@@ -1,0 +1,850 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model addresses {
+  id                               String             @id @default(uuid())
+  street                           String             @db.VarChar(255)
+  city                             String             @db.VarChar(255)
+  state                            String             @db.VarChar(255)
+  country                          String             @db.VarChar(255)
+  zipcode                          String             @db.VarChar(255)
+  isprimary                        Boolean            @default(false)
+  status                           Boolean            @default(true)
+  createdby                        String?
+  createdat                        DateTime           @default(now()) @db.Timestamp(6)
+  updatedby                        String?
+  updatedat                        DateTime?          @db.Timestamp(6)
+  users_addresses_createdbyTousers users?             @relation("addresses_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_addresses_updatedbyTousers users?             @relation("addresses_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  company_adresses                 company_adresses[]
+  user_adresses                    user_adresses[]
+}
+
+model approved_discounted_products {
+  id                                                  String                             @id @default(uuid())
+  approvedpromotion                                   String
+  productdiscountproposal                             String
+  description                                         String                             @db.VarChar(255)
+  finalprice                                          Decimal                            @db.Decimal(10, 2)
+  discountpercentage                                  Decimal                            @db.Decimal(10, 2)
+  quantity                                            Int
+  status                                              Boolean                            @default(true)
+  createdby                                           String?
+  createdat                                           DateTime                           @default(now()) @db.Timestamp(6)
+  updatedby                                           String?
+  updatedat                                           DateTime?                          @db.Timestamp(6)
+  approved_promotions                                 approved_promotions                @relation(fields: [approvedpromotion], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_approved_discounted_products_createdbyTousers users?                             @relation("approved_discounted_products_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product_discount_proposals                          product_discount_proposals         @relation(fields: [productdiscountproposal], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_approved_discounted_products_updatedbyTousers users?                             @relation("approved_discounted_products_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  code_promotion_discount_products                    code_promotion_discount_products[]
+  discount_product_reviews                            discount_product_reviews[]
+}
+
+model approved_promotions {
+  id                                                String                         @id @default(uuid())
+  promotionrequest                                  String
+  promotionapproval                                 String
+  promotionmanager                                  String
+  status                                            Boolean                        @default(true)
+  createdby                                         String?
+  createdat                                         DateTime                       @default(now()) @db.Timestamp(6)
+  updatedby                                         String?
+  updatedat                                         DateTime?                      @db.Timestamp(6)
+  approved_discounted_products                      approved_discounted_products[]
+  users_approved_promotions_createdbyTousers        users?                         @relation("approved_promotions_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_approval                                promotion_approval             @relation(fields: [promotionapproval], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_approved_promotions_promotionmanagerTousers users                          @relation("approved_promotions_promotionmanagerTousers", fields: [promotionmanager], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_requests                                promotion_requests             @relation(fields: [promotionrequest], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_approved_promotions_updatedbyTousers        users?                         @relation("approved_promotions_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_payment                                 promotion_payment[]
+}
+
+model categories {
+  id                                String                       @id @default(uuid())
+  name                              String                       @db.VarChar(255)
+  description                       String                       @db.VarChar(255)
+  level                             Int
+  parent                            String?
+  status                            Boolean                      @default(true)
+  createdby                         String?
+  createdat                         DateTime                     @default(now()) @db.Timestamp(6)
+  updatedby                         String?
+  updatedat                         DateTime?                    @db.Timestamp(6)
+  users_categories_createdbyTousers users?                       @relation("categories_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categories                        categories?                  @relation("categoriesTocategories", fields: [parent], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_categories                  categories[]                 @relation("categoriesTocategories")
+  users_categories_updatedbyTousers users?                       @relation("categories_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category_images                   category_images[]
+  company_categories                company_categories[]
+  product_categories                product_categories[]
+  product_discount_proposals        product_discount_proposals[]
+  products                          products[]
+  promotion_requests                promotion_requests[]
+  promotion_target_products         promotion_target_products[]
+}
+
+model category_images {
+  id                                     String     @id @default(uuid())
+  category                               String
+  image                                  String     @db.VarChar(255)
+  status                                 Boolean    @default(true)
+  createdby                              String?
+  createdat                              DateTime   @default(now()) @db.Timestamp(6)
+  updatedby                              String?
+  updatedat                              DateTime?  @db.Timestamp(6)
+  categories                             categories @relation(fields: [category], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_category_images_createdbyTousers users?     @relation("category_images_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_category_images_updatedbyTousers users?     @relation("category_images_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model code_promotion_discount_products {
+  id                                                      String                       @id @default(uuid())
+  approveddiscountedproduct                               String
+  code                                                    String                       @db.VarChar(255)
+  used                                                    Boolean                      @default(false)
+  useddate                                                DateTime?                    @db.Timestamp(6)
+  usedby                                                  String?
+  status                                                  Boolean                      @default(true)
+  createdby                                               String?
+  createdat                                               DateTime                     @default(now()) @db.Timestamp(6)
+  updatedby                                               String?
+  updatedat                                               DateTime?                    @db.Timestamp(6)
+  approved_discounted_products                            approved_discounted_products @relation(fields: [approveddiscountedproduct], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_code_promotion_discount_products_createdbyTousers users?                       @relation("code_promotion_discount_products_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_code_promotion_discount_products_updatedbyTousers users?                       @relation("code_promotion_discount_products_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_code_promotion_discount_products_usedbyTousers    users?                       @relation("code_promotion_discount_products_usedbyTousers", fields: [usedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model comments {
+  id                              String    @id @default(uuid())
+  userid                          String
+  review                          String
+  commenttext                     String    @db.VarChar(255)
+  commentdate                     DateTime  @default(now()) @db.Timestamp(6)
+  status                          Boolean   @default(true)
+  createdby                       String?
+  createdat                       DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                       String?
+  updatedat                       DateTime? @db.Timestamp(6)
+  users_comments_createdbyTousers users?    @relation("comments_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviews                         reviews   @relation(fields: [review], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_comments_updatedbyTousers users?    @relation("comments_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_comments_useridTousers    users     @relation("comments_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model companies {
+  id                                                  String               @id @default(uuid())
+  name                                                String               @db.VarChar(255)
+  description                                         String               @db.VarChar(255)
+  companytype                                         String
+  documenttype                                        String?
+  documentnumber                                      String?              @db.VarChar(255)
+  website                                             String?              @db.VarChar(255)
+  email                                               String               @unique @db.VarChar(255)
+  foundedat                                           DateTime             @db.Date
+  status                                              Boolean              @default(true)
+  createdby                                           String?
+  createdat                                           DateTime             @default(now()) @db.Timestamp(6)
+  updatedby                                           String?
+  updatedat                                           DateTime?            @db.Timestamp(6)
+  subparameters_companies_companytypeTosubparameters  subparameters        @relation("companies_companytypeTosubparameters", fields: [companytype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_companies_createdbyTousers                    users?               @relation("companies_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters_companies_documenttypeTosubparameters subparameters?       @relation("companies_documenttypeTosubparameters", fields: [documenttype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_companies_updatedbyTousers                    users?               @relation("companies_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  company_adresses                                    company_adresses[]
+  company_avatars                                     company_avatars[]
+  company_categories                                  company_categories[]
+  company_phones                                      company_phones[]
+  company_reviews                                     company_reviews[]
+  product_companies                                   product_companies[]
+  promotion_requests                                  promotion_requests[]
+}
+
+model company_adresses {
+  id                                      String    @id @default(uuid())
+  company                                 String
+  address                                 String
+  status                                  Boolean   @default(true)
+  createdby                               String?
+  createdat                               DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                               String?
+  updatedat                               DateTime? @db.Timestamp(6)
+  addresses                               addresses @relation(fields: [address], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  companies                               companies @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_adresses_createdbyTousers users?    @relation("company_adresses_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_adresses_updatedbyTousers users?    @relation("company_adresses_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model company_avatars {
+  id                                     String    @id @default(uuid())
+  company                                String
+  avatar                                 String    @db.VarChar(255)
+  status                                 Boolean   @default(true)
+  createdby                              String?
+  createdat                              DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                              String?
+  updatedat                              DateTime? @db.Timestamp(6)
+  companies                              companies @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_avatars_createdbyTousers users?    @relation("company_avatars_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_avatars_updatedbyTousers users?    @relation("company_avatars_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model company_categories {
+  id                                        String     @id @default(uuid())
+  category                                  String
+  company                                   String
+  status                                    Boolean    @default(true)
+  createdby                                 String?
+  createdat                                 DateTime   @default(now()) @db.Timestamp(6)
+  updatedby                                 String?
+  updatedat                                 DateTime?  @db.Timestamp(6)
+  categories                                categories @relation(fields: [category], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  companies                                 companies  @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_categories_createdbyTousers users?     @relation("company_categories_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_categories_updatedbyTousers users?     @relation("company_categories_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model company_phones {
+  id                                    String    @id @default(uuid())
+  company                               String
+  phone                                 String
+  status                                Boolean   @default(true)
+  createdby                             String?
+  createdat                             DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                             String?
+  updatedat                             DateTime? @db.Timestamp(6)
+  companies                             companies @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_phones_createdbyTousers users?    @relation("company_phones_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  phones                                phones    @relation(fields: [phone], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_phones_updatedbyTousers users?    @relation("company_phones_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model company_reviews {
+  id                                     String    @id @default(uuid())
+  review                                 String
+  company                                String
+  status                                 Boolean   @default(true)
+  createdby                              String?
+  createdat                              DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                              String?
+  updatedat                              DateTime? @db.Timestamp(6)
+  companies                              companies @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_reviews_createdbyTousers users?    @relation("company_reviews_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviews                                reviews   @relation(fields: [review], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_company_reviews_updatedbyTousers users?    @relation("company_reviews_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model credentials {
+  id                                 String    @id @default(uuid())
+  email                              String    @unique @db.VarChar(255)
+  password                           String    @db.VarChar(255)
+  verifiedemail                      Boolean   @default(false)
+  userid                             String
+  status                             Boolean   @default(true)
+  createdby                          String?
+  createdat                          DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                          String?
+  updatedat                          DateTime? @db.Timestamp(6)
+  users_credentials_createdbyTousers users?    @relation("credentials_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_credentials_updatedbyTousers users?    @relation("credentials_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_credentials_useridTousers    users     @relation("credentials_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model credit_cards {
+  id                                  String              @id @default(uuid())
+  cardtype                            String
+  cardnumber                          String              @db.VarChar(255)
+  expirationdate                      DateTime            @db.Date
+  securitycode                        String              @db.VarChar(255)
+  cardholder                          String?             @db.VarChar(255)
+  status                              Boolean             @default(true)
+  createdby                           String?
+  createdat                           DateTime            @default(now()) @db.Timestamp(6)
+  updatedby                           String?
+  updatedat                           DateTime?           @db.Timestamp(6)
+  subparameters                       subparameters       @relation(fields: [cardtype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_credit_cards_createdbyTousers users?              @relation("credit_cards_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_credit_cards_updatedbyTousers users?              @relation("credit_cards_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_payment                   promotion_payment[]
+}
+
+model discount_product_proposals_from_company {
+  id                                                                             String                     @id @default(uuid())
+  productdiscountproposal                                                        String
+  companyrepresentativeuser                                                      String
+  companyrepresentativereason                                                    String?                    @db.VarChar(255)
+  companyrepresentativecomment                                                   String?                    @db.VarChar(255)
+  companyrepresentativesuggestion                                                String?                    @db.VarChar(255)
+  operationsuser                                                                 String?
+  operationsapprovalstatus                                                       Boolean                    @default(false)
+  marketinguser                                                                  String?
+  marketingapprovalstatus                                                        Boolean                    @default(false)
+  status                                                                         Boolean                    @default(true)
+  createdby                                                                      String?
+  createdat                                                                      DateTime                   @default(now()) @db.Timestamp(6)
+  updatedby                                                                      String?
+  updatedat                                                                      DateTime?                  @db.Timestamp(6)
+  users_discount_product_proposals_from_company_companyrepresentativeuserTousers users                      @relation("discount_product_proposals_from_company_companyrepresentativeuserTousers", fields: [companyrepresentativeuser], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "discount_product_proposals_from__companyrepresentativeuser_fkey")
+  product_discount_proposals                                                     product_discount_proposals @relation(fields: [productdiscountproposal], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "discount_product_proposals_from_co_productdiscountproposal_fkey")
+  users_discount_product_proposals_from_company_createdbyTousers                 users?                     @relation("discount_product_proposals_from_company_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_discount_product_proposals_from_company_updatedbyTousers                 users?                     @relation("discount_product_proposals_from_company_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model discount_product_proposals_from_marketing {
+  id                                                                   String                     @id @default(uuid())
+  productdiscountproposal                                              String
+  marketinguser                                                        String
+  marketingreason                                                      String?                    @db.VarChar(255)
+  marketingcomment                                                     String?                    @db.VarChar(255)
+  marketingsuggestion                                                  String?                    @db.VarChar(255)
+  operationsuser                                                       String?
+  operationsapprovalstatus                                             Boolean                    @default(false)
+  status                                                               Boolean                    @default(true)
+  createdby                                                            String?
+  createdat                                                            DateTime                   @default(now()) @db.Timestamp(6)
+  updatedby                                                            String?
+  updatedat                                                            DateTime?                  @db.Timestamp(6)
+  product_discount_proposals                                           product_discount_proposals @relation(fields: [productdiscountproposal], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "discount_product_proposals_from_ma_productdiscountproposal_fkey")
+  users_discount_product_proposals_from_marketing_createdbyTousers     users?                     @relation("discount_product_proposals_from_marketing_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_discount_product_proposals_from_marketing_marketinguserTousers users                      @relation("discount_product_proposals_from_marketing_marketinguserTousers", fields: [marketinguser], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_discount_product_proposals_from_marketing_updatedbyTousers     users?                     @relation("discount_product_proposals_from_marketing_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model discount_product_reviews {
+  id                                              String                       @id @default(uuid())
+  review                                          String
+  discountproduct                                 String
+  status                                          Boolean                      @default(true)
+  createdby                                       String?
+  createdat                                       DateTime                     @default(now()) @db.Timestamp(6)
+  updatedby                                       String?
+  updatedat                                       DateTime?                    @db.Timestamp(6)
+  users_discount_product_reviews_createdbyTousers users?                       @relation("discount_product_reviews_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  approved_discounted_products                    approved_discounted_products @relation(fields: [discountproduct], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  reviews                                         reviews                      @relation(fields: [review], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_discount_product_reviews_updatedbyTousers users?                       @relation("discount_product_reviews_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model investments {
+  id                                                      String               @id @default(uuid())
+  amount                                                  Decimal              @db.Decimal(10, 2)
+  paymentmethod                                           String
+  investmenttype                                          String
+  investmentreason                                        String?              @db.VarChar(255)
+  investmentcomment                                       String?              @db.VarChar(255)
+  investmentdate                                          DateTime             @db.Date
+  status                                                  Boolean              @default(true)
+  createdby                                               String?
+  createdat                                               DateTime             @default(now()) @db.Timestamp(6)
+  updatedby                                               String?
+  updatedat                                               DateTime?            @db.Timestamp(6)
+  users_investments_createdbyTousers                      users?               @relation("investments_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters_investments_investmenttypeTosubparameters subparameters        @relation("investments_investmenttypeTosubparameters", fields: [investmenttype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters_investments_paymentmethodTosubparameters  subparameters        @relation("investments_paymentmethodTosubparameters", fields: [paymentmethod], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_investments_updatedbyTousers                      users?               @relation("investments_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_payment                                       promotion_payment[]
+  promotion_requests                                      promotion_requests[]
+}
+
+model parameters {
+  id                                String          @id @default(uuid())
+  name                              String          @db.VarChar(255)
+  description                       String          @db.VarChar(255)
+  status                            Boolean         @default(true)
+  createdby                         String?
+  createdat                         DateTime        @default(now()) @db.Timestamp(6)
+  updatedby                         String?
+  updatedat                         DateTime?       @db.Timestamp(6)
+  users_parameters_createdbyTousers users?          @relation("parameters_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_parameters_updatedbyTousers users?          @relation("parameters_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters                     subparameters[]
+}
+
+model people_info {
+  id                                                    String        @id @default(uuid())
+  name                                                  String        @db.VarChar(255)
+  paternalsurname                                       String        @db.VarChar(255)
+  maternalsurname                                       String        @db.VarChar(255)
+  documenttype                                          String
+  documentnumber                                        String?       @db.VarChar(255)
+  birthdate                                             DateTime      @db.Date
+  gender                                                String
+  status                                                Boolean       @default(true)
+  createdby                                             String?
+  createdat                                             DateTime      @default(now()) @db.Timestamp(6)
+  updatedby                                             String?
+  updatedat                                             DateTime?     @db.Timestamp(6)
+  users_people_info_createdbyTousers                    users?        @relation("people_info_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters_people_info_documenttypeTosubparameters subparameters @relation("people_info_documenttypeTosubparameters", fields: [documenttype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters_people_info_genderTosubparameters       subparameters @relation("people_info_genderTosubparameters", fields: [gender], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_people_info_updatedbyTousers                    users?        @relation("people_info_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_users_peopleinfoTopeople_info                   users[]       @relation("users_peopleinfoTopeople_info")
+}
+
+model phones {
+  id                            String           @id @default(uuid())
+  phonetype                     String
+  phone                         String           @db.VarChar(255)
+  isprimary                     Boolean          @default(false)
+  verifiedphone                 Boolean          @default(false)
+  status                        Boolean          @default(true)
+  createdby                     String?
+  createdat                     DateTime         @default(now()) @db.Timestamp(6)
+  updatedby                     String?
+  updatedat                     DateTime?        @db.Timestamp(6)
+  company_phones                company_phones[]
+  users_phones_createdbyTousers users?           @relation("phones_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters                 subparameters    @relation(fields: [phonetype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_phones_updatedbyTousers users?           @relation("phones_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_phones                   user_phones[]
+}
+
+model product_categories {
+  id                                        String     @id @default(uuid())
+  product                                   String
+  category                                  String
+  status                                    Boolean    @default(true)
+  createdby                                 String?
+  createdat                                 DateTime   @default(now()) @db.Timestamp(6)
+  updatedby                                 String?
+  updatedat                                 DateTime?  @db.Timestamp(6)
+  categories                                categories @relation(fields: [category], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_categories_createdbyTousers users?     @relation("product_categories_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products                                  products   @relation(fields: [product], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_categories_updatedbyTousers users?     @relation("product_categories_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_companies {
+  id                                       String    @id @default(uuid())
+  product                                  String
+  company                                  String
+  status                                   Boolean   @default(true)
+  createdby                                String?
+  createdat                                DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                                String?
+  updatedat                                DateTime? @db.Timestamp(6)
+  companies                                companies @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_companies_createdbyTousers users?    @relation("product_companies_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products                                 products  @relation(fields: [product], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_companies_updatedbyTousers users?    @relation("product_companies_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_discount_proposals {
+  id                                                String                                      @id @default(uuid())
+  promotionrequest                                  String
+  title                                             String                                      @db.VarChar(255)
+  product                                           String
+  category                                          String
+  description                                       String                                      @db.VarChar(255)
+  price                                             Decimal                                     @db.Decimal(10, 2)
+  discount                                          Decimal                                     @db.Decimal(10, 2)
+  discountpercentage                                Decimal                                     @db.Decimal(10, 2)
+  discountstartdate                                 DateTime                                    @db.Date
+  discountenddate                                   DateTime                                    @db.Date
+  discountreason                                    String?                                     @db.VarChar(255)
+  discounttype                                      String
+  quantity                                          Int
+  comments                                          String?                                     @db.VarChar(255)
+  status                                            Boolean                                     @default(true)
+  createdby                                         String?
+  createdat                                         DateTime                                    @default(now()) @db.Timestamp(6)
+  updatedby                                         String?
+  updatedat                                         DateTime?                                   @db.Timestamp(6)
+  approved_discounted_products                      approved_discounted_products[]
+  discount_product_proposals_from_company           discount_product_proposals_from_company[]
+  discount_product_proposals_from_marketing         discount_product_proposals_from_marketing[]
+  categories                                        categories                                  @relation(fields: [category], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_discount_proposals_createdbyTousers users?                                      @relation("product_discount_proposals_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters                                     subparameters                               @relation(fields: [discounttype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products                                          products                                    @relation(fields: [product], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_requests                                promotion_requests                          @relation(fields: [promotionrequest], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_discount_proposals_updatedbyTousers users?                                      @relation("product_discount_proposals_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model product_images {
+  id                                    String    @id @default(uuid())
+  product                               String
+  image                                 String    @db.VarChar(255)
+  status                                Boolean   @default(true)
+  createdby                             String?
+  createdat                             DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                             String?
+  updatedat                             DateTime? @db.Timestamp(6)
+  users_product_images_createdbyTousers users?    @relation("product_images_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products                              products  @relation(fields: [product], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_product_images_updatedbyTousers users?    @relation("product_images_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model products {
+  id                              String                       @id @default(uuid())
+  name                            String                       @db.VarChar(255)
+  description                     String                       @db.VarChar(255)
+  category                        String
+  producttype                     String
+  status                          Boolean                      @default(true)
+  createdby                       String?
+  createdat                       DateTime                     @default(now()) @db.Timestamp(6)
+  updatedby                       String?
+  updatedat                       DateTime?                    @db.Timestamp(6)
+  product_categories              product_categories[]
+  product_companies               product_companies[]
+  product_discount_proposals      product_discount_proposals[]
+  product_images                  product_images[]
+  categories                      categories                   @relation(fields: [category], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_products_createdbyTousers users?                       @relation("products_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters                   subparameters                @relation(fields: [producttype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_products_updatedbyTousers users?                       @relation("products_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_target_products       promotion_target_products[]
+}
+
+model promotion_approval {
+  id                                                        String                @id @default(uuid())
+  promotionrequest                                          String
+  marketinguser                                             String
+  marketingapprovalstatus                                   Boolean               @default(false)
+  marketingapprovaldate                                     DateTime?             @db.Timestamp(6)
+  marketingapprovalcomment                                  String?               @db.VarChar(255)
+  marketingapprovalsuggestions                              String?               @db.VarChar(255)
+  marketingapprovalreason                                   String?               @db.VarChar(255)
+  operationsuser                                            String
+  operationsapprovalstatus                                  Boolean               @default(false)
+  operationsapprovaldate                                    DateTime?             @db.Timestamp(6)
+  operationsapprovalcomment                                 String?               @db.VarChar(255)
+  operationsapprovalsuggestions                             String?               @db.VarChar(255)
+  operationsapprovalreason                                  String?               @db.VarChar(255)
+  supervisoruser                                            String
+  supervisorapprovalstatus                                  Boolean               @default(false)
+  supervisorapprovaldate                                    DateTime?             @db.Timestamp(6)
+  supervisorapprovalcomment                                 String?               @db.VarChar(255)
+  supervisorapprovalsuggestions                             String?               @db.VarChar(255)
+  supervisorapprovalreason                                  String?               @db.VarChar(255)
+  companyrepresentativeuser                                 String
+  companyrepresentativeapprovalstatus                       Boolean               @default(false)
+  companyrepresentativeapprovaldate                         DateTime?             @db.Timestamp(6)
+  companyrepresentativeapprovalcomment                      String?               @db.VarChar(255)
+  companyrepresentativeapprovalsuggestions                  String?               @db.VarChar(255)
+  companyrepresentativeapprovalreason                       String?               @db.VarChar(255)
+  status                                                    Boolean               @default(true)
+  createdby                                                 String?
+  createdat                                                 DateTime              @default(now()) @db.Timestamp(6)
+  updatedby                                                 String?
+  updatedat                                                 DateTime?             @db.Timestamp(6)
+  approved_promotions                                       approved_promotions[]
+  users_promotion_approval_companyrepresentativeuserTousers users                 @relation("promotion_approval_companyrepresentativeuserTousers", fields: [companyrepresentativeuser], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_approval_createdbyTousers                 users?                @relation("promotion_approval_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_approval_marketinguserTousers             users                 @relation("promotion_approval_marketinguserTousers", fields: [marketinguser], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_approval_operationsuserTousers            users                 @relation("promotion_approval_operationsuserTousers", fields: [operationsuser], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_requests                                        promotion_requests    @relation(fields: [promotionrequest], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_approval_supervisoruserTousers            users                 @relation("promotion_approval_supervisoruserTousers", fields: [supervisoruser], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_approval_updatedbyTousers                 users?                @relation("promotion_approval_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model promotion_images {
+  id                                      String             @id @default(uuid())
+  promotionrequest                        String
+  image                                   String             @db.VarChar(255)
+  status                                  Boolean            @default(true)
+  createdby                               String?
+  createdat                               DateTime           @default(now()) @db.Timestamp(6)
+  updatedby                               String?
+  updatedat                               DateTime?          @db.Timestamp(6)
+  users_promotion_images_createdbyTousers users?             @relation("promotion_images_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_requests                      promotion_requests @relation(fields: [promotionrequest], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_images_updatedbyTousers users?             @relation("promotion_images_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model promotion_payment {
+  id                                       String              @id @default(uuid())
+  approvedpromotion                        String
+  paymentmethod                            String
+  creditcard                               String?
+  voucher                                  String?             @db.VarChar(255)
+  paymentamount                            Decimal             @db.Decimal(10, 2)
+  paymentdate                              DateTime            @db.Date
+  investment                               String
+  status                                   Boolean             @default(true)
+  createdby                                String?
+  createdat                                DateTime            @default(now()) @db.Timestamp(6)
+  updatedby                                String?
+  updatedat                                DateTime?           @db.Timestamp(6)
+  approved_promotions                      approved_promotions @relation(fields: [approvedpromotion], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_payment_createdbyTousers users?              @relation("promotion_payment_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  credit_cards                             credit_cards?       @relation(fields: [creditcard], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  investments                              investments         @relation(fields: [investment], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters                            subparameters       @relation(fields: [paymentmethod], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_payment_updatedbyTousers users?              @relation("promotion_payment_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model promotion_requests {
+  id                                             String                       @id @default(uuid())
+  company                                        String
+  title                                          String                       @db.VarChar(255)
+  code                                           String                       @unique @db.VarChar(255)
+  description                                    String                       @db.VarChar(255)
+  requestinguser                                 String
+  promotiontype                                  String
+  promotionreason                                String?                      @db.VarChar(255)
+  promotioncomment                               String?                      @db.VarChar(255)
+  companycategory                                String
+  promotionstartdate                             DateTime                     @db.Date
+  promotionenddate                               DateTime                     @db.Date
+  investment                                     String
+  status                                         Boolean                      @default(true)
+  createdby                                      String?
+  createdat                                      DateTime                     @default(now()) @db.Timestamp(6)
+  updatedby                                      String?
+  updatedat                                      DateTime?                    @db.Timestamp(6)
+  approved_promotions                            approved_promotions[]
+  product_discount_proposals                     product_discount_proposals[]
+  promotion_approval                             promotion_approval[]
+  promotion_images                               promotion_images[]
+  companies                                      companies                    @relation(fields: [company], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categories                                     categories                   @relation(fields: [companycategory], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_requests_createdbyTousers      users?                       @relation("promotion_requests_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  investments                                    investments                  @relation(fields: [investment], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters                                  subparameters                @relation(fields: [promotiontype], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_requests_requestinguserTousers users                        @relation("promotion_requests_requestinguserTousers", fields: [requestinguser], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_requests_updatedbyTousers      users?                       @relation("promotion_requests_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_target_products                      promotion_target_products[]
+}
+
+model promotion_target_products {
+  id                                               String             @id @default(uuid())
+  promotionrequest                                 String
+  product                                          String
+  productcategory                                  String
+  productdescription                               String             @db.VarChar(255)
+  productprice                                     Decimal            @db.Decimal(10, 2)
+  status                                           Boolean            @default(true)
+  createdby                                        String?
+  createdat                                        DateTime           @default(now()) @db.Timestamp(6)
+  updatedby                                        String?
+  updatedat                                        DateTime?          @db.Timestamp(6)
+  users_promotion_target_products_createdbyTousers users?             @relation("promotion_target_products_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  products                                         products           @relation(fields: [product], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  categories                                       categories         @relation(fields: [productcategory], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  promotion_requests                               promotion_requests @relation(fields: [promotionrequest], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_promotion_target_products_updatedbyTousers users?             @relation("promotion_target_products_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model reviews {
+  id                             String                     @id @default(uuid())
+  userid                         String
+  review                         String                     @db.VarChar(255)
+  rating                         Int
+  reviewdate                     DateTime                   @default(now()) @db.Timestamp(6)
+  status                         Boolean                    @default(true)
+  createdby                      String?
+  createdat                      DateTime                   @default(now()) @db.Timestamp(6)
+  updatedby                      String?
+  updatedat                      DateTime?                  @db.Timestamp(6)
+  comments                       comments[]
+  company_reviews                company_reviews[]
+  discount_product_reviews       discount_product_reviews[]
+  users_reviews_createdbyTousers users?                     @relation("reviews_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_reviews_updatedbyTousers users?                     @relation("reviews_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_reviews_useridTousers    users                      @relation("reviews_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model subparameters {
+  id                                                    String                       @id @default(uuid())
+  name                                                  String                       @db.VarChar(255)
+  description                                           String                       @db.VarChar(255)
+  parameter                                             String
+  status                                                Boolean                      @default(true)
+  createdby                                             String?
+  createdat                                             DateTime                     @default(now()) @db.Timestamp(6)
+  updatedby                                             String?
+  updatedat                                             DateTime?                    @db.Timestamp(6)
+  companies_companies_companytypeTosubparameters        companies[]                  @relation("companies_companytypeTosubparameters")
+  companies_companies_documenttypeTosubparameters       companies[]                  @relation("companies_documenttypeTosubparameters")
+  credit_cards                                          credit_cards[]
+  investments_investments_investmenttypeTosubparameters investments[]                @relation("investments_investmenttypeTosubparameters")
+  investments_investments_paymentmethodTosubparameters  investments[]                @relation("investments_paymentmethodTosubparameters")
+  people_info_people_info_documenttypeTosubparameters   people_info[]                @relation("people_info_documenttypeTosubparameters")
+  people_info_people_info_genderTosubparameters         people_info[]                @relation("people_info_genderTosubparameters")
+  phones                                                phones[]
+  product_discount_proposals                            product_discount_proposals[]
+  products                                              products[]
+  promotion_payment                                     promotion_payment[]
+  promotion_requests                                    promotion_requests[]
+  users_subparameters_createdbyTousers                  users?                       @relation("subparameters_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parameters                                            parameters                   @relation(fields: [parameter], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_subparameters_updatedbyTousers                  users?                       @relation("subparameters_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_users_roleTosubparameters                       users[]                      @relation("users_roleTosubparameters")
+}
+
+model user_adresses {
+  id                                   String    @id @default(uuid())
+  userid                               String
+  address                              String
+  status                               Boolean   @default(true)
+  createdby                            String?
+  createdat                            DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                            String?
+  updatedat                            DateTime? @db.Timestamp(6)
+  addresses                            addresses @relation(fields: [address], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_adresses_createdbyTousers users?    @relation("user_adresses_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_adresses_updatedbyTousers users?    @relation("user_adresses_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_adresses_useridTousers    users     @relation("user_adresses_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_avatars {
+  id                                  String    @id @default(uuid())
+  userid                              String
+  avatar                              String    @db.VarChar(255)
+  status                              Boolean   @default(true)
+  createdby                           String?
+  createdat                           DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                           String?
+  updatedat                           DateTime? @db.Timestamp(6)
+  users_user_avatars_createdbyTousers users?    @relation("user_avatars_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_avatars_updatedbyTousers users?    @relation("user_avatars_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_avatars_useridTousers    users     @relation("user_avatars_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_google_auth {
+  id                                      String    @id @default(uuid())
+  userid                                  String
+  googleid                                String    @unique @db.VarChar(255)
+  status                                  Boolean   @default(true)
+  createdby                               String?
+  createdat                               DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                               String?
+  updatedat                               DateTime? @db.Timestamp(6)
+  users_user_google_auth_createdbyTousers users?    @relation("user_google_auth_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_google_auth_updatedbyTousers users?    @relation("user_google_auth_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_google_auth_useridTousers    users     @relation("user_google_auth_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_phones {
+  id                                 String    @id @default(uuid())
+  userid                             String
+  phone                              String
+  status                             Boolean   @default(true)
+  createdby                          String?
+  createdat                          DateTime  @default(now()) @db.Timestamp(6)
+  updatedby                          String?
+  updatedat                          DateTime? @db.Timestamp(6)
+  users_user_phones_createdbyTousers users?    @relation("user_phones_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  phones                             phones    @relation(fields: [phone], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_phones_updatedbyTousers users?    @relation("user_phones_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_user_phones_useridTousers    users     @relation("user_phones_useridTousers", fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                                                                                                               String                                      @id @default(uuid())
+  peopleinfo                                                                                                       String
+  role                                                                                                             String
+  lastsession                                                                                                      DateTime?                                   @db.Timestamp(6)
+  status                                                                                                           Boolean                                     @default(true)
+  createdby                                                                                                        String?
+  createdat                                                                                                        DateTime                                    @default(now()) @db.Timestamp(6)
+  updatedby                                                                                                        String?
+  updatedat                                                                                                        DateTime?                                   @db.Timestamp(6)
+  addresses_addresses_createdbyTousers                                                                             addresses[]                                 @relation("addresses_createdbyTousers")
+  addresses_addresses_updatedbyTousers                                                                             addresses[]                                 @relation("addresses_updatedbyTousers")
+  approved_discounted_products_approved_discounted_products_createdbyTousers                                       approved_discounted_products[]              @relation("approved_discounted_products_createdbyTousers")
+  approved_discounted_products_approved_discounted_products_updatedbyTousers                                       approved_discounted_products[]              @relation("approved_discounted_products_updatedbyTousers")
+  approved_promotions_approved_promotions_createdbyTousers                                                         approved_promotions[]                       @relation("approved_promotions_createdbyTousers")
+  approved_promotions_approved_promotions_promotionmanagerTousers                                                  approved_promotions[]                       @relation("approved_promotions_promotionmanagerTousers")
+  approved_promotions_approved_promotions_updatedbyTousers                                                         approved_promotions[]                       @relation("approved_promotions_updatedbyTousers")
+  categories_categories_createdbyTousers                                                                           categories[]                                @relation("categories_createdbyTousers")
+  categories_categories_updatedbyTousers                                                                           categories[]                                @relation("categories_updatedbyTousers")
+  category_images_category_images_createdbyTousers                                                                 category_images[]                           @relation("category_images_createdbyTousers")
+  category_images_category_images_updatedbyTousers                                                                 category_images[]                           @relation("category_images_updatedbyTousers")
+  code_promotion_discount_products_code_promotion_discount_products_createdbyTousers                               code_promotion_discount_products[]          @relation("code_promotion_discount_products_createdbyTousers")
+  code_promotion_discount_products_code_promotion_discount_products_updatedbyTousers                               code_promotion_discount_products[]          @relation("code_promotion_discount_products_updatedbyTousers")
+  code_promotion_discount_products_code_promotion_discount_products_usedbyTousers                                  code_promotion_discount_products[]          @relation("code_promotion_discount_products_usedbyTousers")
+  comments_comments_createdbyTousers                                                                               comments[]                                  @relation("comments_createdbyTousers")
+  comments_comments_updatedbyTousers                                                                               comments[]                                  @relation("comments_updatedbyTousers")
+  comments_comments_useridTousers                                                                                  comments[]                                  @relation("comments_useridTousers")
+  companies_companies_createdbyTousers                                                                             companies[]                                 @relation("companies_createdbyTousers")
+  companies_companies_updatedbyTousers                                                                             companies[]                                 @relation("companies_updatedbyTousers")
+  company_adresses_company_adresses_createdbyTousers                                                               company_adresses[]                          @relation("company_adresses_createdbyTousers")
+  company_adresses_company_adresses_updatedbyTousers                                                               company_adresses[]                          @relation("company_adresses_updatedbyTousers")
+  company_avatars_company_avatars_createdbyTousers                                                                 company_avatars[]                           @relation("company_avatars_createdbyTousers")
+  company_avatars_company_avatars_updatedbyTousers                                                                 company_avatars[]                           @relation("company_avatars_updatedbyTousers")
+  company_categories_company_categories_createdbyTousers                                                           company_categories[]                        @relation("company_categories_createdbyTousers")
+  company_categories_company_categories_updatedbyTousers                                                           company_categories[]                        @relation("company_categories_updatedbyTousers")
+  company_phones_company_phones_createdbyTousers                                                                   company_phones[]                            @relation("company_phones_createdbyTousers")
+  company_phones_company_phones_updatedbyTousers                                                                   company_phones[]                            @relation("company_phones_updatedbyTousers")
+  company_reviews_company_reviews_createdbyTousers                                                                 company_reviews[]                           @relation("company_reviews_createdbyTousers")
+  company_reviews_company_reviews_updatedbyTousers                                                                 company_reviews[]                           @relation("company_reviews_updatedbyTousers")
+  credentials_credentials_createdbyTousers                                                                         credentials[]                               @relation("credentials_createdbyTousers")
+  credentials_credentials_updatedbyTousers                                                                         credentials[]                               @relation("credentials_updatedbyTousers")
+  credentials_credentials_useridTousers                                                                            credentials[]                               @relation("credentials_useridTousers")
+  credit_cards_credit_cards_createdbyTousers                                                                       credit_cards[]                              @relation("credit_cards_createdbyTousers")
+  credit_cards_credit_cards_updatedbyTousers                                                                       credit_cards[]                              @relation("credit_cards_updatedbyTousers")
+  discount_product_proposals_from_company_discount_product_proposals_from_company_companyrepresentativeuserTousers discount_product_proposals_from_company[]   @relation("discount_product_proposals_from_company_companyrepresentativeuserTousers")
+  discount_product_proposals_from_company_discount_product_proposals_from_company_createdbyTousers                 discount_product_proposals_from_company[]   @relation("discount_product_proposals_from_company_createdbyTousers")
+  discount_product_proposals_from_company_discount_product_proposals_from_company_updatedbyTousers                 discount_product_proposals_from_company[]   @relation("discount_product_proposals_from_company_updatedbyTousers")
+  discount_product_proposals_from_marketing_discount_product_proposals_from_marketing_createdbyTousers             discount_product_proposals_from_marketing[] @relation("discount_product_proposals_from_marketing_createdbyTousers")
+  discount_product_proposals_from_marketing_discount_product_proposals_from_marketing_marketinguserTousers         discount_product_proposals_from_marketing[] @relation("discount_product_proposals_from_marketing_marketinguserTousers")
+  discount_product_proposals_from_marketing_discount_product_proposals_from_marketing_updatedbyTousers             discount_product_proposals_from_marketing[] @relation("discount_product_proposals_from_marketing_updatedbyTousers")
+  discount_product_reviews_discount_product_reviews_createdbyTousers                                               discount_product_reviews[]                  @relation("discount_product_reviews_createdbyTousers")
+  discount_product_reviews_discount_product_reviews_updatedbyTousers                                               discount_product_reviews[]                  @relation("discount_product_reviews_updatedbyTousers")
+  investments_investments_createdbyTousers                                                                         investments[]                               @relation("investments_createdbyTousers")
+  investments_investments_updatedbyTousers                                                                         investments[]                               @relation("investments_updatedbyTousers")
+  parameters_parameters_createdbyTousers                                                                           parameters[]                                @relation("parameters_createdbyTousers")
+  parameters_parameters_updatedbyTousers                                                                           parameters[]                                @relation("parameters_updatedbyTousers")
+  people_info_people_info_createdbyTousers                                                                         people_info[]                               @relation("people_info_createdbyTousers")
+  people_info_people_info_updatedbyTousers                                                                         people_info[]                               @relation("people_info_updatedbyTousers")
+  phones_phones_createdbyTousers                                                                                   phones[]                                    @relation("phones_createdbyTousers")
+  phones_phones_updatedbyTousers                                                                                   phones[]                                    @relation("phones_updatedbyTousers")
+  product_categories_product_categories_createdbyTousers                                                           product_categories[]                        @relation("product_categories_createdbyTousers")
+  product_categories_product_categories_updatedbyTousers                                                           product_categories[]                        @relation("product_categories_updatedbyTousers")
+  product_companies_product_companies_createdbyTousers                                                             product_companies[]                         @relation("product_companies_createdbyTousers")
+  product_companies_product_companies_updatedbyTousers                                                             product_companies[]                         @relation("product_companies_updatedbyTousers")
+  product_discount_proposals_product_discount_proposals_createdbyTousers                                           product_discount_proposals[]                @relation("product_discount_proposals_createdbyTousers")
+  product_discount_proposals_product_discount_proposals_updatedbyTousers                                           product_discount_proposals[]                @relation("product_discount_proposals_updatedbyTousers")
+  product_images_product_images_createdbyTousers                                                                   product_images[]                            @relation("product_images_createdbyTousers")
+  product_images_product_images_updatedbyTousers                                                                   product_images[]                            @relation("product_images_updatedbyTousers")
+  products_products_createdbyTousers                                                                               products[]                                  @relation("products_createdbyTousers")
+  products_products_updatedbyTousers                                                                               products[]                                  @relation("products_updatedbyTousers")
+  promotion_approval_promotion_approval_companyrepresentativeuserTousers                                           promotion_approval[]                        @relation("promotion_approval_companyrepresentativeuserTousers")
+  promotion_approval_promotion_approval_createdbyTousers                                                           promotion_approval[]                        @relation("promotion_approval_createdbyTousers")
+  promotion_approval_promotion_approval_marketinguserTousers                                                       promotion_approval[]                        @relation("promotion_approval_marketinguserTousers")
+  promotion_approval_promotion_approval_operationsuserTousers                                                      promotion_approval[]                        @relation("promotion_approval_operationsuserTousers")
+  promotion_approval_promotion_approval_supervisoruserTousers                                                      promotion_approval[]                        @relation("promotion_approval_supervisoruserTousers")
+  promotion_approval_promotion_approval_updatedbyTousers                                                           promotion_approval[]                        @relation("promotion_approval_updatedbyTousers")
+  promotion_images_promotion_images_createdbyTousers                                                               promotion_images[]                          @relation("promotion_images_createdbyTousers")
+  promotion_images_promotion_images_updatedbyTousers                                                               promotion_images[]                          @relation("promotion_images_updatedbyTousers")
+  promotion_payment_promotion_payment_createdbyTousers                                                             promotion_payment[]                         @relation("promotion_payment_createdbyTousers")
+  promotion_payment_promotion_payment_updatedbyTousers                                                             promotion_payment[]                         @relation("promotion_payment_updatedbyTousers")
+  promotion_requests_promotion_requests_createdbyTousers                                                           promotion_requests[]                        @relation("promotion_requests_createdbyTousers")
+  promotion_requests_promotion_requests_requestinguserTousers                                                      promotion_requests[]                        @relation("promotion_requests_requestinguserTousers")
+  promotion_requests_promotion_requests_updatedbyTousers                                                           promotion_requests[]                        @relation("promotion_requests_updatedbyTousers")
+  promotion_target_products_promotion_target_products_createdbyTousers                                             promotion_target_products[]                 @relation("promotion_target_products_createdbyTousers")
+  promotion_target_products_promotion_target_products_updatedbyTousers                                             promotion_target_products[]                 @relation("promotion_target_products_updatedbyTousers")
+  reviews_reviews_createdbyTousers                                                                                 reviews[]                                   @relation("reviews_createdbyTousers")
+  reviews_reviews_updatedbyTousers                                                                                 reviews[]                                   @relation("reviews_updatedbyTousers")
+  reviews_reviews_useridTousers                                                                                    reviews[]                                   @relation("reviews_useridTousers")
+  subparameters_subparameters_createdbyTousers                                                                     subparameters[]                             @relation("subparameters_createdbyTousers")
+  subparameters_subparameters_updatedbyTousers                                                                     subparameters[]                             @relation("subparameters_updatedbyTousers")
+  user_adresses_user_adresses_createdbyTousers                                                                     user_adresses[]                             @relation("user_adresses_createdbyTousers")
+  user_adresses_user_adresses_updatedbyTousers                                                                     user_adresses[]                             @relation("user_adresses_updatedbyTousers")
+  user_adresses_user_adresses_useridTousers                                                                        user_adresses[]                             @relation("user_adresses_useridTousers")
+  user_avatars_user_avatars_createdbyTousers                                                                       user_avatars[]                              @relation("user_avatars_createdbyTousers")
+  user_avatars_user_avatars_updatedbyTousers                                                                       user_avatars[]                              @relation("user_avatars_updatedbyTousers")
+  user_avatars_user_avatars_useridTousers                                                                          user_avatars[]                              @relation("user_avatars_useridTousers")
+  user_google_auth_user_google_auth_createdbyTousers                                                               user_google_auth[]                          @relation("user_google_auth_createdbyTousers")
+  user_google_auth_user_google_auth_updatedbyTousers                                                               user_google_auth[]                          @relation("user_google_auth_updatedbyTousers")
+  user_google_auth_user_google_auth_useridTousers                                                                  user_google_auth[]                          @relation("user_google_auth_useridTousers")
+  user_phones_user_phones_createdbyTousers                                                                         user_phones[]                               @relation("user_phones_createdbyTousers")
+  user_phones_user_phones_updatedbyTousers                                                                         user_phones[]                               @relation("user_phones_updatedbyTousers")
+  user_phones_user_phones_useridTousers                                                                            user_phones[]                               @relation("user_phones_useridTousers")
+  users_users_createdbyTousers                                                                                     users?                                      @relation("users_createdbyTousers", fields: [createdby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_users_users_createdbyTousers                                                                               users[]                                     @relation("users_createdbyTousers")
+  people_info_users_peopleinfoTopeople_info                                                                        people_info                                 @relation("users_peopleinfoTopeople_info", fields: [peopleinfo], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subparameters_users_roleTosubparameters                                                                          subparameters                               @relation("users_roleTosubparameters", fields: [role], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_users_updatedbyTousers                                                                                     users?                                      @relation("users_updatedbyTousers", fields: [updatedby], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  other_users_users_updatedbyTousers                                                                               users[]                                     @relation("users_updatedbyTousers")
+}
