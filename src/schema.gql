@@ -1,0 +1,50 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Parameters {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Query {
+  users: [User!]!
+  user(id: Int!): User!
+  parametric(id: Int!): Parameters!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  createParametric(createParametricInput: CreateParametricInput!): Parameters!
+  updateParametric(updateParametricInput: UpdateParametricInput!): Parameters!
+  removeParametric(id: Int!): Parameters!
+}
+
+input CreateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateParametricInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateParametricInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: String!
+}
