@@ -1,15 +1,14 @@
 import { IsOptional, IsUUID } from 'class-validator'
-import { CreateSubparameterInput } from './create-subparameter.input'
+import { CreatePeopleInfoInput } from './create-people-info.input'
 import { InputType, Field, PartialType, ID } from '@nestjs/graphql'
 
 @InputType()
-export class UpdateSubparameterInput extends PartialType( CreateSubparameterInput ) {
+export class UpdatePeopleInfoInput extends PartialType( CreatePeopleInfoInput ) {
   @Field( () => ID )
-  @IsUUID()
   id: string
 
   //TODO: updatedBy should be required
-  @Field( () => ID, { nullable: true, description: 'Subparameter updater' } )
+  @Field( () => ID, { nullable: true, description: 'PeopleInfo updater' } )
   @IsOptional()
   @IsUUID()
   updatedBy?: string

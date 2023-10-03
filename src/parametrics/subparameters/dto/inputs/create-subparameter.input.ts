@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql'
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator'
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
 
 @InputType()
 export class CreateSubparameterInput {
@@ -18,4 +18,8 @@ export class CreateSubparameterInput {
   @IsUUID()
   parameterId: string
   
+  @Field( () => ID, { nullable: true, description: 'The subparameter creator' } )
+  @IsOptional()
+  @IsUUID()
+  createdBy?: string
 }

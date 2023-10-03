@@ -1,5 +1,5 @@
-import { InputType, Field } from '@nestjs/graphql'
-import { IsNotEmpty, IsString } from 'class-validator'
+import { InputType, Field, ID } from '@nestjs/graphql'
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
 
 @InputType()
 export class CreateParameterInput {
@@ -12,4 +12,9 @@ export class CreateParameterInput {
   @IsNotEmpty()
   @IsString()
   description: string
+
+  @Field( () => ID, { nullable: true, description: 'Parameter creator' } )
+  @IsOptional()
+  @IsUUID()
+  createdBy?: string
 }

@@ -19,13 +19,13 @@ export class Parameter {
   @Field( () => Date )
   createdAt: Date
 
-  @Field( () => String, { nullable: true } )
+  @Field( () => ID, { nullable: true } )
   createdBy?: string | null
 
   @Field( () => Date )
   updatedAt: Date
 
-  @Field( () => String, { nullable: true } )
+  @Field( () => ID, { nullable: true } )
   updatedBy?: string | null
 
   @Field( () => User, { nullable: true } )

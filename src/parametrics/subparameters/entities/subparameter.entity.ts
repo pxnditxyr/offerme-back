@@ -14,7 +14,7 @@ export class Subparameter {
   @Field( () => String )
   description: string
 
-  @Field( () => String )
+  @Field( () => ID )
   parameterId: string
 
   @Field( () => Boolean )
@@ -23,13 +23,13 @@ export class Subparameter {
   @Field( () => Date )
   createdAt: Date
 
-  @Field( () => String, { nullable: true } )
+  @Field( () => ID, { nullable: true } )
   createdBy?: string | null
   
   @Field( () => Date )
   updatedAt: Date
 
-  @Field( () => String, { nullable: true } )
+  @Field( () => ID, { nullable: true } )
   updatedBy?: string | null
 
   @Field( () => String, { nullable: true } )

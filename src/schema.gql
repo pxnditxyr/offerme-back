@@ -2,26 +2,30 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type PeopleInfo {
+type User {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-type Subparameter {
+type PeopleInfo {
   id: ID!
   name: String!
-  description: String!
-  parameterId: String!
+  parternalSurname: String!
+  maternalSurname: String!
+  documentTypeId: ID
+  documentNumber: String
+  birthdate: DateTime!
+  genderId: ID!
   status: Boolean!
   createdAt: DateTime!
-  createdBy: String
+  createdBy: ID
   updatedAt: DateTime!
-  updatedBy: String
-  creator: String
-  updater: String
-  parameter: Parameter!
-  peopleInfoDocumentType: [PeopleInfo!]!
-  peopleInfoGender: [PeopleInfo!]!
+  updatedBy: ID
+  creator: User
+  updater: User
+  documentType: Subparameter
+  gender: Subparameter!
+  users: [User!]!
 }
 
 """
@@ -29,9 +33,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type User {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type Subparameter {
+  id: ID!
+  name: String!
+  description: String!
+  parameterId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: String
+  updater: String
+  parameter: Parameter!
+  peopleInfoDocumentType: [PeopleInfo!]!
+  peopleInfoGender: [PeopleInfo!]!
 }
 
 type Parameter {
@@ -40,9 +56,9 @@ type Parameter {
   description: String!
   status: Boolean!
   createdAt: DateTime!
-  createdBy: String
+  createdBy: ID
   updatedAt: DateTime!
-  updatedBy: String
+  updatedBy: ID
   creator: User
   updater: User
   subparameters: [Subparameter!]!
@@ -58,7 +74,8 @@ type Query {
   parameter(term: String!): Parameter!
   subparameters: [Subparameter!]!
   subparameter(id: ID!): Subparameter!
-  peopleInfo(id: Int!): PeopleInfo!
+  peopleInfo: [PeopleInfo!]!
+  personInfo(id: ID!): PeopleInfo!
   users: [User!]!
   user(id: Int!): User!
   userAvatars: [UserAvatar!]!
@@ -72,9 +89,6 @@ type Mutation {
   createSubparameter(createSubparameterInput: CreateSubparameterInput!): Subparameter!
   updateSubparameter(updateSubparameterInput: UpdateSubparameterInput!): Subparameter!
   deactivateSubparameter(id: ID!): Subparameter!
-  createPeopleInfo(createPeopleInfoInput: CreatePeopleInfoInput!): PeopleInfo!
-  updatePeopleInfo(updatePeopleInfoInput: UpdatePeopleInfoInput!): PeopleInfo!
-  removePeopleInfo(id: Int!): PeopleInfo!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
@@ -89,6 +103,9 @@ input CreateParameterInput {
 
   """Parameter description"""
   description: String!
+
+  """Parameter creator"""
+  createdBy: ID
 }
 
 input UpdateParameterInput {
@@ -97,7 +114,13 @@ input UpdateParameterInput {
 
   """Parameter description"""
   description: String
+
+  """Parameter creator"""
+  createdBy: ID
   id: ID!
+
+  """Parameter updater"""
+  updatedBy: ID
 }
 
 input CreateSubparameterInput {
@@ -109,6 +132,9 @@ input CreateSubparameterInput {
 
   """The parameter id of the subparameter"""
   parameterId: ID!
+
+  """The subparameter creator"""
+  createdBy: ID
 }
 
 input UpdateSubparameterInput {
@@ -120,18 +146,13 @@ input UpdateSubparameterInput {
 
   """The parameter id of the subparameter"""
   parameterId: ID
+
+  """The subparameter creator"""
+  createdBy: ID
   id: ID!
-}
 
-input CreatePeopleInfoInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdatePeopleInfoInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  """Subparameter updater"""
+  updatedBy: ID
 }
 
 input CreateUserInput {
