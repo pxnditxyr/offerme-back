@@ -2,29 +2,136 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type PeopleInfo {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Subparameter {
+  id: ID!
+  name: String!
+  description: String!
+  parameterId: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: String
+  updatedAt: DateTime!
+  updatedBy: String
+  creator: String
+  updater: String
+  parameter: Parameter!
+  peopleInfoDocumentType: [PeopleInfo!]!
+  peopleInfoGender: [PeopleInfo!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type User {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-type Parameters {
+type Parameter {
+  id: ID!
+  name: String!
+  description: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: String
+  updatedAt: DateTime!
+  updatedBy: String
+  creator: User
+  updater: User
+  subparameters: [Subparameter!]!
+}
+
+type UserAvatar {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
 type Query {
+  parameters: [Parameter!]!
+  parameter(term: String!): Parameter!
+  subparameters: [Subparameter!]!
+  subparameter(id: ID!): Subparameter!
+  peopleInfo(id: Int!): PeopleInfo!
   users: [User!]!
   user(id: Int!): User!
-  parametric(id: Int!): Parameters!
+  userAvatars: [UserAvatar!]!
+  userAvatar(id: Int!): UserAvatar!
 }
 
 type Mutation {
+  createParameter(createParameterInput: CreateParameterInput!): Parameter!
+  updateParameter(updateParameterInput: UpdateParameterInput!): Parameter!
+  deactivateParameter(id: String!): Parameter!
+  createSubparameter(createSubparameterInput: CreateSubparameterInput!): Subparameter!
+  updateSubparameter(updateSubparameterInput: UpdateSubparameterInput!): Subparameter!
+  deactivateSubparameter(id: ID!): Subparameter!
+  createPeopleInfo(createPeopleInfoInput: CreatePeopleInfoInput!): PeopleInfo!
+  updatePeopleInfo(updatePeopleInfoInput: UpdatePeopleInfoInput!): PeopleInfo!
+  removePeopleInfo(id: Int!): PeopleInfo!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
-  createParametric(createParametricInput: CreateParametricInput!): Parameters!
-  updateParametric(updateParametricInput: UpdateParametricInput!): Parameters!
-  removeParametric(id: Int!): Parameters!
+  createUserAvatar(createUserAvatarInput: CreateUserAvatarInput!): UserAvatar!
+  updateUserAvatar(updateUserAvatarInput: UpdateUserAvatarInput!): UserAvatar!
+  removeUserAvatar(id: Int!): UserAvatar!
+}
+
+input CreateParameterInput {
+  """Parameter name"""
+  name: String!
+
+  """Parameter description"""
+  description: String!
+}
+
+input UpdateParameterInput {
+  """Parameter name"""
+  name: String
+
+  """Parameter description"""
+  description: String
+  id: ID!
+}
+
+input CreateSubparameterInput {
+  """The name of the subparameter"""
+  name: String!
+
+  """The description of the subparameter"""
+  description: String!
+
+  """The parameter id of the subparameter"""
+  parameterId: ID!
+}
+
+input UpdateSubparameterInput {
+  """The name of the subparameter"""
+  name: String
+
+  """The description of the subparameter"""
+  description: String
+
+  """The parameter id of the subparameter"""
+  parameterId: ID
+  id: ID!
+}
+
+input CreatePeopleInfoInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePeopleInfoInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input CreateUserInput {
@@ -38,13 +145,13 @@ input UpdateUserInput {
   id: Int!
 }
 
-input CreateParametricInput {
+input CreateUserAvatarInput {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-input UpdateParametricInput {
+input UpdateUserAvatarInput {
   """Example field (placeholder)"""
   exampleField: Int
-  id: String!
+  id: Int!
 }

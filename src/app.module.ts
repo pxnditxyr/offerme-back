@@ -2,9 +2,14 @@ import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { UsersModule } from './users/users.module'
 import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default'
-import { ParametricModule } from './parametric/parametric.module'
+
+import { ParametersModule, SubparametersModule } from './parametrics'
+import {
+  PeopleInfoModule,
+  UserAvatarsModule,
+  UsersModule,
+} from './users'
 
 @Module({
   imports: [
@@ -17,8 +22,11 @@ import { ParametricModule } from './parametric/parametric.module'
         ApolloServerPluginLandingPageLocalDefault(),
       ]
     }),
+    ParametersModule,
+    SubparametersModule,
+    PeopleInfoModule,
     UsersModule,
-    ParametricModule,
+    UserAvatarsModule,
   ]
 })
 export class AppModule {}
