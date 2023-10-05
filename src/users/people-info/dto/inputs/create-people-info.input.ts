@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql'
-import { IsDateString, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
+import { IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
 
 @InputType()
 export class CreatePeopleInfoInput {
@@ -19,17 +19,17 @@ export class CreatePeopleInfoInput {
   maternalSurname: string
 
   @Field( () => ID, { nullable: true } )
-  @IsString()
   @IsOptional()
+  @IsString()
   documentTypeId?: string
 
   @Field( () => String, { nullable: true } )
-  @IsString()
   @IsOptional()
+  @IsString()
   documentNumber?: string
 
   @Field( () => Date )
-  @IsDateString()
+  @IsDate( { message: 'Birthdate must be a date' } )
   birthdate: Date
 
   @Field( () => ID )
@@ -37,7 +37,7 @@ export class CreatePeopleInfoInput {
   @IsString()
   genderId: string
   
-  @Field( () => ID )
+  @Field( () => ID, { nullable: true } )
   @IsOptional()
   @IsUUID()
   createdBy?: string

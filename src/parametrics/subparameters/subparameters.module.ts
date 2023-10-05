@@ -13,5 +13,8 @@ import { ParametersModule } from '../parameters/parameters.module'
   imports: [
     ParametersModule
   ],
+  exports: [
+    SubparametersService,
+  ]
 })
 export class SubparametersModule {}

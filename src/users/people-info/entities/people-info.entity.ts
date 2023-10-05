@@ -18,10 +18,10 @@ export class PeopleInfo {
   maternalSurname: string
 
   @Field( () => ID, { nullable: true } )
-  documentTypeId?: string
+  documentTypeId?: string | null
 
   @Field( () => String, { nullable: true } )
-  documentNumber?: string
+  documentNumber?: string | null
 
   @Field( () => Date )
   birthdate: Date
@@ -43,7 +43,6 @@ export class PeopleInfo {
 
   @Field( () => ID, { nullable: true } )
   updatedBy?: string | null
-
 
   @Field( () => User, { nullable: true } )
   creator?: User | null

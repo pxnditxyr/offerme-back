@@ -89,6 +89,9 @@ type Mutation {
   createSubparameter(createSubparameterInput: CreateSubparameterInput!): Subparameter!
   updateSubparameter(updateSubparameterInput: UpdateSubparameterInput!): Subparameter!
   deactivateSubparameter(id: ID!): Subparameter!
+  createPeopleInfo(createPeopleInfoInput: CreatePeopleInfoInput!): PeopleInfo!
+  updatePeopleInfo(updatePeopleInfoInput: UpdatePeopleInfoInput!): PeopleInfo!
+  deactivatePeopleInfo(id: ID!): PeopleInfo!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: Int!): User!
@@ -152,6 +155,32 @@ input UpdateSubparameterInput {
   id: ID!
 
   """Subparameter updater"""
+  updatedBy: ID
+}
+
+input CreatePeopleInfoInput {
+  name: String!
+  parternalSurname: String!
+  maternalSurname: String!
+  documentTypeId: ID
+  documentNumber: String
+  birthdate: DateTime!
+  genderId: ID!
+  createdBy: ID
+}
+
+input UpdatePeopleInfoInput {
+  name: String
+  parternalSurname: String
+  maternalSurname: String
+  documentTypeId: ID
+  documentNumber: String
+  birthdate: DateTime
+  genderId: ID
+  createdBy: ID
+  id: ID!
+
+  """PeopleInfo updater"""
   updatedBy: ID
 }
 

@@ -10,12 +10,12 @@ export class PeopleInfoResolver {
     private readonly peopleInfoService : PeopleInfoService
   ) {}
 
-  // @Mutation( () => PeopleInfo )
-  // async createPeopleInfo(
-  //   @Args('createPeopleInfoInput') createPeopleInfoInput : CreatePeopleInfoInput
-  // ) : Promise<PeopleInfo> {
-  //   return await this.peopleInfoService.create( createPeopleInfoInput )
-  // }
+  @Mutation( () => PeopleInfo )
+  async createPeopleInfo (
+    @Args( 'createPeopleInfoInput' ) createPeopleInfoInput : CreatePeopleInfoInput
+  ) : Promise<PeopleInfo> {
+    return await this.peopleInfoService.create( createPeopleInfoInput )
+  }
 
   @Query( () => [ PeopleInfo ], { name: 'peopleInfo' } )
   async findAll () {
@@ -28,17 +28,17 @@ export class PeopleInfoResolver {
     return await this.peopleInfoService.findOne( id )
   }
 
-  // @Mutation( () => PeopleInfo )
-  // updatePeopleInfo (
-  //   @Args( 'updatePeopleInfoInput' ) updatePeopleInfoInput : UpdatePeopleInfoInput
-  // ) : Promise<PeopleInfo> {
-  //   return await this.peopleInfoService.update( updatePeopleInfoInput.id, updatePeopleInfoInput )
-  // }
+  @Mutation( () => PeopleInfo )
+  async updatePeopleInfo (
+    @Args( 'updatePeopleInfoInput' ) updatePeopleInfoInput : UpdatePeopleInfoInput
+  ) : Promise<PeopleInfo> {
+    return await this.peopleInfoService.update( updatePeopleInfoInput.id, updatePeopleInfoInput )
+  }
 
-  // @Mutation( () => PeopleInfo )
-  // deactivatePeopleInfo(
-  //   @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
-  // ) : Promise<PeopleInfo> {
-  //   return await this.peopleInfoService.deactivate( id )
-  // }
+  @Mutation( () => PeopleInfo )
+  async deactivatePeopleInfo(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) : Promise<PeopleInfo> {
+    return await this.peopleInfoService.deactivate( id )
+  }
 }

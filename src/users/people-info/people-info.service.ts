@@ -1,19 +1,34 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreatePeopleInfoInput, UpdatePeopleInfoInput } from './dto/inputs'
 import { PeopleInfo } from './entities/people-info.entity'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { SubparametersService } from 'src/parametrics/subparameters/subparameters.service'
 
 @Injectable()
 export class PeopleInfoService {
 
   constructor (
     @Inject( PrismaService )
-    private readonly prismaService : PrismaService
+    private readonly prismaService : PrismaService,
+
+    private readonly subparametersService : SubparametersService
+
   ) {}
 
-  // async create( createPeopleInfoInput : CreatePeopleInfoInput ) : Promise<PeopleInfo> {
-  //   return 'This action adds a new peopleInfo'
-  // }
+  async create( createPeopleInfoInput : CreatePeopleInfoInput ) : Promise<PeopleInfo> {
+
+    const { genderId, documentTypeId } = createPeopleInfoInput
+    await this.subparametersService.findOne( genderId )
+    if ( documentTypeId ) await this.subparametersService.findOne( documentTypeId )
+    try {
+      const peopleInfo = await this.prismaService.peopleInfo.create({
+        data: { ...createPeopleInfoInput }
+      })
+      return peopleInfo
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
 
   async findAll () {
     const peopleInfo = await this.prismaService.peopleInfo.findMany({
@@ -41,11 +56,37 @@ export class PeopleInfoService {
     return peopleInfo
   }
 
-  // async update ( id : string, updatePeopleInfoInput : UpdatePeopleInfoInput ) : Promise<PeopleInfo> {
-  //   return `This action updates a #${id} peopleInfo`
-  // }
-  //
-  // async deactivate ( id : string ) : Promise<PeopleInfo> {
-  //   return `This action removes a #${id} peopleInfo`
-  // }
+  async update ( id : string, updatePeopleInfoInput : UpdatePeopleInfoInput ) : Promise<PeopleInfo> {
+    await this.findOne( id )
+    const { genderId, documentTypeId } = updatePeopleInfoInput
+    if ( genderId ) await this.subparametersService.findOne( genderId )
+    if ( documentTypeId ) await this.subparametersService.findOne( documentTypeId )
+    try {
+      const peopleInfo = await this.prismaService.peopleInfo.update({
+        where: { id },
+        data: { ...updatePeopleInfoInput }
+      })
+      return peopleInfo
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  async deactivate ( id : string ) : Promise<PeopleInfo> {
+    await this.findOne( id )
+    try {
+      const peopleInfo = await this.prismaService.peopleInfo.update({
+        where: { id },
+        data: { status: false }
+      })
+      return peopleInfo
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  private handlerDBExceptions ( error : any ) : never {
+    console.error( error )
+    throw new InternalServerErrorException( 'Unexpected error, please check logs' )
+  }
 }
