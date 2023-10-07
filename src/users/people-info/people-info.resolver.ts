@@ -36,7 +36,7 @@ export class PeopleInfoResolver {
   }
 
   @Mutation( () => PeopleInfo )
-  async deactivatePeopleInfo(
+  async deactivatePeopleInfo (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
   ) : Promise<PeopleInfo> {
     return await this.peopleInfoService.deactivate( id )

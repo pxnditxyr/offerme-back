@@ -1,8 +1,8 @@
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreatePeopleInfoInput, UpdatePeopleInfoInput } from './dto/inputs'
 import { PeopleInfo } from './entities/people-info.entity'
-import { PrismaService } from 'src/prisma/prisma.service'
-import { SubparametersService } from 'src/parametrics/subparameters/subparameters.service'
+import { PrismaService } from '../../prisma'
+import { SubparametersService } from '../../parametrics/subparameters/subparameters.service'
 
 @Injectable()
 export class PeopleInfoService {

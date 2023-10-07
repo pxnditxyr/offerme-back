@@ -1,19 +1,13 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql'
-import { User } from 'src/users/users/entities/user.entity'
+import { User } from '../../users/entities/user.entity'
 
 @ObjectType()
-export class UserAvatar {
+export class Role {
   @Field( () => ID )
   id: string
 
-  @Field( () => ID )
-  userId: string
-
   @Field( () => String )
-  url: string
-
-  @Field( () => Boolean )
-  isMain: boolean
+  name: string
 
   @Field( () => Boolean )
   status: boolean
@@ -36,6 +30,6 @@ export class UserAvatar {
   @Field( () => User, { nullable: true } )
   updater?: User | null
 
-  @Field( () => User, { nullable: true } )
-  user?: User | null
+  @Field( () => [ User ], { nullable: true } )
+  users?: User[] | null
 }

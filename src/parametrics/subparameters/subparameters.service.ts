@@ -1,6 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreateSubparameterInput, UpdateSubparameterInput } from './dto/inputs'
-import { PrismaService } from 'src/prisma/prisma.service'
+import { PrismaService } from '../../prisma'
 import { ParametersService } from '../parameters/parameters.service'
 import { Subparameter } from './entities/subparameter.entity'
 

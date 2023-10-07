@@ -4,140 +4,163 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env( "DATABASE_URL" )
+  url      = env("DATABASE_URL")
 }
 
 model Parameters {
-  id            String          @id @default( uuid() )
-  name          String          @unique @db.VarChar( 255 )
-  description   String          @db.VarChar( 255 )
-  status        Boolean         @default( true )
-  createdAt     DateTime        @default( now() )
-  createdBy     String?
-  updatedAt     DateTime        @updatedAt
-  updatedBy     String?
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(255)
+  description String   @db.VarChar(255)
+  status      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
 
-  creator       Users?          @relation( "parameters_created_by", fields: [ createdBy ], references: [ id ] )
-  updater       Users?          @relation( "parameters_updated_by", fields: [ updatedBy ], references: [ id ] )
-  subparameters Subparameters[] @relation( "subparameters_parameter" )
-  
-  @@map( "parameters" )
+  creator       Users?          @relation("parameters_created_by", fields: [createdBy], references: [id])
+  updater       Users?          @relation("parameters_updated_by", fields: [updatedBy], references: [id])
+  subparameters Subparameters[] @relation("subparameters_parameter")
+
+  @@map("parameters")
 }
 
 model Subparameters {
-  id                     String       @id @default( uuid() )
-  name                   String       @db.VarChar( 255 )
-  description            String       @db.VarChar( 255 )
-  parameterId            String
-  status                 Boolean      @default( true )
-  createdAt              DateTime     @default( now() )
-  createdBy              String?
-  updatedAt              DateTime     @updatedAt
-  updatedBy              String?
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(255)
+  description String   @db.VarChar(255)
+  parameterId String
+  status      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
 
-  creator                Users?       @relation( "subparameters_created_by", fields: [ createdBy ], references: [ id ] )
-  updater                Users?       @relation( "subparameters_updated_by", fields: [ updatedBy ], references: [ id ] )
-  parameter              Parameters   @relation( "subparameters_parameter", fields: [ parameterId ], references: [ id ] )
-  peopleInfoDocumentType PeopleInfo[] @relation( "people_info_subparameters_document_type" )
-  peopleInfoGender       PeopleInfo[] @relation( "people_info_subparameters_gender" )
-  
-  @@map( "subparameters" )
+  creator                Users?       @relation("subparameters_created_by", fields: [createdBy], references: [id])
+  updater                Users?       @relation("subparameters_updated_by", fields: [updatedBy], references: [id])
+  parameter              Parameters   @relation("subparameters_parameter", fields: [parameterId], references: [id])
+  peopleInfoDocumentType PeopleInfo[] @relation("people_info_subparameters_document_type")
+  peopleInfoGender       PeopleInfo[] @relation("people_info_subparameters_gender")
+
+  @@map("subparameters")
 }
 
 model PeopleInfo {
-  id               String         @id @default( uuid() )
-  name             String         @db.VarChar( 255 )
-  parternalSurname String         @db.VarChar( 255 )
-  maternalSurname  String         @db.VarChar( 255 )
+  id               String   @id @default(uuid())
+  name             String   @db.VarChar(255)
+  parternalSurname String   @db.VarChar(255)
+  maternalSurname  String   @db.VarChar(255)
   documentTypeId   String?
-  documentNumber   String?        @db.VarChar( 255 )
-  birthdate        DateTime       @db.Date
+  documentNumber   String?  @db.VarChar(255)
+  birthdate        DateTime @db.Date
   genderId         String
-  status           Boolean        @default( true )
-  createdAt        DateTime       @default( now() )
+  status           Boolean  @default(true)
+  createdAt        DateTime @default(now())
   createdBy        String?
-  updatedAt        DateTime       @updatedAt
+  updatedAt        DateTime @updatedAt
   updatedBy        String?
 
-  creator          Users?         @relation( "people_info_created_by", fields: [ createdBy ], references: [ id ] )
-  updater          Users?         @relation( "people_info_updated_by", fields: [ updatedBy ], references: [ id ] )
-  documentType     Subparameters? @relation( "people_info_subparameters_document_type", fields: [ documentTypeId ], references: [ id ] )
-  gender           Subparameters  @relation( "people_info_subparameters_gender", fields: [ genderId ], references: [ id ] )
-  users            Users[]        @relation( "people_info_user" )
+  creator      Users?         @relation("people_info_created_by", fields: [createdBy], references: [id])
+  updater      Users?         @relation("people_info_updated_by", fields: [updatedBy], references: [id])
+  documentType Subparameters? @relation("people_info_subparameters_document_type", fields: [documentTypeId], references: [id])
+  gender       Subparameters  @relation("people_info_subparameters_gender", fields: [genderId], references: [id])
+  users        Users[]        @relation("people_info_user")
 
-  @@map( "people_info" )
+  @@map("people_info")
 }
 
-
 model Roles {
-  id        String   @id @default( uuid() )
-  name      String   @unique @db.VarChar( 255 )
-  status    Boolean  @default( true )
-  createdAt DateTime @default( now() )
+  id        String   @id @default(uuid())
+  name      String   @unique @db.VarChar(255)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
   createdBy String?
   updatedAt DateTime @updatedAt
   updatedBy String?
-  
-  creator   Users?   @relation( "roles_created_by", fields: [ createdBy ], references: [ id ] )
-  updater   Users?   @relation( "roles_updated_by", fields: [ updatedBy ], references: [ id ] )
-  users     Users[]  @relation( "users_roles" )
 
-  @@map( "roles" )
+  creator Users?  @relation("roles_created_by", fields: [createdBy], references: [id])
+  updater Users?  @relation("roles_updated_by", fields: [updatedBy], references: [id])
+  users   Users[] @relation("users_roles")
+
+  @@map("roles")
 }
 
-
 model Users {
-  id              String     @id @default( uuid() )
+  id              String   @id @default(uuid())
   peopleInfoId    String
   roleId          String
-  email           String     @unique @db.VarChar( 255 )
-  password        String     @db.VarChar( 255 )
-  isVerifiedEmail Boolean    @default( false )
-  lastSession     DateTime   @db.Date
-  googleId        String?    @db.VarChar( 255 )
-  
-  status          Boolean    @default( true )
-  createdAt       DateTime   @default( now() )
-  createdBy       String?
-  updatedAt       DateTime   @updatedAt
-  updatedBy       String?
-  
-  creator         Users?     @relation( "users_created_by", fields: [ createdBy ], references: [ id ] )
-  updater         Users?     @relation( "users_updated_by", fields: [ updatedBy ], references: [ id ] )
-  peopleInfo      PeopleInfo @relation( "people_info_user", fields: [ peopleInfoId ], references: [ id ] )
-  role            Roles      @relation( "users_roles", fields: [ roleId ], references: [ id ] )
+  email           String   @unique @db.VarChar(255)
+  password        String   @db.VarChar(255)
+  isVerifiedEmail Boolean  @default(false)
+  googleId        String?  @db.VarChar(255)
 
-  createdParameters Parameters[] @relation( "parameters_created_by" )
-  updatedParameters Parameters[] @relation( "parameters_updated_by" )
-  createdSubparameters Subparameters[] @relation( "subparameters_created_by" )
-  updatedSubparameters Subparameters[] @relation( "subparameters_updated_by" )
-  createdPeopleInfo PeopleInfo[] @relation( "people_info_created_by" )
-  updatedPeopleInfo PeopleInfo[] @relation( "people_info_updated_by" )
-  createdRoles Roles[] @relation( "roles_created_by" )
-  updatedRoles Roles[] @relation( "roles_updated_by" )
-  createdUsers Users[] @relation( "users_created_by" )
-  updatedUsers Users[] @relation( "users_updated_by" )
-  createdUserAvatars UserAvatars[] @relation( "user_avatars_created_by" )
-  updatedUserAvatars UserAvatars[] @relation( "user_avatars_updated_by" )
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
 
-  userAvatars UserAvatars[] @relation( "user_avatars_user" )
+  creator    Users?     @relation("users_created_by", fields: [createdBy], references: [id])
+  updater    Users?     @relation("users_updated_by", fields: [updatedBy], references: [id])
+  peopleInfo PeopleInfo @relation("people_info_user", fields: [peopleInfoId], references: [id])
+  role       Roles      @relation("users_roles", fields: [roleId], references: [id])
 
-  @@map( "users" )
+  createdParameters    Parameters[]    @relation("parameters_created_by")
+  updatedParameters    Parameters[]    @relation("parameters_updated_by")
+  createdSubparameters Subparameters[] @relation("subparameters_created_by")
+  updatedSubparameters Subparameters[] @relation("subparameters_updated_by")
+  createdPeopleInfo    PeopleInfo[]    @relation("people_info_created_by")
+  updatedPeopleInfo    PeopleInfo[]    @relation("people_info_updated_by")
+  createdRoles         Roles[]         @relation("roles_created_by")
+  updatedRoles         Roles[]         @relation("roles_updated_by")
+  createdUsers         Users[]         @relation("users_created_by")
+  updatedUsers         Users[]         @relation("users_updated_by")
+  createdUserAvatars   UserAvatars[]   @relation("user_avatars_created_by")
+  updatedUserAvatars   UserAvatars[]   @relation("user_avatars_updated_by")
+  createdSessions      Sessions[]      @relation("sessions_created_by")
+  updatedSessions      Sessions[]      @relation("sessions_updated_by")
+
+  avatars  UserAvatars[] @relation("user_avatars_user")
+  sessions Sessions[]    @relation("sessions_user")
+
+  @@map("users")
 }
 
 model UserAvatars {
-  id        String   @id @default( uuid() )
+  id        String   @id @default(uuid())
   userId    String
-  name      String   @db.VarChar( 255 )
-  status    Boolean  @default( true )
-  createdAt DateTime @default( now() )
-  createdBy String
+  url       String   @db.VarChar(255)
+  isMain    Boolean  @default(true)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
   updatedAt DateTime @updatedAt
   updatedBy String?
-  
-  creator   Users    @relation( "user_avatars_created_by", fields: [ createdBy ], references: [ id ] )
-  updater   Users?   @relation( "user_avatars_updated_by", fields: [ updatedBy ], references: [ id ] )
-  user      Users    @relation( "user_avatars_user", fields: [ userId ], references: [ id ] )
 
-  @@map( "user_avatars" )
+  creator Users?  @relation("user_avatars_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("user_avatars_updated_by", fields: [updatedBy], references: [id])
+  user    Users  @relation("user_avatars_user", fields: [userId], references: [id])
+
+  @@map("user_avatars")
+}
+
+model Sessions {
+  id        String    @id @default(uuid())
+  userId    String
+  token     String    @db.VarChar(255)
+  ipAddress String    @db.VarChar(255)
+  userAgent String    @db.VarChar(255)
+  startedAt DateTime  @db.Date @default(now())
+  endedAt   DateTime? @db.Date
+
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  creator Users? @relation("sessions_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("sessions_updated_by", fields: [updatedBy], references: [id])
+  user    Users  @relation("sessions_user", fields: [userId], references: [id])
+
+  @@map("sessions")
 }

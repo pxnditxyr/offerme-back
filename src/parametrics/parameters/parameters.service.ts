@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreateParameterInput, UpdateParameterInput } from './dto/inputs'
-import { Parameter } from './entities/parameter.entity'
-import { PrismaService } from '../../prisma/prisma.service'
+import { Parameter } from '../parameters/entities/parameter.entity'
+import { PrismaService } from '../../prisma'
 import { isUUID } from 'class-validator'
 
 @Injectable()

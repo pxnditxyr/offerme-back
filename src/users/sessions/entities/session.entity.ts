@@ -1,8 +1,8 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql'
+import { ObjectType, Field, Int, ID } from '@nestjs/graphql'
 import { User } from 'src/users/users/entities/user.entity'
 
 @ObjectType()
-export class UserAvatar {
+export class Session {
   @Field( () => ID )
   id: string
 
@@ -10,10 +10,19 @@ export class UserAvatar {
   userId: string
 
   @Field( () => String )
-  url: string
+  token: string
 
-  @Field( () => Boolean )
-  isMain: boolean
+  @Field( () => String )
+  ipAddress: string
+
+  @Field( () => String )
+  userAgent: string
+
+  @Field( () => Date )
+  startedAt: Date
+
+  @Field( () => Date, { nullable: true } )
+  endedAt?: Date | null
 
   @Field( () => Boolean )
   status: boolean

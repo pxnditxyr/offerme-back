@@ -1,10 +1,9 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql'
-import { Subparameter } from 'src/parametrics/subparameters/entities/subparameter.entity'
-import { User } from 'src/users/users/entities/user.entity'
+import { Subparameter } from '../../../parametrics/subparameters/entities/subparameter.entity'
+import { User } from '../../../users/users/entities/user.entity'
 
 @ObjectType()
 export class PeopleInfo {
-
   @Field( () => ID )
   id: string
 

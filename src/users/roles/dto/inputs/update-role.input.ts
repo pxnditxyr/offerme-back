@@ -1,9 +1,9 @@
 import { IsBoolean, IsOptional, IsUUID } from 'class-validator'
-import { CreatePeopleInfoInput } from './create-people-info.input'
+import { CreateRoleInput } from './create-role.input'
 import { InputType, Field, PartialType, ID } from '@nestjs/graphql'
 
 @InputType()
-export class UpdatePeopleInfoInput extends PartialType( CreatePeopleInfoInput ) {
+export class UpdateRoleInput extends PartialType(CreateRoleInput) {
   @Field( () => ID )
   @IsUUID()
   id: string
@@ -13,8 +13,8 @@ export class UpdatePeopleInfoInput extends PartialType( CreatePeopleInfoInput ) 
   @IsBoolean()
   status?: boolean
 
-  //TODO: updatedBy should be required
-  @Field( () => ID, { nullable: true, description: 'PeopleInfo updater' } )
+  // TODO: updatedBy must be required
+  @Field( () => ID, { nullable: true, description: 'The user who updated this role' } )
   @IsOptional()
   @IsUUID()
   updatedBy?: string

@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ParametersService } from './parameters.service'
 import { ParametersResolver } from './parameters.resolver'
-import { PrismaService } from 'src/prisma/prisma.service'
+
+import { PrismaService } from '../../prisma'
 
 @Module({
   providers: [

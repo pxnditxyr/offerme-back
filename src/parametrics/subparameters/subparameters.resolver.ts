@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { ParseUUIDPipe } from '@nestjs/common'
 import { SubparametersService } from './subparameters.service'
 import { Subparameter } from './entities/subparameter.entity'
 import { CreateSubparameterInput, UpdateSubparameterInput } from './dto/inputs'
-import { ParseUUIDPipe } from '@nestjs/common'
 
 @Resolver( () => Subparameter )
 export class SubparametersResolver {

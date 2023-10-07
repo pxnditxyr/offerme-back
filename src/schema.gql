@@ -2,9 +2,76 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Role {
+  id: ID!
+  name: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: User
+  updater: User
+  users: [User!]
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Session {
+  id: ID!
+  userId: ID!
+  token: String!
+  ipAddress: String!
+  userAgent: String!
+  startedAt: DateTime!
+  endedAt: DateTime
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: User
+  updater: User
+  user: User
+}
+
+type UserAvatar {
+  id: ID!
+  userId: ID!
+  url: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: User
+  updater: User
+  user: User
+}
+
 type User {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  peopleInfoId: ID!
+  roleId: ID!
+  email: String!
+  password: String!
+  isVerifiedEmail: Boolean!
+  googleId: String
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: User
+  updater: User
+  peopleInfo: PeopleInfo
+  role: Role
+  sessions: [Session!]
+  avatars: [UserAvatar!]
 }
 
 type PeopleInfo {
@@ -27,11 +94,6 @@ type PeopleInfo {
   gender: Subparameter!
   users: [User!]!
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type Subparameter {
   id: ID!
@@ -64,11 +126,6 @@ type Parameter {
   subparameters: [Subparameter!]!
 }
 
-type UserAvatar {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -77,9 +134,13 @@ type Query {
   peopleInfo: [PeopleInfo!]!
   personInfo(id: ID!): PeopleInfo!
   users: [User!]!
-  user(id: Int!): User!
+  user(id: ID!): User!
+  roles: [Role!]!
+  role(id: ID!): Role!
   userAvatars: [UserAvatar!]!
-  userAvatar(id: Int!): UserAvatar!
+  userAvatar(id: ID!): UserAvatar!
+  sessions: [Session!]!
+  session(id: ID!): Session!
 }
 
 type Mutation {
@@ -94,10 +155,13 @@ type Mutation {
   deactivatePeopleInfo(id: ID!): PeopleInfo!
   createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  removeUser(id: Int!): User!
+  deactivateUser(id: ID!): User!
+  createRole(createRoleInput: CreateRoleInput!): Role!
+  updateRole(updateRoleInput: UpdateRoleInput!): Role!
+  deactivateRole(id: ID!): Role!
   createUserAvatar(createUserAvatarInput: CreateUserAvatarInput!): UserAvatar!
   updateUserAvatar(updateUserAvatarInput: UpdateUserAvatarInput!): UserAvatar!
-  removeUserAvatar(id: Int!): UserAvatar!
+  deactivateUserAvatar(id: ID!): UserAvatar!
 }
 
 input CreateParameterInput {
@@ -121,6 +185,7 @@ input UpdateParameterInput {
   """Parameter creator"""
   createdBy: ID
   id: ID!
+  status: Boolean
 
   """Parameter updater"""
   updatedBy: ID
@@ -179,29 +244,57 @@ input UpdatePeopleInfoInput {
   genderId: ID
   createdBy: ID
   id: ID!
+  status: Boolean
 
   """PeopleInfo updater"""
   updatedBy: ID
 }
 
 input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  peopleInfoId: ID!
+  roleId: ID!
+  email: String!
+  password: String!
+  googleId: String
+  createdBy: ID
 }
 
 input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  peopleInfoId: ID
+  roleId: ID
+  email: String
+  password: String
+  googleId: String
+  createdBy: ID
+  id: ID!
+  status: Boolean
+  isVerifiedEmail: Boolean
+}
+
+input CreateRoleInput {
+  name: String!
+  createdBy: ID
+}
+
+input UpdateRoleInput {
+  name: String
+  createdBy: ID
+  id: ID!
+  status: Boolean
+
+  """The user who updated this role"""
+  updatedBy: ID
 }
 
 input CreateUserAvatarInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  userId: ID!
+  url: String!
 }
 
 input UpdateUserAvatarInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  userId: ID
+  url: String
+  id: ID!
+  isMain: Boolean
+  status: Boolean
 }

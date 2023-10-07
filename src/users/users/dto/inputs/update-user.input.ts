@@ -1,9 +1,9 @@
 import { InputType, Field, PartialType, ID } from '@nestjs/graphql'
 import { IsBoolean, IsOptional, IsUUID } from 'class-validator'
-import { CreateParameterInput } from './create-parameter.input'
+import { CreateUserInput } from './create-user.input'
 
 @InputType()
-export class UpdateParameterInput extends PartialType( CreateParameterInput ) {
+export class UpdateUserInput extends PartialType( CreateUserInput ) {
   @Field( () => ID )
   @IsUUID()
   id: string
@@ -13,9 +13,9 @@ export class UpdateParameterInput extends PartialType( CreateParameterInput ) {
   @IsBoolean()
   status?: boolean
 
-  //TODO; updatedBy should be required
-  @Field( () => ID, { nullable: true, description: 'Parameter updater' } )
+  @Field( () => Boolean, { nullable: true } )
   @IsOptional()
-  @IsUUID()
-  updatedBy?: string
+  @IsBoolean()
+  isVerifiedEmail: boolean
 }
+

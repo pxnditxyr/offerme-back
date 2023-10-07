@@ -9,6 +9,8 @@ import {
   PeopleInfoModule,
   UserAvatarsModule,
   UsersModule,
+  RolesModule,
+  SessionsModule,
 } from './users'
 
 @Module({
@@ -27,6 +29,8 @@ import {
     PeopleInfoModule,
     UsersModule,
     UserAvatarsModule,
+    RolesModule,
+    SessionsModule,
   ]
 })
 export class AppModule {}
