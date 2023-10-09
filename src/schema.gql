@@ -58,7 +58,6 @@ type User {
   peopleInfoId: ID!
   roleId: ID!
   email: String!
-  password: String!
   isVerifiedEmail: Boolean!
   googleId: String
   status: Boolean!
@@ -77,7 +76,7 @@ type User {
 type PeopleInfo {
   id: ID!
   name: String!
-  parternalSurname: String!
+  paternalSurname: String!
   maternalSurname: String!
   documentTypeId: ID
   documentNumber: String
@@ -105,8 +104,8 @@ type Subparameter {
   createdBy: ID
   updatedAt: DateTime!
   updatedBy: ID
-  creator: String
-  updater: String
+  creator: User
+  updater: User
   parameter: Parameter!
   peopleInfoDocumentType: [PeopleInfo!]!
   peopleInfoGender: [PeopleInfo!]!
@@ -126,6 +125,32 @@ type Parameter {
   subparameters: [Subparameter!]!
 }
 
+type PeopleInfoResponse {
+  id: ID!
+  name: String!
+  paternalSurname: String!
+  maternalSurname: String!
+  birthdate: DateTime!
+  genderId: String!
+}
+
+type RoleResponse {
+  id: ID!
+  name: String!
+}
+
+type UserResponse {
+  id: ID!
+  email: String!
+  peopleInfo: PeopleInfoResponse!
+  role: RoleResponse!
+}
+
+type AuthResponse {
+  token: ID!
+  user: UserResponse!
+}
+
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -141,6 +166,7 @@ type Query {
   userAvatar(id: ID!): UserAvatar!
   sessions: [Session!]!
   session(id: ID!): Session!
+  revalidateToken: AuthResponse!
 }
 
 type Mutation {
@@ -225,7 +251,7 @@ input UpdateSubparameterInput {
 
 input CreatePeopleInfoInput {
   name: String!
-  parternalSurname: String!
+  paternalSurname: String!
   maternalSurname: String!
   documentTypeId: ID
   documentNumber: String
@@ -236,7 +262,7 @@ input CreatePeopleInfoInput {
 
 input UpdatePeopleInfoInput {
   name: String
-  parternalSurname: String
+  paternalSurname: String
   maternalSurname: String
   documentTypeId: ID
   documentNumber: String

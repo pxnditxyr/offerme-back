@@ -12,6 +12,9 @@ import { SubparametersModule } from '../../parametrics'
   ],
   imports: [
     SubparametersModule
+  ],
+  exports: [
+    PeopleInfoService
   ]
 })
 export class PeopleInfoModule {}

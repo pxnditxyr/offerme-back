@@ -11,7 +11,7 @@ export class PeopleInfo {
   name: string
 
   @Field( () => String )
-  parternalSurname: string
+  paternalSurname: string
 
   @Field( () => String )
   maternalSurname: string

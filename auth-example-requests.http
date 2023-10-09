@@ -1,0 +1,25 @@
+POST http://localhost:3001/auth/signup
+Content-Type: application/json
+
+{
+  "birthdate": "1995-01-01",
+  "maternalSurname": "ex mat",
+  "paternalSurname": "ex pat",
+  "name": "example name",
+  "email": "example13@example.com",
+  "password": "Hola123#",
+  "genderId": "aba173f5-0d85-4b04-8cfc-e409889fa2b1",
+  "ipAddress": "192.168.0.2",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"
+}
+
+POST http://localhost:3001/auth/signin
+Content-Type: application/json
+
+{
+  "email": "example@example.com",
+  "password": "Hola123#",
+  "ipAddress": "192.168.0.2",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0"
+}
+

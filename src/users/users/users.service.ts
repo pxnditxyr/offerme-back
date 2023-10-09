@@ -3,6 +3,7 @@ import { CreateUserInput, UpdateUserInput } from './dto/inputs'
 import { User } from './entities/user.entity'
 import { PrismaService } from '../../prisma'
 import { RolesService } from '../roles/roles.service'
+import { hashSync } from 'bcrypt'
 
 @Injectable()
 export class UsersService {
@@ -18,8 +19,13 @@ export class UsersService {
     const { roleId } = createUserInput
     await this.rolesService.findOne( roleId )
     try {
+      const { password } = createUserInput
+      const hashedPassword = hashSync( password, 10 )
       const user = await this.prismaService.users.create({
-        data: { ...createUserInput }
+        data: {
+          ...createUserInput,
+          password: hashedPassword
+        }
       })
       return user
     } catch ( error ) {

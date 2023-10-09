@@ -22,7 +22,10 @@ export class PeopleInfoService {
     if ( documentTypeId ) await this.subparametersService.findOne( documentTypeId )
     try {
       const peopleInfo = await this.prismaService.peopleInfo.create({
-        data: { ...createPeopleInfoInput }
+        data: {
+          ...createPeopleInfoInput,
+          birthdate: new Date( createPeopleInfoInput.birthdate )
+        }
       })
       return peopleInfo
     } catch ( error ) {

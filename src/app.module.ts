@@ -12,6 +12,7 @@ import {
   RolesModule,
   SessionsModule,
 } from './users'
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import {
     UserAvatarsModule,
     RolesModule,
     SessionsModule,
+    AuthModule,
   ]
 })
 export class AppModule {}

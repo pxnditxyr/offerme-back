@@ -39,10 +39,21 @@ export class RolesService {
       include: {
         creator: true,
         updater: true,
-        users: true,
       }
     })
     if ( !role ) throw new NotFoundException( `Role with id ${ id } not found` )
+    return role
+  }
+
+  async findByName ( name : string ) {
+    const role = await this.prismaService.roles.findUnique({
+      where: { name },
+      select: {
+        id: true,
+        name: true
+      }
+    })
+    if ( !role ) throw new NotFoundException( `Role with name ${ name } not found` )
     return role
   }
 

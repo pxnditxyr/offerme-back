@@ -47,7 +47,7 @@ model Subparameters {
 model PeopleInfo {
   id               String   @id @default(uuid())
   name             String   @db.VarChar(255)
-  parternalSurname String   @db.VarChar(255)
+  paternalSurname  String   @db.VarChar(255)
   maternalSurname  String   @db.VarChar(255)
   documentTypeId   String?
   documentNumber   String?  @db.VarChar(255)
@@ -149,8 +149,8 @@ model Sessions {
   token     String    @db.VarChar(255)
   ipAddress String    @db.VarChar(255)
   userAgent String    @db.VarChar(255)
-  startedAt DateTime  @db.Date @default(now())
-  endedAt   DateTime? @db.Date
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
 
   status    Boolean  @default(true)
   createdAt DateTime @default(now())

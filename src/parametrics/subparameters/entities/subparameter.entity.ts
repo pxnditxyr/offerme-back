@@ -32,10 +32,10 @@ export class Subparameter {
   @Field( () => ID, { nullable: true } )
   updatedBy?: string | null
 
-  @Field( () => String, { nullable: true } )
+  @Field( () => User, { nullable: true } )
   creator?: User | null
 
-  @Field( () => String, { nullable: true } )
+  @Field( () => User, { nullable: true } )
   updater?: User | null
 
   @Field( () => Parameter )
