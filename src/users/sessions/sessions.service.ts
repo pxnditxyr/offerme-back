@@ -3,6 +3,12 @@ import { CreateSessionInput } from './dto/inputs'
 import { Session } from './entities/session.entity'
 import { PrismaService } from '../../prisma'
 
+const sessionInclude = {
+  creator: true,
+  updater: true,
+  user: true,
+}
+
 @Injectable()
 export class SessionsService {
 
@@ -15,7 +21,10 @@ export class SessionsService {
   async create( createSessionInput : CreateSessionInput ) : Promise<Session> {
     try {
       const session = await this.prismaService.sessions.create({
-        data: { ...createSessionInput }
+        data: {
+          ...createSessionInput,
+          createdBy: createSessionInput.userId
+        }
       })
       return session
     } catch ( error ) {
@@ -25,11 +34,7 @@ export class SessionsService {
 
   async findAll () {
     const sessions = await this.prismaService.sessions.findMany({
-      include: {
-        creator: true,
-        updater: true,
-        user: true,
-      }
+      include: { ...sessionInclude }
     })
     return sessions
   }
@@ -37,11 +42,7 @@ export class SessionsService {
   async findOne ( id : string ) {
     const session = await this.prismaService.sessions.findUnique({
       where: { id },
-      include: {
-        creator: true,
-        updater: true,
-        user: true,
-      }
+      include: { ...sessionInclude }
     })
     if ( !session ) throw new NotFoundException( `Session ${ id } not found` )
     return session

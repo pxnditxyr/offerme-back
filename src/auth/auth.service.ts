@@ -52,7 +52,7 @@ export class AuthService {
 
     await this.sessionsService.create({
       userId: user.id,
-      token: '1234567890', // TODO: Generate a JWT token
+      token,
       ipAddress,
       userAgent
     })

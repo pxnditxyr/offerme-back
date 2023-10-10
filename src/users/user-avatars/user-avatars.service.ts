@@ -1,6 +1,13 @@
 import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common'
 import { CreateUserAvatarInput, UpdateUserAvatarInput } from './dto/inputs'
 import { PrismaService } from 'src/prisma'
+import { User } from '../users/entities/user.entity'
+
+const userAvatarInclude = {
+  creator: true,
+  updater: true,
+  user: true,
+}
 
 @Injectable()
 export class UserAvatarsService {
@@ -10,10 +17,13 @@ export class UserAvatarsService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create ( createUserAvatarInput : CreateUserAvatarInput ) {
+  async create ( createUserAvatarInput : CreateUserAvatarInput, creator : User ) {
     try {
       const userAvatar = await this.prismaService.userAvatars.create({
-        data: { ...createUserAvatarInput }
+        data: {
+          ...createUserAvatarInput,
+          createdBy: creator.id
+        }
       })
       return userAvatar
     } catch ( error ) {
@@ -23,11 +33,7 @@ export class UserAvatarsService {
 
   async findAll () {
     const userAvatars = await this.prismaService.userAvatars.findMany({
-      include: {
-        user: true,
-        creator: true,
-        updater: true
-      }
+      include: { ...userAvatarInclude }
     })
     return userAvatars
   }
@@ -35,20 +41,19 @@ export class UserAvatarsService {
   async findOne ( id : string ) {
     const userAvatar = await this.prismaService.userAvatars.findUnique({
       where: { id },
-      include: {
-        user: true,
-        creator: true,
-        updater: true
-      }
+      include: { ...userAvatarInclude }
     })
     return userAvatar
   }
 
-  async update ( id : string, updateUserAvatarInput : UpdateUserAvatarInput ) {
+  async update ( id : string, updateUserAvatarInput : UpdateUserAvatarInput, updater : User ) {
     try {
       const userAvatar = await this.prismaService.userAvatars.update({
         where: { id },
-        data: { ...updateUserAvatarInput }
+        data: {
+          ...updateUserAvatarInput,
+          updatedBy: updater.id
+        }
       })
       return userAvatar
     } catch ( error ) {
@@ -56,11 +61,14 @@ export class UserAvatarsService {
     }
   }
 
-  async deactivate ( id : string ) {
+  async deactivate ( id : string, updater : User ) {
     try {
       const userAvatar = await this.prismaService.userAvatars.update({
         where: { id },
-        data: { status: false }
+        data: {
+          status: false,
+          updatedBy: updater.id
+        }
       })
       return userAvatar
     } catch ( error ) {
@@ -72,5 +80,4 @@ export class UserAvatarsService {
     console.error( error )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
-      
 }
