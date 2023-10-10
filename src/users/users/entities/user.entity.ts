@@ -1,8 +1,8 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { PeopleInfo } from '../../../users/people-info/entities/people-info.entity';
-import { Role } from '../../../users/roles/entities/role.entity';
-import { Session } from '../../sessions/entities/session.entity';
-import { UserAvatar } from '../../../users/user-avatars/entities/user-avatar.entity';
+import { ObjectType, Field, ID } from '@nestjs/graphql'
+import { PeopleInfo } from '../../../users/people-info/entities/people-info.entity'
+import { Role } from '../../../users/roles/entities/role.entity'
+import { Session } from '../../sessions/entities/session.entity'
+import { UserAvatar } from '../../../users/user-avatars/entities/user-avatar.entity'
 
 @ObjectType()
 export class User {

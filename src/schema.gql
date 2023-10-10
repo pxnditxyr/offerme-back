@@ -158,7 +158,7 @@ type Query {
   subparameter(id: ID!): Subparameter!
   peopleInfo: [PeopleInfo!]!
   personInfo(id: ID!): PeopleInfo!
-  users: [User!]!
+  users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
   roles: [Role!]!
   role(id: ID!): Role!
@@ -169,10 +169,15 @@ type Query {
   revalidateToken: AuthResponse!
 }
 
+enum ValidRoles {
+  ADMIN
+  USER
+}
+
 type Mutation {
   createParameter(createParameterInput: CreateParameterInput!): Parameter!
   updateParameter(updateParameterInput: UpdateParameterInput!): Parameter!
-  deactivateParameter(id: String!): Parameter!
+  deactivateParameter(id: ID!): Parameter!
   createSubparameter(createSubparameterInput: CreateSubparameterInput!): Subparameter!
   updateSubparameter(updateSubparameterInput: UpdateSubparameterInput!): Subparameter!
   deactivateSubparameter(id: ID!): Subparameter!

@@ -2,6 +2,7 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
 import { UserAvatarsService } from './user-avatars.service'
 import { UserAvatar } from './entities/user-avatar.entity'
 import { CreateUserAvatarInput, UpdateUserAvatarInput } from './dto/inputs'
+import { ParseUUIDPipe } from '@nestjs/common'
 
 @Resolver( () => UserAvatar )
 export class UserAvatarsResolver {
@@ -23,7 +24,7 @@ export class UserAvatarsResolver {
 
   @Query( () => UserAvatar, { name: 'userAvatar' } )
   async findOne(
-    @Args( 'id', { type: () => ID } ) id : string
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
   ) {
     return await this.userAvatarsService.findOne( id )
   }
@@ -37,7 +38,7 @@ export class UserAvatarsResolver {
 
   @Mutation( () => UserAvatar )
   async deactivateUserAvatar(
-    @Args( 'id', { type: () => ID } ) id : string
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
   ) {
     return await this.userAvatarsService.deactivate( id )
   }

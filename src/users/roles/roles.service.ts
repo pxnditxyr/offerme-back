@@ -2,6 +2,13 @@ import { BadRequestException, Inject, Injectable, InternalServerErrorException, 
 import { CreateRoleInput, UpdateRoleInput } from './dto/inputs'
 import { PrismaService } from '../../prisma'
 import { Role } from './entities/role.entity'
+import { User } from '../users/entities/user.entity'
+
+const roleIncludes = {
+  creator: true,
+  updater: true,
+  users: true,
+}
 
 @Injectable()
 export class RolesService {
@@ -11,10 +18,13 @@ export class RolesService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create( createRoleInput : CreateRoleInput ) : Promise<Role> {
+  async create( createRoleInput : CreateRoleInput, creator : User ) : Promise<Role> {
     try {
       const role = await this.prismaService.roles.create({
-        data: { ...createRoleInput }
+        data: {
+          ...createRoleInput,
+          createdBy: creator.id
+        }
       })
       return role
     } catch ( error ) {
@@ -24,11 +34,7 @@ export class RolesService {
 
   async findAll () {
     const roles = await this.prismaService.roles.findMany({
-      include: {
-        creator: true,
-        updater: true,
-        users: true,
-      }
+      include: { ...roleIncludes }
     })
     return roles
   }
@@ -36,10 +42,7 @@ export class RolesService {
   async findOne ( id : string ) {
     const role = await this.prismaService.roles.findUnique({
       where: { id },
-      include: {
-        creator: true,
-        updater: true,
-      }
+      include: { ...roleIncludes }
     })
     if ( !role ) throw new NotFoundException( `Role with id ${ id } not found` )
     return role
@@ -57,13 +60,14 @@ export class RolesService {
     return role
   }
 
-  async update ( id : string, updateRoleInput: UpdateRoleInput ) : Promise<Role> {
+  async update ( id : string, updateRoleInput: UpdateRoleInput, updater : User ) : Promise<Role> {
     await this.findOne( id )
     try {
       const role = await this.prismaService.roles.update({
         where: { id },
         data: {
           ...updateRoleInput,
+          updatedBy: updater.id
         }
       })
       return role
@@ -72,13 +76,14 @@ export class RolesService {
     }
   }
 
-  async deactivate ( id : string ) : Promise<Role> {
+  async deactivate ( id : string, updater : User ) : Promise<Role> {
     await this.findOne( id )
     try {
       const role = await this.prismaService.roles.update({
         where: { id },
         data: {
           status: false,
+          updatedBy: updater.id
         }
       })
       return role

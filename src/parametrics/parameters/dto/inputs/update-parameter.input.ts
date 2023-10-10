@@ -13,7 +13,7 @@ export class UpdateParameterInput extends PartialType( CreateParameterInput ) {
   @IsBoolean()
   status?: boolean
 
-  //TODO; updatedBy should be required
+  //TODO: updatedBy should be required
   @Field( () => ID, { nullable: true, description: 'Parameter updater' } )
   @IsOptional()
   @IsUUID()

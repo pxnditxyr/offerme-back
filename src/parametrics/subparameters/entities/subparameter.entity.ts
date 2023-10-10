@@ -1,6 +1,6 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { PeopleInfo } from '../../../users/people-info/entities/people-info.entity';
-import { User } from '../../../users/users/entities/user.entity';
+import { ObjectType, Field, ID } from '@nestjs/graphql'
+import { PeopleInfo } from '../../../users/people-info/entities/people-info.entity'
+import { User } from '../../../users/users/entities/user.entity'
 import { Parameter } from '../../parameters/entities/parameter.entity'
 
 @ObjectType()

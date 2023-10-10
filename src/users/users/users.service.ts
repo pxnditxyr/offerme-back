@@ -4,6 +4,16 @@ import { User } from './entities/user.entity'
 import { PrismaService } from '../../prisma'
 import { RolesService } from '../roles/roles.service'
 import { hashSync } from 'bcrypt'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+
+const userIncludes = {
+  peopleInfo: true,
+  role: true,
+  creator: true,
+  updater: true,
+  sessions: true,
+  avatars: true,
+}
 
 @Injectable()
 export class UsersService {
@@ -15,7 +25,7 @@ export class UsersService {
     private readonly rolesService : RolesService
   ) {}
 
-  async create ( createUserInput : CreateUserInput ) : Promise<User> {
+  async create ( createUserInput : CreateUserInput, creator?: User ) : Promise<User> {
     const { roleId } = createUserInput
     await this.rolesService.findOne( roleId )
     try {
@@ -24,7 +34,8 @@ export class UsersService {
       const user = await this.prismaService.users.create({
         data: {
           ...createUserInput,
-          password: hashedPassword
+          password: hashedPassword,
+          createdBy: creator?.id,
         }
       })
       return user
@@ -33,18 +44,18 @@ export class UsersService {
     }
   }
 
-  async findAll () {
-    const users = await this.prismaService.users.findMany({
-      include: {
-        peopleInfo: true,
-        role: true,
-        creator: true,
-        updater: true,
-        sessions: true,
-        avatars: true,
-      }
+  async findAll ( roles : ValidRoles[] ) {
+    if ( roles.length === 0 ) 
+      return await this.prismaService.users.findMany({ include: { ...userIncludes } })
+
+    return await this.prismaService.users.findMany({
+      where: {
+        role: {
+          name: { in: roles }
+        }
+      },
+      include: { ...userIncludes }
     })
-    return users
   }
 
   async findOne ( id : string ) {
@@ -79,14 +90,17 @@ export class UsersService {
     return user
   }
 
-  async update ( id : string, updateUserInput : UpdateUserInput ) : Promise<User> {
+  async update ( id : string, updateUserInput : UpdateUserInput, updater : User ) : Promise<User> {
     await this.findOne( id )
     const { roleId } = updateUserInput
     if( roleId ) await this.rolesService.findOne( roleId )
     try {
       const user = await this.prismaService.users.update({
         where: { id },
-        data: { ...updateUserInput }
+        data: {
+          ...updateUserInput,
+          updatedBy: updater.id
+        }
       })
       return user
     } catch ( error ) {
@@ -94,12 +108,15 @@ export class UsersService {
     }
   }
 
-  async deactivate ( id : string ) : Promise<User> {
+  async deactivate ( id : string, updater : User ) : Promise<User> {
     await this.findOne( id )
     try {
       const user = await this.prismaService.users.update({
         where: { id },
-        data: { status: false }
+        data: {
+          status: false,
+          updatedBy: updater.id
+        }
       })
       return user
     } catch ( error ) {

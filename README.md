@@ -46,7 +46,7 @@ cp .env.example .env
 
 2. Update the `.env` file with your configuration values.
 
-### Database
+### Database 🗄️
 
 1. If you're using a containerized database, you can use Docker Compose to start it: 🐋
 
@@ -59,6 +59,10 @@ docker-compose up -d
 ```bash
 bunx prisma db push
 ```
+### Other considerations 📋
+
+1. In your database, you must record the roles accepted by your system, and the name of each role must be written 📝 in the same way in the file: 
+./src/auth/enums/valid-roles.enum.ts 📂
 
 ## Usage 🚀
 

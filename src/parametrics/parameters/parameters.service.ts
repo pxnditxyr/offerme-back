@@ -3,6 +3,13 @@ import { CreateParameterInput, UpdateParameterInput } from './dto/inputs'
 import { Parameter } from '../parameters/entities/parameter.entity'
 import { PrismaService } from '../../prisma'
 import { isUUID } from 'class-validator'
+import { User } from 'src/users/users/entities/user.entity'
+
+const parameterIncludes = {
+  subparameters: true,
+  creator: true,
+  updater: true,
+}
 
 @Injectable()
 export class ParametersService {
@@ -12,10 +19,13 @@ export class ParametersService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create( createParameterInput : CreateParameterInput ) : Promise<Parameter> {
+  async create( createParameterInput : CreateParameterInput, creator : User ) : Promise<Parameter> {
     try {
       const parameter = await this.prismaService.parameters.create({
-        data: { ...createParameterInput }
+        data: {
+          ...createParameterInput,
+          createdBy: creator.id
+        }
       })
       return parameter
     } catch ( error ) {
@@ -26,11 +36,7 @@ export class ParametersService {
   async findAll() {
     // TODO: don't return parameters with status false
     const parameters = await this.prismaService.parameters.findMany({
-      include: {
-        subparameters: true,
-        creator: true,
-        updater: true
-      }
+      include: { ...parameterIncludes }
     })
     return parameters
   }
@@ -40,33 +46,28 @@ export class ParametersService {
     if ( isUUID( term ) ) {
       const parameter = await this.prismaService.parameters.findUnique({
         where: { id: term },
-        include: {
-          subparameters: true,
-          creator: true,
-          updater: true
-        }
+        include: { ...parameterIncludes }
       })
       if ( !parameter ) throw new NotFoundException( `Parameter ${ term } not found` )
       return parameter
     }
     const parameter = await this.prismaService.parameters.findUnique({
       where: { name: term },
-      include: {
-        subparameters: true,
-        creator: true,
-        updater: true
-      }
+      include: { ...parameterIncludes }
     })
     if ( !parameter ) throw new NotFoundException( `Parameter ${ term } not found` )
     return parameter
   }
 
-  async update( id : string, updateParameterInput : UpdateParameterInput ) {
+  async update( id : string, updateParameterInput : UpdateParameterInput, updater : User ) {
     await this.findOne( id )
     try {
       const parameter = await this.prismaService.parameters.update({
         where: { id },
-        data: { ...updateParameterInput }
+        data: {
+          ...updateParameterInput,
+          updatedBy: updater.id
+        }
       })
       return parameter
     } catch ( error ) {
@@ -74,12 +75,15 @@ export class ParametersService {
     }
   }
 
-  async deactivate ( id : string ) : Promise<Parameter> {
+  async deactivate ( id : string, updater : User ) {
     await this.findOne( id )
     try {
       const parameter = await this.prismaService.parameters.update({
         where: { id },
-        data: { status: false }
+        data: {
+          status: false,
+          updatedBy: updater.id
+        }
       })
       return parameter
     } catch ( error ) {

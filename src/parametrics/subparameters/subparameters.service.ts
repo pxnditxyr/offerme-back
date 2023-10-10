@@ -3,6 +3,13 @@ import { CreateSubparameterInput, UpdateSubparameterInput } from './dto/inputs'
 import { PrismaService } from '../../prisma'
 import { ParametersService } from '../parameters/parameters.service'
 import { Subparameter } from './entities/subparameter.entity'
+import { User } from 'src/users/users/entities/user.entity'
+
+const subparameterIncludes = {
+  parameter: true,
+  creator: true,
+  updater: true,
+}
 
 @Injectable()
 export class SubparametersService {
@@ -14,13 +21,16 @@ export class SubparametersService {
     private readonly parametersService : ParametersService
   ) {}
 
-  async create ( createSubparameterInput : CreateSubparameterInput ) : Promise<Subparameter> {
+  async create ( createSubparameterInput : CreateSubparameterInput, creator : User ) : Promise<Subparameter> {
 
     await this.parametersService.findOne( createSubparameterInput.parameterId )
 
     try {
       const subparameter = await this.prismaService.subparameters.create({
-        data: { ...createSubparameterInput }
+        data: {
+          ...createSubparameterInput,
+          createdBy: creator.id
+        }
       })
       return subparameter
     } catch ( error ) {
@@ -32,11 +42,7 @@ export class SubparametersService {
     // TODO: don't return subparameters with status false
     // TODO: don't return subparameters with parameter status false
     const subparameters = await this.prismaService.subparameters.findMany({
-      include: {
-        parameter: true,
-        creator: true,
-        updater: true
-      }
+      include: { ...subparameterIncludes }
     })
     return subparameters
   }
@@ -46,22 +52,21 @@ export class SubparametersService {
     // TODO: don't return subparameters with parameter status false
     const subparameter = await this.prismaService.subparameters.findUnique({
       where: { id },
-      include: {
-        parameter: true,
-        creator: true,
-        updater: true
-      }
+      include: { ...subparameterIncludes }
     })
     if ( !subparameter ) throw new NotFoundException( `Subparameter with id ${ id } not found` )
     return subparameter
   }
 
-  async update ( id : string, updateSubparameterInput : UpdateSubparameterInput ) : Promise<Subparameter> {
+  async update ( id : string, updateSubparameterInput : UpdateSubparameterInput, updater : User ) : Promise<Subparameter> {
     await this.findOne( id )
     try {
       const subparameter = await this.prismaService.subparameters.update({
         where: { id },
-        data: { ...updateSubparameterInput }
+        data: {
+          ...updateSubparameterInput,
+          updatedBy: updater.id
+        }
       })
       return subparameter
     } catch ( error ) {
@@ -69,12 +74,15 @@ export class SubparametersService {
     }
   }
 
-  async deactivate ( id : string ) : Promise<Subparameter> {
+  async deactivate ( id : string, updater : User ) : Promise<Subparameter> {
     await this.findOne( id )
     try {
       const subparameter = await this.prismaService.subparameters.update({
         where: { id },
-        data: { status: false }
+        data: {
+          status: false,
+          updatedBy: updater.id
+        }
       })
       return subparameter
     } catch ( error ) {
