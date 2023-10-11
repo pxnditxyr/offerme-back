@@ -40,24 +40,25 @@ model Subparameters {
   parameter              Parameters   @relation("subparameters_parameter", fields: [parameterId], references: [id])
   peopleInfoDocumentType PeopleInfo[] @relation("people_info_subparameters_document_type")
   peopleInfoGender       PeopleInfo[] @relation("people_info_subparameters_gender")
+  phoneType              Phones[]     @relation("phones_phone_type")
 
   @@map("subparameters")
 }
 
 model PeopleInfo {
-  id               String   @id @default(uuid())
-  name             String   @db.VarChar(255)
-  paternalSurname  String   @db.VarChar(255)
-  maternalSurname  String   @db.VarChar(255)
-  documentTypeId   String?
-  documentNumber   String?  @db.VarChar(255)
-  birthdate        DateTime @db.Date
-  genderId         String
-  status           Boolean  @default(true)
-  createdAt        DateTime @default(now())
-  createdBy        String?
-  updatedAt        DateTime @updatedAt
-  updatedBy        String?
+  id              String   @id @default(uuid())
+  name            String   @db.VarChar(255)
+  paternalSurname String   @db.VarChar(255)
+  maternalSurname String   @db.VarChar(255)
+  documentTypeId  String?
+  documentNumber  String?  @db.VarChar(255)
+  birthdate       DateTime @db.Date
+  genderId        String
+  status          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  createdBy       String?
+  updatedAt       DateTime @updatedAt
+  updatedBy       String?
 
   creator      Users?         @relation("people_info_created_by", fields: [createdBy], references: [id])
   updater      Users?         @relation("people_info_updated_by", fields: [updatedBy], references: [id])
@@ -85,13 +86,13 @@ model Roles {
 }
 
 model Users {
-  id              String   @id @default(uuid())
+  id              String  @id @default(uuid())
   peopleInfoId    String
   roleId          String
-  email           String   @unique @db.VarChar(255)
-  password        String   @db.VarChar(255)
-  isVerifiedEmail Boolean  @default(false)
-  googleId        String?  @db.VarChar(255)
+  email           String  @unique @db.VarChar(255)
+  password        String  @db.VarChar(255)
+  isVerifiedEmail Boolean @default(false)
+  googleId        String? @db.VarChar(255)
 
   status    Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -118,9 +119,19 @@ model Users {
   updatedUserAvatars   UserAvatars[]   @relation("user_avatars_updated_by")
   createdSessions      Sessions[]      @relation("sessions_created_by")
   updatedSessions      Sessions[]      @relation("sessions_updated_by")
+  createdPhones        Phones[]        @relation("phones_created_by")
+  updatedPhones        Phones[]        @relation("phones_updated_by")
+  createdAddresses     Addresses[]     @relation("addresses_created_by")
+  updatedAddresses     Addresses[]     @relation("addresses_updated_by")
+  createdUserPhones    UserPhones[]    @relation("user_phones_created_by")
+  updatedUserPhones    UserPhones[]    @relation("user_phones_updated_by")
+  createdUserAddresses UserAddresses[] @relation("user_addresses_created_by")
+  updatedUserAddresses UserAddresses[] @relation("user_addresses_updated_by")
 
-  avatars  UserAvatars[] @relation("user_avatars_user")
-  sessions Sessions[]    @relation("sessions_user")
+  avatars   UserAvatars[]   @relation("user_avatars_user")
+  sessions  Sessions[]      @relation("sessions_user")
+  phones    UserPhones[]    @relation("user_phones_user")
+  addresses UserAddresses[] @relation("user_addresses_user")
 
   @@map("users")
 }
@@ -136,7 +147,7 @@ model UserAvatars {
   updatedAt DateTime @updatedAt
   updatedBy String?
 
-  creator Users?  @relation("user_avatars_created_by", fields: [createdBy], references: [id])
+  creator Users? @relation("user_avatars_created_by", fields: [createdBy], references: [id])
   updater Users? @relation("user_avatars_updated_by", fields: [updatedBy], references: [id])
   user    Users  @relation("user_avatars_user", fields: [userId], references: [id])
 
@@ -163,4 +174,83 @@ model Sessions {
   user    Users  @relation("sessions_user", fields: [userId], references: [id])
 
   @@map("sessions")
+}
+
+model Phones {
+  id          String   @id @default(uuid())
+  phoneTypeId String
+  number      String   @db.VarChar(255)
+  status      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  phoneType Subparameters @relation("phones_phone_type", fields: [phoneTypeId], references: [id])
+  creator   Users?        @relation("phones_created_by", fields: [createdBy], references: [id])
+  updater   Users?        @relation("phones_updated_by", fields: [updatedBy], references: [id])
+
+  users UserPhones[] @relation("user_phones_phone")
+
+  @@map("phones")
+}
+
+model Addresses {
+  id        String   @id @default(uuid())
+  street    String   @db.VarChar(255)
+  city      String   @db.VarChar(255)
+  state     String   @db.VarChar(255)
+  country   String   @db.VarChar(255)
+  zipCode   String   @db.VarChar(255)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  creator Users? @relation("addresses_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("addresses_updated_by", fields: [updatedBy], references: [id])
+
+  users UserAddresses[] @relation("user_addresses_address")
+
+  @@map("addresses")
+}
+
+model UserPhones {
+  id         String   @id @default(uuid())
+  userId     String
+  phoneId    String
+  isVerified Boolean  @default(false)
+  isMain     Boolean  @default(true)
+  status     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  createdBy  String?
+  updatedAt  DateTime @updatedAt
+  updatedBy  String?
+
+  user    Users  @relation("user_phones_user", fields: [userId], references: [id])
+  phone   Phones @relation("user_phones_phone", fields: [phoneId], references: [id])
+  creator Users? @relation("user_phones_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("user_phones_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("user_phones")
+}
+
+model UserAddresses {
+  id        String   @id @default(uuid())
+  userId    String
+  addressId String
+  isMain    Boolean  @default(true)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  user    Users     @relation("user_addresses_user", fields: [userId], references: [id])
+  address Addresses @relation("user_addresses_address", fields: [addressId], references: [id])
+  creator Users?    @relation("user_addresses_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("user_addresses_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("user_addresses")
 }
