@@ -11,8 +11,44 @@ import {
   UsersModule,
   RolesModule,
   SessionsModule,
+  UserPhonesModule,
+  UserAdressesModule,
+  UserCreditCardsModule,
 } from './users'
-import { AuthModule } from './auth/auth.module'
+import { AuthModule } from './auth'
+import { PhonesModule, AddressesModule } from './contact-information'
+
+import {
+  CompaniesModule,
+  CompanyUsersModule,
+  CompanyCategoriesModule,
+  CompanyAddressesModule,
+  CompanyPhonesModule,
+  CompanyReviewsModule,
+  CompanyLogosModule,
+
+} from './companies'
+
+import {
+  PromotionReviewsModule,
+  CodePromotionDiscountProductsModule,
+  PromotionsModule,
+  PromotionStatusModule,
+  PromotionPaymentsModule,
+  DiscountProductsModule,
+  PromotionTargetProductsModule,
+  PromotionImagesModule,
+  PromotionRequestsModule,
+  
+} from './promotions'
+
+import { CreditCardsModule } from './payments'
+
+import { CategoriesModule, CategoryImagesModule  } from './categories'
+
+import { ProductsModule, ProductImagesModule, ProductCategoriesModule } from './products'
+
+import { ReviewsModule, CommentsModule  } from './reviews'
 
 @Module({
   imports: [
@@ -25,14 +61,10 @@ import { AuthModule } from './auth/auth.module'
         ApolloServerPluginLandingPageLocalDefault(),
       ]
     }),
-    ParametersModule,
-    SubparametersModule,
-    PeopleInfoModule,
-    UsersModule,
-    UserAvatarsModule,
-    RolesModule,
-    SessionsModule,
-    AuthModule,
+    ParametersModule, SubparametersModule,
+    PeopleInfoModule, UsersModule, RolesModule, SessionsModule,
+    UserAvatarsModule, UserPhonesModule, UserAdressesModule, AuthModule,
+    PhonesModule, AddressesModule, CompaniesModule, CompanyLogosModule, CompanyPhonesModule, CompanyAddressesModule, CategoriesModule, CategoryImagesModule, CompanyCategoriesModule, ProductsModule, ProductImagesModule, ProductCategoriesModule, CompanyUsersModule, CreditCardsModule, UserCreditCardsModule, PromotionRequestsModule, PromotionImagesModule, PromotionTargetProductsModule, DiscountProductsModule, PromotionStatusModule, PromotionPaymentsModule, PromotionsModule, CodePromotionDiscountProductsModule, ReviewsModule, CommentsModule, PromotionReviewsModule, CompanyReviewsModule,
   ]
 })
 export class AppModule {}

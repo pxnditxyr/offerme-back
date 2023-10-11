@@ -41,6 +41,14 @@ model Subparameters {
   peopleInfoDocumentType PeopleInfo[] @relation("people_info_subparameters_document_type")
   peopleInfoGender       PeopleInfo[] @relation("people_info_subparameters_gender")
   phoneType              Phones[]     @relation("phones_phone_type")
+  companyType            Companies[]  @relation("companies_company_type")
+  companyDocumentType    Companies[]  @relation("companies_document_type")
+  productType            Products[]   @relation("products_product_type")
+  creditCardType               CreditCards[] @relation("credit_cards_card_type")
+  promotionRequestType          PromotionRequests[] @relation("promotion_request_promotion_type")
+  paymentMethod          PromotionPayments[] @relation("promotion_payments_payment_method")
+  promotionType          Promotions[] @relation("promotions_promotion_type")
+
 
   @@map("subparameters")
 }
@@ -127,11 +135,72 @@ model Users {
   updatedUserPhones    UserPhones[]    @relation("user_phones_updated_by")
   createdUserAddresses UserAddresses[] @relation("user_addresses_created_by")
   updatedUserAddresses UserAddresses[] @relation("user_addresses_updated_by")
+  createdCompanies     Companies[]     @relation("companies_created_by")
+  updatedCompanies     Companies[]     @relation("companies_updated_by")
+  createdCompanyLogos  CompanyLogos[]  @relation("company_logos_created_by")
+  updatedCompanyLogos  CompanyLogos[]  @relation("company_logos_updated_by")
+  createdCompanyPhones CompanyPhones[] @relation("company_phones_created_by")
+  updatedCompanyPhones CompanyPhones[] @relation("company_phones_updated_by")
+  createdCompanyAddresses CompanyAddresses[] @relation("company_addresses_created_by")
+  updatedCompanyAddresses CompanyAddresses[] @relation("company_addresses_updated_by")
+  createdCategories    Categories[]    @relation("categories_created_by")
+  updatedCategories    Categories[]    @relation("categories_updated_by")
+  createdCategoryImages CategoryImages[] @relation("category_images_created_by")
+  updatedCategoryImages CategoryImages[] @relation("category_images_updated_by")
+  createdProducts      Products[]      @relation("products_created_by")
+  updatedProducts      Products[]      @relation("products_updated_by")
+  createdProductImages ProductImages[] @relation("product_images_created_by")
+  updatedProductImages ProductImages[] @relation("product_images_updated_by")
+  createdCompanyCategories CompanyCategories[] @relation("company_categories_created_by")
+  updatedCompanyCategories CompanyCategories[] @relation("company_categories_updated_by")
+  createdProductCategories ProductCategories[] @relation("product_categories_created_by")
+  updatedProductCategories ProductCategories[] @relation("product_categories_updated_by")
+  createdCreditCards   CreditCards[]   @relation("credit_cards_created_by")
+  updatedCreditCards   CreditCards[]   @relation("credit_cards_updated_by")
+  createdUserCreditCards UserCreditCards[] @relation("user_credit_cards_created_by")
+  updatedUserCreditCards UserCreditCards[] @relation("user_credit_cards_updated_by")
+  createdCampanyUsers  CampanyUsers[]  @relation("campany_users_created_by")
+  updatedCampanyUsers  CampanyUsers[]  @relation("campany_users_updated_by")
+  createdPromotionRequest PromotionRequests[] @relation("promotion_request_created_by")
+  updatedPromotionRequest PromotionRequests[] @relation("promotion_request_updated_by")
+  createdPromotionImages PromotionImages[] @relation("promotion_images_created_by")
+  updatedPromotionImages PromotionImages[] @relation("promotion_images_updated_by")
+  createdPromotionTargetProducts PromotionTargetProducts[] @relation("promotion_target_products_created_by")
+  updatedPromotionTargetProducts PromotionTargetProducts[] @relation("promotion_target_products_updated_by")
+  createdPromotionStatus PromotionStatus[] @relation("promotion_status_created_by")
+  updatedPromotionStatus PromotionStatus[] @relation("promotion_status_updated_by")
+  createdPromotionPayments PromotionPayments[] @relation("promotion_payments_created_by")
+  updatedPromotionPayments PromotionPayments[] @relation("promotion_payments_updated_by")
+  createdPromotions Promotions[] @relation("promotions_created_by")
+  updatedPromotions Promotions[] @relation("promotions_updated_by")
+  createdDiscountProducts DiscountProducts[] @relation("discount_products_created_by")
+  updatedDiscountProducts DiscountProducts[] @relation("discount_products_updated_by")
+  createdCodePromotion CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_created_by")
+  updatedCodePromotion CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_updated_by")
+  createdReviews Reviews[] @relation("reviews_created_by")
+  updatedReviews Reviews[] @relation("reviews_updated_by")
+  createdComments Comments[] @relation("comments_created_by")
+  updatedComments Comments[] @relation("comments_updated_by")
+  createdPromotionReviews PromotionReviews[] @relation("promotion_reviews_created_by")
+  updatedPromotionReviews PromotionReviews[] @relation("promotion_reviews_updated_by")
+  createdCompanyReviews CompanyReviews[] @relation("company_reviews_created_by")
+  updatedCompanyReviews CompanyReviews[] @relation("company_reviews_updated_by")
 
   avatars   UserAvatars[]   @relation("user_avatars_user")
   sessions  Sessions[]      @relation("sessions_user")
   phones    UserPhones[]    @relation("user_phones_user")
   addresses UserAddresses[] @relation("user_addresses_user")
+  creditCards UserCreditCards[] @relation("user_credit_cards_user")
+  companies CampanyUsers[]  @relation("campany_users_user")
+  promotionRequests PromotionRequests[] @relation("promotion_request_requesting_user")
+  approvedPromotionRequests PromotionStatus[] @relation("promotion_status_admin_approved_by")
+  rejectedPromotionRequests PromotionStatus[] @relation("promotion_status_admin_rejected_by")
+  discountProducts DiscountProducts[] @relation("discount_products_user")
+  usedCodePromotion CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_user")
+  reviews Reviews[] @relation("reviews_user")
+  comments Comments[] @relation("comments_user")
+  promotions Promotions[] @relation("promotions_user")
+  promotionReviews PromotionReviews[] @relation("promotion_reviews_user")
 
   @@map("users")
 }
@@ -191,17 +260,18 @@ model Phones {
   updater   Users?        @relation("phones_updated_by", fields: [updatedBy], references: [id])
 
   users UserPhones[] @relation("user_phones_phone")
+  companies CompanyPhones[] @relation("company_phones_phone")
 
   @@map("phones")
 }
 
 model Addresses {
   id        String   @id @default(uuid())
-  street    String   @db.VarChar(255)
+  street    String?   @db.VarChar(255)
   city      String   @db.VarChar(255)
   state     String   @db.VarChar(255)
   country   String   @db.VarChar(255)
-  zipCode   String   @db.VarChar(255)
+  zipCode   String?   @db.VarChar(255)
   status    Boolean  @default(true)
   createdAt DateTime @default(now())
   createdBy String?
@@ -212,6 +282,7 @@ model Addresses {
   updater Users? @relation("addresses_updated_by", fields: [updatedBy], references: [id])
 
   users UserAddresses[] @relation("user_addresses_address")
+  companies CompanyAddresses[] @relation("company_addresses_address")
 
   @@map("addresses")
 }
@@ -253,4 +324,560 @@ model UserAddresses {
   updater Users?    @relation("user_addresses_updated_by", fields: [updatedBy], references: [id])
 
   @@map("user_addresses")
+}
+
+model Companies {
+  id          String   @id @default(uuid())
+  name        String   @db.VarChar(255)
+  description String   @db.VarChar(255)
+  companyTypeId String
+  documentTypeId String
+  documentNumber String @db.VarChar(255)
+  website     String   @db.VarChar(255)
+  email       String   @db.VarChar(255)
+  foundedAt   DateTime @db.Date
+  status      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  createdBy   String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  companyType Subparameters @relation("companies_company_type", fields: [companyTypeId], references: [id])
+  documentType Subparameters @relation("companies_document_type", fields: [documentTypeId], references: [id])
+  creator Users? @relation("companies_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("companies_updated_by", fields: [updatedBy], references: [id])
+
+  logos CompanyLogos[] @relation("company_logos_company")
+  phones CompanyPhones[] @relation("company_phones_company")
+  addresses CompanyAddresses[] @relation("company_addresses_company")
+  products Products[] @relation("products_company")
+  categories CompanyCategories[] @relation("company_categories_company")
+  users CampanyUsers[] @relation("campany_users_company")
+  promotionRequests PromotionRequests[] @relation("promotion_request_company")
+  promotions Promotions[] @relation("promotions_company")
+  reviews CompanyReviews[] @relation("company_reviews_company")
+
+  @@map("companies")
+}
+
+model CompanyLogos {
+  id       String   @id @default(uuid())
+  companyId String
+  url      String   @db.VarChar(255)
+  isMain   Boolean  @default(true)
+  status   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("company_logos_company", fields: [companyId], references: [id])
+  creator Users?    @relation("company_logos_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("company_logos_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("company_logos")
+}
+
+model CompanyPhones {
+  id       String   @id @default(uuid())
+  companyId String
+  phoneId  String
+  status   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("company_phones_company", fields: [companyId], references: [id])
+  phone   Phones    @relation("company_phones_phone", fields: [phoneId], references: [id])
+  creator Users?    @relation("company_phones_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("company_phones_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("company_phones")
+}
+
+model CompanyAddresses {
+  id       String   @id @default(uuid())
+  companyId String
+  addressId String
+  name     String   @db.VarChar(255)
+  description String @db.VarChar(255)
+  status   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("company_addresses_company", fields: [companyId], references: [id])
+  address Addresses @relation("company_addresses_address", fields: [addressId], references: [id])
+  creator Users?    @relation("company_addresses_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("company_addresses_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("company_addresses")
+}
+
+model Categories {
+  id       String   @id @default(uuid())
+  name     String   @db.VarChar(255)
+  description String @db.VarChar(255)
+  level    Int      @default(0)
+  parentId String?
+  status   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  parent   Categories? @relation("categories_parent", fields: [parentId], references: [id])
+  children Categories[] @relation("categories_parent")
+  creator Users? @relation("categories_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("categories_updated_by", fields: [updatedBy], references: [id])
+
+  images CategoryImages[] @relation("category_images_category")
+  companies CompanyCategories[] @relation("company_categories_category")
+  products ProductCategories[] @relation("product_categories_category")
+
+  @@map("categories")
+}
+
+model CategoryImages {
+  id      String   @id @default(uuid())
+  categoryId String
+  url     String   @db.VarChar(255)
+  isMain  Boolean  @default(true)
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  category Categories @relation("category_images_category", fields: [categoryId], references: [id])
+  creator  Users?     @relation("category_images_created_by", fields: [createdBy], references: [id])
+  updater  Users?     @relation("category_images_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("category_images")
+}
+
+model CompanyCategories {
+  id      String   @id @default(uuid())
+  companyId String
+  categoryId String
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("company_categories_company", fields: [companyId], references: [id])
+  category Categories @relation("company_categories_category", fields: [categoryId], references: [id])
+  creator  Users?     @relation("company_categories_created_by", fields: [createdBy], references: [id])
+  updater  Users?     @relation("company_categories_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("company_categories")
+}
+
+model CampanyUsers {
+  id       String   @id @default(uuid())
+  companyId String
+  userId   String
+  status   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("campany_users_company", fields: [companyId], references: [id])
+  user    Users     @relation("campany_users_user", fields: [userId], references: [id])
+  creator Users?    @relation("campany_users_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("campany_users_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("campany_users")
+}
+
+model Products {
+  id      String   @id @default(uuid())
+  name    String   @db.VarChar(255)
+  description String @db.VarChar(255)
+  companyId String
+  productTypeId String
+  stock   Int      @default(0)
+  price   Float    @default(0)
+  code    String   @unique @db.VarChar(255)
+  notes  String   @db.VarChar(255)
+  
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("products_company", fields: [companyId], references: [id])
+  productType Subparameters @relation("products_product_type", fields: [productTypeId], references: [id])
+  creator  Users?     @relation("products_created_by", fields: [createdBy], references: [id])
+  updater  Users?     @relation("products_updated_by", fields: [updatedBy], references: [id])
+
+  images ProductImages[] @relation("product_images_product")
+  categories ProductCategories[] @relation("product_categories_product")
+  promotionRequests PromotionTargetProducts[] @relation("promotion_target_products_product")
+  discountProducts DiscountProducts[] @relation("discount_products_product")
+
+  @@map("products")
+}
+
+model ProductImages {
+  id     String   @id @default(uuid())
+  productId String
+  url    String   @db.VarChar(255)
+  isMain Boolean  @default(true)
+  status Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  product Products @relation("product_images_product", fields: [productId], references: [id])
+  creator Users?    @relation("product_images_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("product_images_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("product_images")
+}
+
+model ProductCategories {
+  id      String   @id @default(uuid())
+  productId String
+  categoryId String
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  product Products @relation("product_categories_product", fields: [productId], references: [id])
+  category Categories @relation("product_categories_category", fields: [categoryId], references: [id])
+  creator  Users?     @relation("product_categories_created_by", fields: [createdBy], references: [id])
+  updater  Users?     @relation("product_categories_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("product_categories")
+}
+
+model CreditCards {
+  id        String   @id @default(uuid())
+  creditCardTypeId String
+  number    String   @db.VarChar(255)
+  expMonth  String   @db.VarChar(255)
+  expYear   String   @db.VarChar(255)
+  cvv       String   @db.VarChar(255)
+  isMain    Boolean  @default(true)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  creditCardType Subparameters @relation("credit_cards_card_type", fields: [creditCardTypeId], references: [id])
+  creator Users? @relation("credit_cards_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("credit_cards_updated_by", fields: [updatedBy], references: [id])
+
+  users UserCreditCards[] @relation("user_credit_cards_credit_card")
+  promotionPayments PromotionPayments[] @relation("promotion_payments_credit_card")
+
+  @@map("credit_cards")
+}
+
+model UserCreditCards {
+  id       String   @id @default(uuid())
+  userId   String
+  creditCardId String
+  status   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  user    Users  @relation("user_credit_cards_user", fields: [userId], references: [id])
+  creditCard   CreditCards @relation("user_credit_cards_credit_card", fields: [creditCardId], references: [id])
+  creator Users? @relation("user_credit_cards_created_by", fields: [createdBy], references: [id])
+  updater Users? @relation("user_credit_cards_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("user_credit_cards")
+}
+
+model PromotionRequests {
+  id        String   @id @default(uuid())
+  requestingUserId String
+  companyId String
+  title     String   @db.VarChar(255)
+  code      String   @db.VarChar(255)
+  description String @db.VarChar(255)
+  promotionTypeId String
+  reason    String   @db.VarChar(255)
+  comment   String   @db.VarChar(255)
+  promotionStartAt DateTime @db.Date
+  promotionEndAt DateTime @db.Date
+  inversionAmount Float @default(0)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  requestingUser Users @relation("promotion_request_requesting_user", fields: [requestingUserId], references: [id])
+  company Companies @relation("promotion_request_company", fields: [companyId], references: [id])
+  promotionType Subparameters @relation("promotion_request_promotion_type", fields: [promotionTypeId], references: [id])
+  creator Users?    @relation("promotion_request_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotion_request_updated_by", fields: [updatedBy], references: [id])
+
+  images PromotionImages[] @relation("promotion_images_promotion_request")
+  targetProducts PromotionTargetProducts[] @relation("promotion_target_products_promotion_request")
+  promotionStatus PromotionStatus[] @relation("promotion_status_promotion_request")
+  promotionPayments PromotionPayments[] @relation("promotion_payments_promotion_request")
+  discountProducts DiscountProducts[] @relation("discount_products_promotion_request")
+
+  @@map("promotion_requests")
+}
+
+model PromotionImages {
+  id        String   @id @default(uuid())
+  promotionRequestId String
+  url       String   @db.VarChar(255)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  promotionRequest PromotionRequests @relation("promotion_images_promotion_request", fields: [promotionRequestId], references: [id])
+  creator Users?    @relation("promotion_images_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotion_images_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("promotion_images")
+}
+
+model PromotionTargetProducts {
+  id       String   @id @default(uuid())
+  promotionRequestId String
+  productId String
+  description String @db.VarChar(255)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  promotionRequest PromotionRequests @relation("promotion_target_products_promotion_request", fields: [promotionRequestId], references: [id])
+  product Products @relation("promotion_target_products_product", fields: [productId], references: [id])
+  creator Users?    @relation("promotion_target_products_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotion_target_products_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("promotion_target_products")
+}
+
+model DiscountProducts {
+  id       String   @id @default(uuid())
+  productId String
+  userId   String
+  promotionRequestId String
+  title    String   @db.VarChar(255)
+  description String @db.VarChar(255)
+  discountPercentage Float @default(0)
+  discountAmount Float @default(0)
+  discountPrice Float @default(0)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  product Products @relation("discount_products_product", fields: [productId], references: [id])
+  user    Users  @relation("discount_products_user", fields: [userId], references: [id])
+  promotionRequest PromotionRequests @relation("discount_products_promotion_request", fields: [promotionRequestId], references: [id])
+  creator Users?    @relation("discount_products_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("discount_products_updated_by", fields: [updatedBy], references: [id])
+  codePromotion CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_discount_product")
+
+  @@map("discount_products")
+}
+
+model PromotionStatus {
+  id       String   @id @default(uuid())
+  promotionRequestId String
+  adminApprovedStatus Boolean @default(false)
+  adminApprovedAt DateTime? @db.Date
+  adminApprovedBy String?
+  adminRejectedStatus Boolean @default(false)
+  adminRejectedAt DateTime? @db.Date
+  adminRejectedBy String?
+  adminComment String @db.VarChar(255)
+  adminReason String @db.VarChar(255)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  promotionRequest PromotionRequests @relation("promotion_status_promotion_request", fields: [promotionRequestId], references: [id])
+  adminApproved Users?    @relation("promotion_status_admin_approved_by", fields: [adminApprovedBy], references: [id])
+  adminRejected Users?    @relation("promotion_status_admin_rejected_by", fields: [adminRejectedBy], references: [id])
+  creator Users?    @relation("promotion_status_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotion_status_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("promotion_status")
+}
+
+model PromotionPayments {
+  id      String   @id @default(uuid())
+  promotionRequestId String
+  paymentMethodId String
+  amount  Float    @default(0)
+  creditCardId String?
+  voucher String?
+  paymentDate DateTime @db.Date @default(now())
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  promotionRequest PromotionRequests @relation("promotion_payments_promotion_request", fields: [promotionRequestId], references: [id])
+  paymentMethod Subparameters @relation("promotion_payments_payment_method", fields: [paymentMethodId], references: [id])
+  creditCard CreditCards? @relation("promotion_payments_credit_card", fields: [creditCardId], references: [id])
+  creator Users?    @relation("promotion_payments_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotion_payments_updated_by", fields: [updatedBy], references: [id])
+
+  promotions Promotions[] @relation("promotions_promotion_payment")
+
+  @@map("promotion_payments")
+}
+
+model Promotions {
+  id     String   @id @default(uuid())
+  userId String
+  companyId String
+  promotionPaymentId String
+  title     String   @db.VarChar(255)
+  code      String   @db.VarChar(255) @unique
+  description String @db.VarChar(255)
+  promotionTypeId String
+  reason    String   @db.VarChar(255)
+  comment   String   @db.VarChar(255)
+  promotionStartAt DateTime @db.Date
+  promotionEndAt DateTime @db.Date
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String? 
+
+  user    Users @relation("promotions_user", fields: [userId], references: [id])
+  company Companies @relation("promotions_company", fields: [companyId], references: [id])
+  promotionType Subparameters @relation("promotions_promotion_type", fields: [promotionTypeId], references: [id])
+  promotionPayment PromotionPayments @relation("promotions_promotion_payment", fields: [promotionPaymentId], references: [id])
+  creator Users?    @relation("promotions_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotions_updated_by", fields: [updatedBy], references: [id])
+
+  reviews PromotionReviews[] @relation("promotion_reviews_promotion")
+  
+  @@map("promotions")
+}
+
+model CodePromotionDiscountProducts {
+  id      String   @id @default(uuid())
+  code    String   @db.VarChar(255) @unique
+  discounctProductId String
+  used    Boolean  @default(false)
+  usedAt  DateTime? @db.Date
+  usedBy  String?
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  discountProduct DiscountProducts @relation("code_promotion_discount_products_discount_product", fields: [discounctProductId], references: [id])
+  user    Users?    @relation("code_promotion_discount_products_user", fields: [usedBy], references: [id])
+  creator Users?    @relation("code_promotion_discount_products_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("code_promotion_discount_products_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("code_promotion_discount_products")
+}
+
+model Reviews {
+  id      String   @id @default(uuid())
+  userId  String
+  review String   @db.VarChar(255)
+  rating  Int      @default(0)
+  reviewDate DateTime @db.Date @default(now())
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  user    Users  @relation("reviews_user", fields: [userId], references: [id])
+  creator Users?    @relation("reviews_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("reviews_updated_by", fields: [updatedBy], references: [id])
+
+  comments Comments[] @relation("comments_review")
+  promotionReviews PromotionReviews[] @relation("promotion_reviews_review")
+  companyReviews CompanyReviews[] @relation("company_reviews_review")
+
+  @@map("reviews")
+}
+
+model Comments {
+  id     String   @id @default(uuid())
+  userId String
+  reviewId String
+  comment String   @db.VarChar(255)
+  commentDate DateTime @db.Date @default(now())
+  status Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  user    Users  @relation("comments_user", fields: [userId], references: [id])
+  review Reviews @relation("comments_review", fields: [reviewId], references: [id])
+  creator Users?    @relation("comments_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("comments_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("comments")
+}
+
+model PromotionReviews {
+  id      String   @id @default(uuid())
+  reviewId String
+  userId  String
+  promotionId String
+  status  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  review Reviews @relation("promotion_reviews_review", fields: [reviewId], references: [id])
+  user    Users  @relation("promotion_reviews_user", fields: [userId], references: [id])
+  promotion Promotions @relation("promotion_reviews_promotion", fields: [promotionId], references: [id])
+  creator Users?    @relation("promotion_reviews_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("promotion_reviews_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("promotion_reviews")
+}
+
+model CompanyReviews {
+  id     String   @id @default(uuid())
+  reviewId String
+  companyId String
+  status Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  review Reviews @relation("company_reviews_review", fields: [reviewId], references: [id])
+  company Companies @relation("company_reviews_company", fields: [companyId], references: [id])
+  creator Users?    @relation("company_reviews_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("company_reviews_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("company_reviews")
 }

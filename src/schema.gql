@@ -125,6 +125,21 @@ type Parameter {
   subparameters: [Subparameter!]!
 }
 
+type UserPhone {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type UserAdress {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type UserCreditCard {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type PeopleInfoResponse {
   id: ID!
   name: String!
@@ -151,6 +166,149 @@ type AuthResponse {
   user: UserResponse!
 }
 
+type Phone {
+  id: ID!
+  phoneTypeId: ID!
+  number: String!
+}
+
+type Address {
+  id: ID!
+  street: String
+  city: String!
+  state: String!
+  country: String!
+  zipCode: String
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: User
+  updater: User
+  users: [User!]
+}
+
+type Company {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CompanyLogo {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CompanyUser {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CompanyPhone {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CompanyReview {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CompanyAddress {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CompanyCategory {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Promotion {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionImage {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionTargetProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionStatus {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionPayment {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionRequest {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionReview {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CodePromotionDiscountProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type DiscountProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CreditCard {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Category {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CategoryImage {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Product {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type ProductImage {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type ProductCategory {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Review {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Comment {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -162,11 +320,68 @@ type Query {
   user(id: ID!): User!
   roles: [Role!]!
   role(id: ID!): Role!
-  userAvatars: [UserAvatar!]!
-  userAvatar(id: ID!): UserAvatar!
   sessions: [Session!]!
   session(id: ID!): Session!
+  userAvatars: [UserAvatar!]!
+  userAvatar(id: ID!): UserAvatar!
+  userPhones: [UserPhone!]!
+  userPhone(id: Int!): UserPhone!
+  userAdresses: [UserAdress!]!
+  userAdress(id: Int!): UserAdress!
   revalidateToken: AuthResponse!
+  phones: [Phone!]!
+  phone(id: Int!): Phone!
+  addresses: [Address!]!
+  address(id: Int!): Address!
+  companies: [Company!]!
+  company(id: Int!): Company!
+  companyLogos: [CompanyLogo!]!
+  companyLogo(id: Int!): CompanyLogo!
+  companyPhones: [CompanyPhone!]!
+  companyPhone(id: Int!): CompanyPhone!
+  companyAddresses: [CompanyAddress!]!
+  companyAddress(id: Int!): CompanyAddress!
+  categories: [Category!]!
+  category(id: Int!): Category!
+  categoryImages: [CategoryImage!]!
+  categoryImage(id: Int!): CategoryImage!
+  companyCategories: [CompanyCategory!]!
+  companyCategory(id: Int!): CompanyCategory!
+  products: [Product!]!
+  product(id: Int!): Product!
+  productImages: [ProductImage!]!
+  productImage(id: Int!): ProductImage!
+  productCategories: [ProductCategory!]!
+  productCategory(id: Int!): ProductCategory!
+  companyUsers: [CompanyUser!]!
+  companyUser(id: Int!): CompanyUser!
+  creditCards: [CreditCard!]!
+  creditCard(id: Int!): CreditCard!
+  userCreditCards: [UserCreditCard!]!
+  userCreditCard(id: Int!): UserCreditCard!
+  promotionRequests: [PromotionRequest!]!
+  promotionRequest(id: Int!): PromotionRequest!
+  promotionImages: [PromotionImage!]!
+  promotionImage(id: Int!): PromotionImage!
+  promotionTargetProducts: [PromotionTargetProduct!]!
+  promotionTargetProduct(id: Int!): PromotionTargetProduct!
+  discountProducts: [DiscountProduct!]!
+  discountProduct(id: Int!): DiscountProduct!
+  promotionStatus(id: Int!): PromotionStatus!
+  promotionPayments: [PromotionPayment!]!
+  promotionPayment(id: Int!): PromotionPayment!
+  promotions: [Promotion!]!
+  promotion(id: Int!): Promotion!
+  codePromotionDiscountProducts: [CodePromotionDiscountProduct!]!
+  codePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
+  reviews: [Review!]!
+  review(id: Int!): Review!
+  comments: [Comment!]!
+  comment(id: Int!): Comment!
+  promotionReviews: [PromotionReview!]!
+  promotionReview(id: Int!): PromotionReview!
+  companyReviews: [CompanyReview!]!
+  companyReview(id: Int!): CompanyReview!
 }
 
 enum ValidRoles {
@@ -193,6 +408,93 @@ type Mutation {
   createUserAvatar(createUserAvatarInput: CreateUserAvatarInput!): UserAvatar!
   updateUserAvatar(updateUserAvatarInput: UpdateUserAvatarInput!): UserAvatar!
   deactivateUserAvatar(id: ID!): UserAvatar!
+  createUserPhone(createUserPhoneInput: CreateUserPhoneInput!): UserPhone!
+  updateUserPhone(updateUserPhoneInput: UpdateUserPhoneInput!): UserPhone!
+  removeUserPhone(id: Int!): UserPhone!
+  createUserAdress(createUserAdressInput: CreateUserAdressInput!): UserAdress!
+  updateUserAdress(updateUserAdressInput: UpdateUserAdressInput!): UserAdress!
+  removeUserAdress(id: Int!): UserAdress!
+  createPhone(createPhoneInput: CreatePhoneInput!): Phone!
+  updatePhone(updatePhoneInput: UpdatePhoneInput!): Phone!
+  removePhone(id: Int!): Phone!
+  createAddress(createAddressInput: CreateAddressInput!): Address!
+  updateAddress(updateAddressInput: UpdateAddressInput!): Address!
+  removeAddress(id: Int!): Address!
+  createCompany(createCompanyInput: CreateCompanyInput!): Company!
+  updateCompany(updateCompanyInput: UpdateCompanyInput!): Company!
+  removeCompany(id: Int!): Company!
+  createCompanyLogo(createCompanyLogoInput: CreateCompanyLogoInput!): CompanyLogo!
+  updateCompanyLogo(updateCompanyLogoInput: UpdateCompanyLogoInput!): CompanyLogo!
+  removeCompanyLogo(id: Int!): CompanyLogo!
+  createCompanyPhone(createCompanyPhoneInput: CreateCompanyPhoneInput!): CompanyPhone!
+  updateCompanyPhone(updateCompanyPhoneInput: UpdateCompanyPhoneInput!): CompanyPhone!
+  removeCompanyPhone(id: Int!): CompanyPhone!
+  createCompanyAddress(createCompanyAddressInput: CreateCompanyAddressInput!): CompanyAddress!
+  updateCompanyAddress(updateCompanyAddressInput: UpdateCompanyAddressInput!): CompanyAddress!
+  removeCompanyAddress(id: Int!): CompanyAddress!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
+  removeCategory(id: Int!): Category!
+  createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
+  updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
+  removeCategoryImage(id: Int!): CategoryImage!
+  createCompanyCategory(createCompanyCategoryInput: CreateCompanyCategoryInput!): CompanyCategory!
+  updateCompanyCategory(updateCompanyCategoryInput: UpdateCompanyCategoryInput!): CompanyCategory!
+  removeCompanyCategory(id: Int!): CompanyCategory!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product!
+  createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
+  updateProductImage(updateProductImageInput: UpdateProductImageInput!): ProductImage!
+  removeProductImage(id: Int!): ProductImage!
+  createProductCategory(createProductCategoryInput: CreateProductCategoryInput!): ProductCategory!
+  updateProductCategory(updateProductCategoryInput: UpdateProductCategoryInput!): ProductCategory!
+  removeProductCategory(id: Int!): ProductCategory!
+  createCompanyUser(createCompanyUserInput: CreateCompanyUserInput!): CompanyUser!
+  updateCompanyUser(updateCompanyUserInput: UpdateCompanyUserInput!): CompanyUser!
+  removeCompanyUser(id: Int!): CompanyUser!
+  createCreditCard(createCreditCardInput: CreateCreditCardInput!): CreditCard!
+  updateCreditCard(updateCreditCardInput: UpdateCreditCardInput!): CreditCard!
+  removeCreditCard(id: Int!): CreditCard!
+  createUserCreditCard(createUserCreditCardInput: CreateUserCreditCardInput!): UserCreditCard!
+  updateUserCreditCard(updateUserCreditCardInput: UpdateUserCreditCardInput!): UserCreditCard!
+  removeUserCreditCard(id: Int!): UserCreditCard!
+  createPromotionRequest(createPromotionRequestInput: CreatePromotionRequestInput!): PromotionRequest!
+  updatePromotionRequest(updatePromotionRequestInput: UpdatePromotionRequestInput!): PromotionRequest!
+  removePromotionRequest(id: Int!): PromotionRequest!
+  createPromotionImage(createPromotionImageInput: CreatePromotionImageInput!): PromotionImage!
+  updatePromotionImage(updatePromotionImageInput: UpdatePromotionImageInput!): PromotionImage!
+  removePromotionImage(id: Int!): PromotionImage!
+  createPromotionTargetProduct(createPromotionTargetProductInput: CreatePromotionTargetProductInput!): PromotionTargetProduct!
+  updatePromotionTargetProduct(updatePromotionTargetProductInput: UpdatePromotionTargetProductInput!): PromotionTargetProduct!
+  removePromotionTargetProduct(id: Int!): PromotionTargetProduct!
+  createDiscountProduct(createDiscountProductInput: CreateDiscountProductInput!): DiscountProduct!
+  updateDiscountProduct(updateDiscountProductInput: UpdateDiscountProductInput!): DiscountProduct!
+  removeDiscountProduct(id: Int!): DiscountProduct!
+  createPromotionStatus(createPromotionStatusInput: CreatePromotionStatusInput!): PromotionStatus!
+  updatePromotionStatus(updatePromotionStatusInput: UpdatePromotionStatusInput!): PromotionStatus!
+  removePromotionStatus(id: Int!): PromotionStatus!
+  createPromotionPayment(createPromotionPaymentInput: CreatePromotionPaymentInput!): PromotionPayment!
+  updatePromotionPayment(updatePromotionPaymentInput: UpdatePromotionPaymentInput!): PromotionPayment!
+  removePromotionPayment(id: Int!): PromotionPayment!
+  createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
+  updatePromotion(updatePromotionInput: UpdatePromotionInput!): Promotion!
+  removePromotion(id: Int!): Promotion!
+  createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
+  updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
+  removeCodePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
+  createReview(createReviewInput: CreateReviewInput!): Review!
+  updateReview(updateReviewInput: UpdateReviewInput!): Review!
+  removeReview(id: Int!): Review!
+  createComment(createCommentInput: CreateCommentInput!): Comment!
+  updateComment(updateCommentInput: UpdateCommentInput!): Comment!
+  removeComment(id: Int!): Comment!
+  createPromotionReview(createPromotionReviewInput: CreatePromotionReviewInput!): PromotionReview!
+  updatePromotionReview(updatePromotionReviewInput: UpdatePromotionReviewInput!): PromotionReview!
+  removePromotionReview(id: Int!): PromotionReview!
+  createCompanyReview(createCompanyReviewInput: CreateCompanyReviewInput!): CompanyReview!
+  updateCompanyReview(updateCompanyReviewInput: UpdateCompanyReviewInput!): CompanyReview!
+  removeCompanyReview(id: Int!): CompanyReview!
 }
 
 input CreateParameterInput {
@@ -328,4 +630,323 @@ input UpdateUserAvatarInput {
   id: ID!
   isMain: Boolean
   status: Boolean
+}
+
+input CreateUserPhoneInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserPhoneInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateUserAdressInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserAdressInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePhoneInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePhoneInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateAddressInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateAddressInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyLogoInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyLogoInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyPhoneInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyPhoneInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyAddressInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyAddressInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCategoryImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCategoryImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateProductImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateProductImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateProductCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateProductCategoryInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCreditCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCreditCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateUserCreditCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserCreditCardInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionRequestInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionRequestInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionImageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionTargetProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionTargetProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateDiscountProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateDiscountProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionStatusInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionStatusInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionPaymentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionPaymentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCodePromotionDiscountProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCodePromotionDiscountProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateReviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateReviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCommentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreatePromotionReviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdatePromotionReviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateCompanyReviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateCompanyReviewInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
