@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql'
-import { IsDateString, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
+import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
 @InputType()
 export class CreatePeopleInfoInput {
@@ -36,9 +36,4 @@ export class CreatePeopleInfoInput {
   @IsNotEmpty()
   @IsString()
   genderId: string
-  
-  @Field( () => ID, { nullable: true } )
-  @IsOptional()
-  @IsUUID()
-  createdBy?: string
 }

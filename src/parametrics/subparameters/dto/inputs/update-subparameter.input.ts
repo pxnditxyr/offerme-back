@@ -1,4 +1,4 @@
-import { IsOptional, IsUUID } from 'class-validator'
+import { IsBoolean, IsOptional, IsUUID } from 'class-validator'
 import { CreateSubparameterInput } from './create-subparameter.input'
 import { InputType, Field, PartialType, ID } from '@nestjs/graphql'
 
@@ -8,9 +8,8 @@ export class UpdateSubparameterInput extends PartialType( CreateSubparameterInpu
   @IsUUID()
   id: string
 
-  //TODO: updatedBy should be required
-  @Field( () => ID, { nullable: true, description: 'Subparameter updater' } )
+  @Field( () => Boolean )
   @IsOptional()
-  @IsUUID()
-  updatedBy?: string
+  @IsBoolean()
+  status?: boolean
 }

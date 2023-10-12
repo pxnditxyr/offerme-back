@@ -1,5 +1,5 @@
-import { InputType, Field, ID } from '@nestjs/graphql'
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator'
+import { InputType, Field } from '@nestjs/graphql'
+import { IsNotEmpty, IsString } from 'class-validator'
 
 @InputType()
 export class CreateRoleInput {
@@ -7,10 +7,4 @@ export class CreateRoleInput {
   @IsNotEmpty()
   @IsString()
   name: string
-
-  // TODO: createdBy must be required
-  @Field( () => ID, { nullable: true } )
-  @IsOptional()
-  @IsUUID()
-  createdBy?: string
 }

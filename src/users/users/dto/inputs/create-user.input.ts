@@ -24,9 +24,4 @@ export class CreateUserInput {
   @IsOptional()
   @IsString()
   googleId?: string | null
-
-  @Field( () => ID, { nullable: true } )
-  @IsOptional()
-  @IsUUID()
-  createdBy?: string | null
 }

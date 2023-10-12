@@ -12,10 +12,4 @@ export class UpdateRoleInput extends PartialType(CreateRoleInput) {
   @IsOptional()
   @IsBoolean()
   status?: boolean
-
-  // TODO: updatedBy must be required
-  @Field( () => ID, { nullable: true, description: 'The user who updated this role' } )
-  @IsOptional()
-  @IsUUID()
-  updatedBy?: string
 }

@@ -166,10 +166,25 @@ type AuthResponse {
   user: UserResponse!
 }
 
+type CompanyPhone {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Phone {
   id: ID!
   phoneTypeId: ID!
   number: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  phoneType: Subparameter
+  creator: User
+  updater: User
+  users: [UserPhone!]
+  companies: [CompanyPhone!]
 }
 
 type Address {
@@ -200,11 +215,6 @@ type CompanyLogo {
 }
 
 type CompanyUser {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type CompanyPhone {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -330,7 +340,7 @@ type Query {
   userAdress(id: Int!): UserAdress!
   revalidateToken: AuthResponse!
   phones: [Phone!]!
-  phone(id: Int!): Phone!
+  phone(id: ID!): Phone!
   addresses: [Address!]!
   address(id: Int!): Address!
   companies: [Company!]!
@@ -416,7 +426,7 @@ type Mutation {
   removeUserAdress(id: Int!): UserAdress!
   createPhone(createPhoneInput: CreatePhoneInput!): Phone!
   updatePhone(updatePhoneInput: UpdatePhoneInput!): Phone!
-  removePhone(id: Int!): Phone!
+  removePhone(id: ID!): Phone!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
   removeAddress(id: Int!): Address!
@@ -503,9 +513,6 @@ input CreateParameterInput {
 
   """Parameter description"""
   description: String!
-
-  """Parameter creator"""
-  createdBy: ID
 }
 
 input UpdateParameterInput {
@@ -514,14 +521,8 @@ input UpdateParameterInput {
 
   """Parameter description"""
   description: String
-
-  """Parameter creator"""
-  createdBy: ID
   id: ID!
   status: Boolean
-
-  """Parameter updater"""
-  updatedBy: ID
 }
 
 input CreateSubparameterInput {
@@ -533,9 +534,6 @@ input CreateSubparameterInput {
 
   """The parameter id of the subparameter"""
   parameterId: ID!
-
-  """The subparameter creator"""
-  createdBy: ID
 }
 
 input UpdateSubparameterInput {
@@ -547,13 +545,8 @@ input UpdateSubparameterInput {
 
   """The parameter id of the subparameter"""
   parameterId: ID
-
-  """The subparameter creator"""
-  createdBy: ID
   id: ID!
-
-  """Subparameter updater"""
-  updatedBy: ID
+  status: Boolean!
 }
 
 input CreatePeopleInfoInput {
@@ -564,7 +557,6 @@ input CreatePeopleInfoInput {
   documentNumber: String
   birthdate: DateTime!
   genderId: ID!
-  createdBy: ID
 }
 
 input UpdatePeopleInfoInput {
@@ -575,7 +567,6 @@ input UpdatePeopleInfoInput {
   documentNumber: String
   birthdate: DateTime
   genderId: ID
-  createdBy: ID
   id: ID!
   status: Boolean
 
@@ -589,7 +580,6 @@ input CreateUserInput {
   email: String!
   password: String!
   googleId: String
-  createdBy: ID
 }
 
 input UpdateUserInput {
@@ -598,25 +588,19 @@ input UpdateUserInput {
   email: String
   password: String
   googleId: String
-  createdBy: ID
   id: ID!
-  status: Boolean
   isVerifiedEmail: Boolean
+  status: Boolean
 }
 
 input CreateRoleInput {
   name: String!
-  createdBy: ID
 }
 
 input UpdateRoleInput {
   name: String
-  createdBy: ID
   id: ID!
   status: Boolean
-
-  """The user who updated this role"""
-  updatedBy: ID
 }
 
 input CreateUserAvatarInput {
@@ -655,14 +639,15 @@ input UpdateUserAdressInput {
 }
 
 input CreatePhoneInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  phoneTypeId: ID!
+  number: String!
 }
 
 input UpdatePhoneInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  phoneTypeId: ID
+  number: String
+  id: ID!
+  status: Boolean
 }
 
 input CreateAddressInput {
