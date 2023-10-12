@@ -1,26 +1,88 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAddressInput } from './dto/create-address.input';
-import { UpdateAddressInput } from './dto/update-address.input';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { CreateAddressInput, UpdateAddressInput } from './dto/inputs'
+import { PrismaService } from 'src/prisma'
+import { User } from 'src/users/users/entities/user.entity'
+import { Address } from './entities/address.entity'
+
+const addressIncludes = {
+  creator: true,
+  updater: true,
+  users: true,
+  companies: true,
+}
 
 @Injectable()
 export class AddressesService {
-  create(createAddressInput: CreateAddressInput) {
-    return 'This action adds a new address';
+
+  constructor (
+    @Inject( PrismaService )
+    private readonly prismaService : PrismaService
+  ) {}
+
+  async create ( createAddressInput : CreateAddressInput, creator : User ) : Promise<Address> {
+    try {
+      const address = await this.prismaService.addresses.create({
+        data: {
+          ...createAddressInput,
+          createdBy: creator.id,
+        }
+      })
+      return address
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  findAll() {
-    return `This action returns all addresses`;
+  async findAll () {
+    const addresses = await this.prismaService.addresses.findMany({
+      include: { ...addressIncludes }
+    })
+    return addresses
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} address`;
+  async findOne ( id : string ) {
+    const address = await this.prismaService.addresses.findUnique({
+      where: { id },
+      include: { ...addressIncludes }
+    })
+    if ( !address ) throw new NotFoundException( `Address with ID ${ id } not found` )
+    return address
   }
 
-  update(id: number, updateAddressInput: UpdateAddressInput) {
-    return `This action updates a #${id} address`;
+  async update( id : string, updateAddressInput : UpdateAddressInput, updater : User ) : Promise<Address> {
+    await this.findOne( id )
+    try {
+      const address = await this.prismaService.addresses.update({
+        where: { id },
+        data: {
+          ...updateAddressInput,
+          updatedBy: updater.id,
+        }
+      })
+      return address
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} address`;
+  async deactivate ( id : string, updater : User ) : Promise<Address> {
+    await this.findOne( id )
+    try {
+      const address = await this.prismaService.addresses.update({
+        where: { id },
+        data: {
+          status: false,
+          updatedBy: updater.id,
+        }
+      })
+      return address
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  private handlerDBExceptions ( error : any ) : never {
+    console.error( error )
+    throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }

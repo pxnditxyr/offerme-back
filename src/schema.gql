@@ -187,6 +187,11 @@ type Phone {
   companies: [CompanyPhone!]
 }
 
+type Company {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Address {
   id: ID!
   street: String
@@ -202,11 +207,7 @@ type Address {
   creator: User
   updater: User
   users: [User!]
-}
-
-type Company {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companies: [Company!]
 }
 
 type CompanyLogo {
@@ -342,7 +343,7 @@ type Query {
   phones: [Phone!]!
   phone(id: ID!): Phone!
   addresses: [Address!]!
-  address(id: Int!): Address!
+  address(id: ID!): Address!
   companies: [Company!]!
   company(id: Int!): Company!
   companyLogos: [CompanyLogo!]!
@@ -429,7 +430,7 @@ type Mutation {
   removePhone(id: ID!): Phone!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
-  removeAddress(id: Int!): Address!
+  deactivateAddress(id: ID!): Address!
   createCompany(createCompanyInput: CreateCompanyInput!): Company!
   updateCompany(updateCompanyInput: UpdateCompanyInput!): Company!
   removeCompany(id: Int!): Company!
@@ -651,14 +652,21 @@ input UpdatePhoneInput {
 }
 
 input CreateAddressInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  street: String
+  city: String!
+  state: String!
+  country: String!
+  zipCode: String
 }
 
 input UpdateAddressInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  street: String
+  city: String
+  state: String
+  country: String
+  zipCode: String
+  id: ID!
+  status: Boolean
 }
 
 input CreateCompanyInput {

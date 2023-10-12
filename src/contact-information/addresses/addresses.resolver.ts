@@ -1,35 +1,55 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { AddressesService } from './addresses.service';
-import { Address } from './entities/address.entity';
-import { CreateAddressInput } from './dto/create-address.input';
-import { UpdateAddressInput } from './dto/update-address.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { AddressesService } from './addresses.service'
+import { Address } from './entities/address.entity'
+import { CreateAddressInput, UpdateAddressInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
 
-@Resolver(() => Address)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => Address )
 export class AddressesResolver {
-  constructor(private readonly addressesService: AddressesService) {}
+  constructor(
+    private readonly addressesService : AddressesService
+  ) {}
+
+  @Mutation( () => Address )
+  async createAddress(
+    @Args( 'createAddressInput' ) createAddressInput : CreateAddressInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return await this.addressesService.create( createAddressInput, user )
+  }
+
+  @Query( () => [Address], { name: 'addresses' } )
+  async findAll (
+    @CurrentUser([ ValidRoles.ADMIN ]) _user : User
+  ) {
+    return await this.addressesService.findAll()
+  }
+
+  @Query( () => Address, { name: 'address' } )
+  async findOne(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) {
+    return await this.addressesService.findOne(id)
+  }
+
+  @Mutation( () => Address )
+  async updateAddress(
+    @Args( 'updateAddressInput' ) updateAddressInput: UpdateAddressInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) : Promise<Address> {
+    return await this.addressesService.update( updateAddressInput.id, updateAddressInput, user )
+  }
 
   @Mutation(() => Address)
-  createAddress(@Args('createAddressInput') createAddressInput: CreateAddressInput) {
-    return this.addressesService.create(createAddressInput);
-  }
-
-  @Query(() => [Address], { name: 'addresses' })
-  findAll() {
-    return this.addressesService.findAll();
-  }
-
-  @Query(() => Address, { name: 'address' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.addressesService.findOne(id);
-  }
-
-  @Mutation(() => Address)
-  updateAddress(@Args('updateAddressInput') updateAddressInput: UpdateAddressInput) {
-    return this.addressesService.update(updateAddressInput.id, updateAddressInput);
-  }
-
-  @Mutation(() => Address)
-  removeAddress(@Args('id', { type: () => Int }) id: number) {
-    return this.addressesService.remove(id);
+  async deactivateAddress (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) : Promise<Address> {
+    return this.addressesService.deactivate( id, user )
   }
 }
