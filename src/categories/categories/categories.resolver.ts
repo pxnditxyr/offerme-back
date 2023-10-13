@@ -1,35 +1,53 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { CategoriesService } from './categories.service';
-import { Category } from './entities/category.entity';
-import { CreateCategoryInput } from './dto/create-category.input';
-import { UpdateCategoryInput } from './dto/update-category.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { CategoriesService } from './categories.service'
+import { Category } from './entities/category.entity'
+import { CreateCategoryInput, UpdateCategoryInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
 
-@Resolver(() => Category)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => Category )
 export class CategoriesResolver {
-  constructor(private readonly categoriesService: CategoriesService) {}
+  constructor(
+    private readonly categoriesService: CategoriesService
+  ) {}
 
-  @Mutation(() => Category)
-  createCategory(@Args('createCategoryInput') createCategoryInput: CreateCategoryInput) {
-    return this.categoriesService.create(createCategoryInput);
+  @Mutation( () => Category )
+  async createCategory (
+    @Args( 'createCategoryInput' ) createCategoryInput : CreateCategoryInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return await this.categoriesService.create( createCategoryInput, user )
   }
 
-  @Query(() => [Category], { name: 'categories' })
-  findAll() {
-    return this.categoriesService.findAll();
+  @Query( () => [ Category ], { name: 'categories' } )
+  async findAll () {
+    return await this.categoriesService.findAll()
   }
 
-  @Query(() => Category, { name: 'category' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.categoriesService.findOne(id);
+  @Query( () => Category, { name: 'category' } )
+  async findOne (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) {
+    return await this.categoriesService.findOne( id )
   }
 
-  @Mutation(() => Category)
-  updateCategory(@Args('updateCategoryInput') updateCategoryInput: UpdateCategoryInput) {
-    return this.categoriesService.update(updateCategoryInput.id, updateCategoryInput);
+  @Mutation( () => Category )
+  async updateCategory(
+    @Args( 'updateCategoryInput' ) updateCategoryInput : UpdateCategoryInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return this.categoriesService.update( updateCategoryInput.id, updateCategoryInput, user )
   }
 
-  @Mutation(() => Category)
-  removeCategory(@Args('id', { type: () => Int }) id: number) {
-    return this.categoriesService.remove(id);
+  @Mutation( () => Category )
+  async deactivateCategory (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return await this.categoriesService.deactivate( id, user )
   }
 }

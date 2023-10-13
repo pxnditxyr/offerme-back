@@ -285,14 +285,34 @@ type CreditCard {
   exampleField: Int!
 }
 
-type Category {
+type CategoryImage {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-type CategoryImage {
+type ProductCategory {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String!
+  order: Int!
+  parentId: ID
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  parent: Category
+  children: [Category!]
+  creator: User
+  updater: User
+  images: [CategoryImage!]
+  companies: [CompanyCategory!]
+  products: [ProductCategory!]
 }
 
 type Product {
@@ -301,11 +321,6 @@ type Product {
 }
 
 type ProductImage {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type ProductCategory {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -353,7 +368,7 @@ type Query {
   companyAddresses: [CompanyAddress!]!
   companyAddress(id: Int!): CompanyAddress!
   categories: [Category!]!
-  category(id: Int!): Category!
+  category(id: ID!): Category!
   categoryImages: [CategoryImage!]!
   categoryImage(id: Int!): CategoryImage!
   companyCategories: [CompanyCategory!]!
@@ -445,7 +460,7 @@ type Mutation {
   removeCompanyAddress(id: Int!): CompanyAddress!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
-  removeCategory(id: Int!): Category!
+  deactivateCategory(id: ID!): Category!
   createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
   updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
   removeCategoryImage(id: Int!): CategoryImage!
@@ -714,14 +729,19 @@ input UpdateCompanyAddressInput {
 }
 
 input CreateCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  description: String!
+  order: Int!
+  parentId: ID
 }
 
 input UpdateCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  description: String
+  order: Int
+  parentId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreateCategoryImageInput {

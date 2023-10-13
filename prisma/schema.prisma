@@ -419,7 +419,7 @@ model Categories {
   id          String   @id @default(uuid())
   name        String   @db.VarChar(255)
   description String   @db.VarChar(255)
-  level       Int      @default(0)
+  order       Int
   parentId    String?
   status      Boolean  @default(true)
   createdAt   DateTime @default(now())
