@@ -1,35 +1,54 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { CategoryImagesService } from './category-images.service';
-import { CategoryImage } from './entities/category-image.entity';
-import { CreateCategoryImageInput } from './dto/create-category-image.input';
-import { UpdateCategoryImageInput } from './dto/update-category-image.input';
+import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql'
+import { CategoryImagesService } from './category-images.service'
+import { CategoryImage } from './entities/category-image.entity'
+import { CreateCategoryImageInput, UpdateCategoryImageInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
 
-@Resolver(() => CategoryImage)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => CategoryImage )
 export class CategoryImagesResolver {
-  constructor(private readonly categoryImagesService: CategoryImagesService) {}
+  constructor (
+    private readonly categoryImagesService: CategoryImagesService
+  ) {}
+
+  @Mutation( () => CategoryImage )
+  async createCategoryImage(
+    @Args( 'createCategoryImageInput' ) createCategoryImageInput : CreateCategoryImageInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return await this.categoryImagesService.create( createCategoryImageInput, user )
+  }
+
+  @Query( () => [ CategoryImage ], { name: 'categoryImages' } )
+  async findAll (
+    @CurrentUser([ ValidRoles.ADMIN ]) _user : User
+  ) {
+    return await this.categoryImagesService.findAll()
+  }
+
+  @Query( () => CategoryImage, { name: 'categoryImage' } )
+  async findOne (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string ) {
+    return await this.categoryImagesService.findOne( id )
+  }
+
+  @Mutation( () => CategoryImage )
+  async updateCategoryImage(
+    @Args( 'updateCategoryImageInput' ) updateCategoryImageInput : UpdateCategoryImageInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return await this.categoryImagesService.update( updateCategoryImageInput.id, updateCategoryImageInput, user )
+  }
 
   @Mutation(() => CategoryImage)
-  createCategoryImage(@Args('createCategoryImageInput') createCategoryImageInput: CreateCategoryImageInput) {
-    return this.categoryImagesService.create(createCategoryImageInput);
-  }
-
-  @Query(() => [CategoryImage], { name: 'categoryImages' })
-  findAll() {
-    return this.categoryImagesService.findAll();
-  }
-
-  @Query(() => CategoryImage, { name: 'categoryImage' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.categoryImagesService.findOne(id);
-  }
-
-  @Mutation(() => CategoryImage)
-  updateCategoryImage(@Args('updateCategoryImageInput') updateCategoryImageInput: UpdateCategoryImageInput) {
-    return this.categoryImagesService.update(updateCategoryImageInput.id, updateCategoryImageInput);
-  }
-
-  @Mutation(() => CategoryImage)
-  removeCategoryImage(@Args('id', { type: () => Int }) id: number) {
-    return this.categoryImagesService.remove(id);
+  async deactivateCategoryImage(
+    @Args('id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) {
+    return this.categoryImagesService.deactivate( id, user )
   }
 }

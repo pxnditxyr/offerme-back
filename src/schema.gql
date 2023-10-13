@@ -286,8 +286,21 @@ type CreditCard {
 }
 
 type CategoryImage {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  categoryId: ID!
+  url: String!
+
+  """Image description text"""
+  alt: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  category: Category
+  creator: User
+  updater: User
 }
 
 type ProductCategory {
@@ -370,7 +383,7 @@ type Query {
   categories: [Category!]!
   category(id: ID!): Category!
   categoryImages: [CategoryImage!]!
-  categoryImage(id: Int!): CategoryImage!
+  categoryImage(id: ID!): CategoryImage!
   companyCategories: [CompanyCategory!]!
   companyCategory(id: Int!): CompanyCategory!
   products: [Product!]!
@@ -463,7 +476,7 @@ type Mutation {
   deactivateCategory(id: ID!): Category!
   createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
   updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
-  removeCategoryImage(id: Int!): CategoryImage!
+  deactivateCategoryImage(id: ID!): CategoryImage!
   createCompanyCategory(createCompanyCategoryInput: CreateCompanyCategoryInput!): CompanyCategory!
   updateCompanyCategory(updateCompanyCategoryInput: UpdateCompanyCategoryInput!): CompanyCategory!
   removeCompanyCategory(id: Int!): CompanyCategory!
@@ -745,14 +758,22 @@ input UpdateCategoryInput {
 }
 
 input CreateCategoryImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  categoryId: ID!
+  url: String!
+
+  """Image description text"""
+  alt: String!
 }
 
 input UpdateCategoryImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  categoryId: ID
+  url: String
+
+  """Image description text"""
+  alt: String
+  id: ID!
+  isMain: Boolean
+  status: Boolean
 }
 
 input CreateCompanyCategoryInput {

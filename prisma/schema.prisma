@@ -363,6 +363,7 @@ model CompanyLogos {
   id        String   @id @default(uuid())
   companyId String
   url       String   @db.VarChar(255)
+  alt       String   @db.VarChar(255)
   isMain    Boolean  @default(true)
   status    Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -443,6 +444,7 @@ model CategoryImages {
   id         String   @id @default(uuid())
   categoryId String
   url        String   @db.VarChar(255)
+  alt        String   @db.VarChar(255)
   isMain     Boolean  @default(true)
   status     Boolean  @default(true)
   createdAt  DateTime @default(now())
@@ -527,6 +529,7 @@ model ProductImages {
   id        String   @id @default(uuid())
   productId String
   url       String   @db.VarChar(255)
+  alt       String   @db.VarChar(255)
   isMain    Boolean  @default(true)
   status    Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -639,6 +642,7 @@ model PromotionImages {
   id                 String   @id @default(uuid())
   promotionRequestId String
   url                String   @db.VarChar(255)
+  alt                String   @db.VarChar(255)
   status             Boolean  @default(true)
   createdAt          DateTime @default(now())
   createdBy          String?

@@ -1,26 +1,123 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCategoryImageInput } from './dto/create-category-image.input';
-import { UpdateCategoryImageInput } from './dto/update-category-image.input';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { CreateCategoryImageInput, UpdateCategoryImageInput } from './dto/inputs'
+import { PrismaService } from 'src/prisma'
+import { User } from 'src/users/users/entities/user.entity'
+import { CategoryImage } from './entities/category-image.entity'
+import { CategoriesService } from '../categories/categories.service'
+
+const categoryImageIncludes = {
+  creator: true,
+  updater: true,
+  category: true
+}
 
 @Injectable()
 export class CategoryImagesService {
-  create(createCategoryImageInput: CreateCategoryImageInput) {
-    return 'This action adds a new categoryImage';
+
+  constructor (
+    @Inject( PrismaService )
+    private readonly prismaService : PrismaService,
+
+    private readonly categoriesService : CategoriesService
+  ) {}
+
+  async create ( createCategoryImageInput : CreateCategoryImageInput, user : User ) : Promise<CategoryImage> {
+    const { categoryId } = createCategoryImageInput
+    await this.categoriesService.findOne( categoryId )
+    try {
+      await this.changeMainImage( categoryId, user )
+      const categoryImage = await this.prismaService.categoryImages.create({
+        data: {
+          ...createCategoryImageInput,
+          createdBy: user.id
+        }
+      })
+      return categoryImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  findAll() {
-    return `This action returns all categoryImages`;
+  async findAll () {
+    const categoryImages = await this.prismaService.categoryImages.findMany({
+      include: { ...categoryImageIncludes }
+    })
+    return categoryImages
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} categoryImage`;
+  async findOne ( id : string ) {
+    const categoryImage = await this.prismaService.categoryImages.findUnique({
+      where: { id },
+      include: { ...categoryImageIncludes }
+    })
+    if ( !categoryImage ) throw new NotFoundException( `Category image with ID ${ id } not found` )
+    return categoryImage
   }
 
-  update(id: number, updateCategoryImageInput: UpdateCategoryImageInput) {
-    return `This action updates a #${id} categoryImage`;
+  async findMainImage ( categoryId : string ) {
+    const categoryImage = await this.prismaService.categoryImages.findFirst({
+      where: {
+        categoryId,
+        isMain: true
+      },
+      include: { ...categoryImageIncludes }
+    })
+    return categoryImage
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} categoryImage`;
+  async changeMainImage ( categoryId : string, user : User ) : Promise<CategoryImage | null> {
+    const mainImage = await this.findMainImage( categoryId )
+    if ( !mainImage ) return null
+    try {
+      const categoryImage = await this.prismaService.categoryImages.update({
+        where: { id: mainImage.id },
+        data: {
+          isMain: false,
+          updatedBy: user.id
+        }
+      })
+      return categoryImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  async update( id : string, updateCategoryImageInput : UpdateCategoryImageInput, user : User ) : Promise<CategoryImage> {
+    await this.findOne( id )
+    const { categoryId } = updateCategoryImageInput
+    if ( categoryId ) await this.categoriesService.findOne( categoryId )
+    try {
+      const categoryImage = await this.prismaService.categoryImages.update({
+        where: { id },
+        data: {
+          ...updateCategoryImageInput,
+          updatedBy: user.id
+        }
+      })
+      return categoryImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  async deactivate ( id : string, user : User ) : Promise<CategoryImage> {
+    await this.findOne( id )
+    try {
+      const categoryImage = await this.prismaService.categoryImages.update({
+        where: { id },
+        data: {
+          status: false,
+          updatedBy: user.id
+        }
+      })
+      return categoryImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  private handlerDBExceptions ( error : any ) : never {
+    console.error( error )
+    throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }
