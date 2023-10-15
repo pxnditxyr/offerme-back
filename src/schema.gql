@@ -187,44 +187,6 @@ type Phone {
   companies: [CompanyPhone!]
 }
 
-type Company {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Address {
-  id: ID!
-  street: String
-  city: String!
-  state: String!
-  country: String!
-  zipCode: String
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  creator: User
-  updater: User
-  users: [User!]
-  companies: [Company!]
-}
-
-type CompanyLogo {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type CompanyUser {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type CompanyReview {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type CompanyAddress {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -235,42 +197,22 @@ type CompanyCategory {
   exampleField: Int!
 }
 
-type Promotion {
+type CompanyLogo {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-type PromotionImage {
+type CompanyReview {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-type PromotionTargetProduct {
+type ProductCategory {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
-type PromotionStatus {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PromotionPayment {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PromotionRequest {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PromotionReview {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type CodePromotionDiscountProduct {
+type ProductImage {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -280,6 +222,7 @@ type DiscountProduct {
   exampleField: Int!
 }
 
+<<<<<<< Updated upstream
 type CreditCard {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -329,6 +272,9 @@ type Category {
 }
 
 type Product {
+=======
+type PromotionTargetProduct {
+>>>>>>> Stashed changes
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -336,6 +282,137 @@ type Product {
 type ProductImage {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type PromotionRequest {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Promotion {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Company {
+  id: ID!
+  name: String!
+  description: String!
+  companyTypeId: ID!
+  documentTypeId: ID
+  documentNumber: String
+  website: String
+  email: String
+  foundedAt: DateTime
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  companyType: Subparameter
+  documentType: Subparameter
+  creator: User
+  updater: User
+  logos: [CompanyLogo!]
+  phones: [CompanyPhone!]
+  addresses: [CompanyAddress!]
+  products: [Product!]
+  categories: [CompanyCategory!]
+  users: [User!]
+  promotionRequests: [PromotionRequest!]
+  promotions: [Promotion!]
+  companies: [CompanyReview!]
+}
+
+type Address {
+  id: ID!
+  street: String
+  city: String!
+  state: String!
+  country: String!
+  zipCode: String
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creator: User
+  updater: User
+  users: [User!]
+  companies: [Company!]
+}
+
+type CompanyUser {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionImage {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionStatus {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionPayment {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionReview {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CodePromotionDiscountProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CreditCard {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type CategoryImage {
+  id: ID!
+  categoryId: ID!
+  url: String!
+
+  """Image description text"""
+  alt: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  category: Category
+  creator: User
+  updater: User
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String!
+  order: Int!
+  parentId: ID
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  parent: Category
+  children: [Category!]
+  creator: User
+  updater: User
+  images: [CategoryImage!]
+  companies: [CompanyCategory!]
+  products: [ProductCategory!]
 }
 
 type Review {
@@ -373,7 +450,7 @@ type Query {
   addresses: [Address!]!
   address(id: ID!): Address!
   companies: [Company!]!
-  company(id: Int!): Company!
+  company(id: ID!): Company!
   companyLogos: [CompanyLogo!]!
   companyLogo(id: Int!): CompanyLogo!
   companyPhones: [CompanyPhone!]!
@@ -461,7 +538,7 @@ type Mutation {
   deactivateAddress(id: ID!): Address!
   createCompany(createCompanyInput: CreateCompanyInput!): Company!
   updateCompany(updateCompanyInput: UpdateCompanyInput!): Company!
-  removeCompany(id: Int!): Company!
+  deactivateCompany(id: ID!): Company!
   createCompanyLogo(createCompanyLogoInput: CreateCompanyLogoInput!): CompanyLogo!
   updateCompanyLogo(updateCompanyLogoInput: UpdateCompanyLogoInput!): CompanyLogo!
   removeCompanyLogo(id: Int!): CompanyLogo!
@@ -698,14 +775,27 @@ input UpdateAddressInput {
 }
 
 input CreateCompanyInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  description: String!
+  companyTypeId: ID!
+  documentTypeId: ID
+  documentNumber: String
+  website: String
+  email: String
+  foundedAt: DateTime
 }
 
 input UpdateCompanyInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  description: String
+  companyTypeId: ID
+  documentTypeId: ID
+  documentNumber: String
+  website: String
+  email: String
+  foundedAt: DateTime
+  id: ID!
+  status: Boolean!
 }
 
 input CreateCompanyLogoInput {

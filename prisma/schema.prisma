@@ -326,25 +326,25 @@ model UserAddresses {
 }
 
 model Companies {
-  id             String   @id @default(uuid())
-  name           String   @db.VarChar(255)
-  description    String   @db.VarChar(255)
+  id             String    @id @default(uuid())
+  name           String    @db.VarChar(255)
+  description    String    @db.VarChar(255)
   companyTypeId  String
-  documentTypeId String
-  documentNumber String   @db.VarChar(255)
-  website        String   @db.VarChar(255)
-  email          String   @db.VarChar(255)
-  foundedAt      DateTime @db.Date
-  status         Boolean  @default(true)
-  createdAt      DateTime @default(now())
+  documentTypeId String?
+  documentNumber String?   @db.VarChar(255)
+  website        String?   @db.VarChar(255)
+  email          String?   @db.VarChar(255)
+  foundedAt      DateTime? @db.Date
+  status         Boolean   @default(true)
+  createdAt      DateTime  @default(now())
   createdBy      String?
-  updatedAt      DateTime @updatedAt
+  updatedAt      DateTime  @updatedAt
   updatedBy      String?
 
-  companyType  Subparameters @relation("companies_company_type", fields: [companyTypeId], references: [id])
-  documentType Subparameters @relation("companies_document_type", fields: [documentTypeId], references: [id])
-  creator      Users?        @relation("companies_created_by", fields: [createdBy], references: [id])
-  updater      Users?        @relation("companies_updated_by", fields: [updatedBy], references: [id])
+  companyType  Subparameters  @relation("companies_company_type", fields: [companyTypeId], references: [id])
+  documentType Subparameters? @relation("companies_document_type", fields: [documentTypeId], references: [id])
+  creator      Users?         @relation("companies_created_by", fields: [createdBy], references: [id])
+  updater      Users?         @relation("companies_updated_by", fields: [updatedBy], references: [id])
 
   logos             CompanyLogos[]      @relation("company_logos_company")
   phones            CompanyPhones[]     @relation("company_phones_company")

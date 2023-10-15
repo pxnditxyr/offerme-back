@@ -1,26 +1,107 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCompanyInput } from './dto/create-company.input';
-import { UpdateCompanyInput } from './dto/update-company.input';
+import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { CreateCompanyInput, UpdateCompanyInput } from './dto/inputs'
+import { PrismaService } from 'src/prisma'
+import { SubparametersService } from 'src/parametrics/subparameters/subparameters.service'
+import { User } from 'src/users/users/entities/user.entity'
+import { Company } from './entities/company.entity'
+
+const companyIncludes = {
+  logos: true,
+  phones: true,
+  reviews: true,
+  products: true,
+  promotionRequests: true,
+  promotions: true,
+  companyType: true,
+  documentType: true,
+  creator: true,
+  updater: true,
+  addresses: true,
+  categories: true,
+}
 
 @Injectable()
 export class CompaniesService {
-  create(createCompanyInput: CreateCompanyInput) {
-    return 'This action adds a new company';
+
+  constructor (
+    @Inject( PrismaService )
+    private readonly prismaService : PrismaService,
+
+    private readonly subparametersService : SubparametersService
+  ) {}
+
+  async create ( createCompanyInput : CreateCompanyInput, user : User ) : Promise<Company> {
+    const { companyTypeId, documentTypeId } = createCompanyInput
+    await this.subparametersService.findOne( companyTypeId )
+    if ( documentTypeId ) await this.subparametersService.findOne( documentTypeId )
+    try {
+      const company = await this.prismaService.companies.create({
+        data: {
+          ...createCompanyInput,
+          createdBy: user.id,
+        }
+      })
+      return company
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+
   }
 
-  findAll() {
-    return `This action returns all companies`;
+  async findAll () {
+    const companies = await this.prismaService.companies.findMany({
+      include: { ...companyIncludes }
+    })
+    return companies
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findOne( id : string ) {
+    const company = await this.prismaService.companies.findUnique({
+      where: { id },
+      include: { ...companyIncludes }
+    })
+    if ( !company ) throw new NotFoundException( `Company with id ${id} not found` )
+
+    return company
   }
 
-  update(id: number, updateCompanyInput: UpdateCompanyInput) {
-    return `This action updates a #${id} company`;
+  async update( id : string, updateCompanyInput : UpdateCompanyInput, user : User ) : Promise<Company> {
+    await this.findOne( id )
+    const { companyTypeId, documentTypeId } = updateCompanyInput
+    if ( companyTypeId ) await this.subparametersService.findOne( companyTypeId )
+    if ( documentTypeId ) await this.subparametersService.findOne( documentTypeId )
+    try {
+      const company = await this.prismaService.companies.update({
+        where: { id },
+        data: {
+          ...updateCompanyInput,
+          updatedBy: user.id,
+          }
+      })
+      return company
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async deactivate ( id : string, user : User ) : Promise<Company> {
+    await this.findOne( id )
+    try {
+      const company = await this.prismaService.companies.update({
+        where: { id },
+        data: {
+          status: false,
+          updatedBy: user.id,
+        }
+      })
+      return company
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  private handlerDBExceptions ( error : any ) : never {
+    console.error( error )
+    throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }
