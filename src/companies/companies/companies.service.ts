@@ -30,7 +30,7 @@ export class CompaniesService {
     private readonly subparametersService : SubparametersService
   ) {}
 
-  async create ( createCompanyInput : CreateCompanyInput, user : User ) : Promise<Company> {
+  async create ( createCompanyInput : CreateCompanyInput, creator : User ) : Promise<Company> {
     const { companyTypeId, documentTypeId } = createCompanyInput
     await this.subparametersService.findOne( companyTypeId )
     if ( documentTypeId ) await this.subparametersService.findOne( documentTypeId )
@@ -38,7 +38,7 @@ export class CompaniesService {
       const company = await this.prismaService.companies.create({
         data: {
           ...createCompanyInput,
-          createdBy: user.id,
+          createdBy: creator.id,
         }
       })
       return company
@@ -65,7 +65,7 @@ export class CompaniesService {
     return company
   }
 
-  async update( id : string, updateCompanyInput : UpdateCompanyInput, user : User ) : Promise<Company> {
+  async update( id : string, updateCompanyInput : UpdateCompanyInput, updater : User ) : Promise<Company> {
     await this.findOne( id )
     const { companyTypeId, documentTypeId } = updateCompanyInput
     if ( companyTypeId ) await this.subparametersService.findOne( companyTypeId )
@@ -75,7 +75,7 @@ export class CompaniesService {
         where: { id },
         data: {
           ...updateCompanyInput,
-          updatedBy: user.id,
+          updatedBy: updater.id,
           }
       })
       return company
@@ -84,14 +84,14 @@ export class CompaniesService {
     }
   }
 
-  async deactivate ( id : string, user : User ) : Promise<Company> {
+  async deactivate ( id : string, updater : User ) : Promise<Company> {
     await this.findOne( id )
     try {
       const company = await this.prismaService.companies.update({
         where: { id },
         data: {
           status: false,
-          updatedBy: user.id,
+          updatedBy: updater.id,
         }
       })
       return company

@@ -23,7 +23,7 @@ export class CompanyAddressesService {
     private readonly addressesService : AddressesService
   ) {}
 
-  async create ( createCompanyAddressInput: CreateCompanyAddressInput, user : User ) : Promise<CompanyAddress> {
+  async create ( createCompanyAddressInput: CreateCompanyAddressInput, creator : User ) : Promise<CompanyAddress> {
     const { addressId, companyId  } = createCompanyAddressInput
     await this.companiesService.findOne( companyId )
     await this.addressesService.findOne( addressId )
@@ -31,7 +31,7 @@ export class CompanyAddressesService {
       const companyAddress = await this.prismaService.companyAddresses.create({
         data: {
           ...createCompanyAddressInput,
-          createdBy: user.id,
+          createdBy: creator.id,
         }
       })
       return companyAddress
@@ -56,7 +56,7 @@ export class CompanyAddressesService {
     return companyAddress
   }
 
-  async update ( id : string, updateCompanyAddressInput : UpdateCompanyAddressInput, user : User ) : Promise<CompanyAddress> {
+  async update ( id : string, updateCompanyAddressInput : UpdateCompanyAddressInput, updater : User ) : Promise<CompanyAddress> {
     await this.findOne( id )
     const { addressId, companyId } = updateCompanyAddressInput
     if ( addressId ) await this.addressesService.findOne( addressId )
@@ -66,7 +66,7 @@ export class CompanyAddressesService {
         where: { id },
         data: {
           ...updateCompanyAddressInput,
-          updatedBy: user.id
+          updatedBy: updater.id
         },
       })
       return companyAddress
@@ -75,14 +75,14 @@ export class CompanyAddressesService {
     }
   }
 
-  async deactivate ( id : string, user : User ) : Promise<CompanyAddress> {
+  async deactivate ( id : string, updater : User ) : Promise<CompanyAddress> {
     await this.findOne( id )
     try {
       const companyAddress = await this.prismaService.companyAddresses.update({
         where: { id },
         data: {
           status: false,
-          updatedBy: user.id
+          updatedBy: updater.id
         }
       })
       return companyAddress

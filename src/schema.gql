@@ -204,9 +204,62 @@ type CompanyAddress {
   updater: User
 }
 
-type CompanyCategory {
+type CategoryImage {
+  id: ID!
+  categoryId: ID!
+  url: String!
+
+  """Image description text"""
+  alt: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  category: Category
+  creator: User
+  updater: User
+}
+
+type ProductCategory {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String!
+  order: Int!
+  parentId: ID
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  parent: Category
+  children: [Category!]
+  creator: User
+  updater: User
+  images: [CategoryImage!]
+  companies: [CompanyCategory!]
+  products: [ProductCategory!]
+}
+
+type CompanyCategory {
+  id: ID!
+  companyId: ID!
+  categoryId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  category: Category
+  creator: User
+  updater: User
 }
 
 type CompanyLogo {
@@ -327,49 +380,6 @@ type CreditCard {
   exampleField: Int!
 }
 
-type CategoryImage {
-  id: ID!
-  categoryId: ID!
-  url: String!
-
-  """Image description text"""
-  alt: String!
-  isMain: Boolean!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  category: Category
-  creator: User
-  updater: User
-}
-
-type ProductCategory {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Category {
-  id: ID!
-  name: String!
-  description: String!
-  order: Int!
-  parentId: ID
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  parent: Category
-  children: [Category!]
-  creator: User
-  updater: User
-  images: [CategoryImage!]
-  companies: [CompanyCategory!]
-  products: [ProductCategory!]
-}
-
 type ProductImage {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -422,7 +432,7 @@ type Query {
   categoryImages: [CategoryImage!]!
   categoryImage(id: ID!): CategoryImage!
   companyCategories: [CompanyCategory!]!
-  companyCategory(id: Int!): CompanyCategory!
+  companyCategory(id: ID!): CompanyCategory!
   products: [Product!]!
   product(id: Int!): Product!
   productImages: [ProductImage!]!
@@ -516,7 +526,7 @@ type Mutation {
   deactivateCategoryImage(id: ID!): CategoryImage!
   createCompanyCategory(createCompanyCategoryInput: CreateCompanyCategoryInput!): CompanyCategory!
   updateCompanyCategory(updateCompanyCategoryInput: UpdateCompanyCategoryInput!): CompanyCategory!
-  removeCompanyCategory(id: Int!): CompanyCategory!
+  deactivateCompanyCategory(id: ID!): CompanyCategory!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
@@ -755,7 +765,7 @@ input UpdateCompanyInput {
   email: String
   foundedAt: DateTime
   id: ID!
-  status: Boolean!
+  status: Boolean
 }
 
 input CreateCompanyLogoInput {
@@ -832,14 +842,15 @@ input UpdateCategoryImageInput {
 }
 
 input CreateCompanyCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companyId: ID!
+  categoryId: ID!
 }
 
 input UpdateCompanyCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  companyId: ID
+  categoryId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreateProductInput {

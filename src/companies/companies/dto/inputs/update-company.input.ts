@@ -7,7 +7,7 @@ export class UpdateCompanyInput extends PartialType( CreateCompanyInput ) {
   @Field( () => ID )
   id: string
 
-  @Field( () => Boolean )
+  @Field( () => Boolean, { nullable: true } )
   @IsOptional()
   @IsBoolean()
   status?: boolean
