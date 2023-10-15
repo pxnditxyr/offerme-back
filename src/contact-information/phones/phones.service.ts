@@ -19,13 +19,13 @@ export class PhonesService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create ( createPhoneInput : CreatePhoneInput, user : User ) : Promise<Phone> {
+  async create ( createPhoneInput : CreatePhoneInput, creator : User ) : Promise<Phone> {
 
     try {
       const phone = await this.prismaService.phones.create({
         data: {
           ...createPhoneInput,
-          createdBy: user.id
+          createdBy: creator.id
         }
       })
       return phone
@@ -49,13 +49,13 @@ export class PhonesService {
     return phone
   }
 
-  async update ( id : string, updatePhoneInput : UpdatePhoneInput, user : User ) : Promise<Phone> {
+  async update ( id : string, updatePhoneInput : UpdatePhoneInput, updater : User ) : Promise<Phone> {
     try {
       const phone = await this.prismaService.phones.update({
         where: { id },
         data: {
           ...updatePhoneInput,
-          updatedBy: user.id
+          updatedBy: updater.id
         }
       })
       return phone
@@ -64,13 +64,13 @@ export class PhonesService {
     }
   }
 
-  async deactivate ( id : string, user : User ) : Promise<Phone> {
+  async deactivate ( id : string, updater : User ) : Promise<Phone> {
     try {
       const phone = await this.prismaService.phones.update({
         where: { id },
         data: {
           status: false,
-          updatedBy: user.id
+          updatedBy: updater.id
         }
       })
       return phone

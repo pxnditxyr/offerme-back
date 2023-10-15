@@ -2,6 +2,7 @@ import { Inject, Injectable, InternalServerErrorException } from '@nestjs/common
 import { CreateUserAvatarInput, UpdateUserAvatarInput } from './dto/inputs'
 import { PrismaService } from 'src/prisma'
 import { User } from '../users/entities/user.entity'
+import { UserAvatar } from './entities/user-avatar.entity'
 
 const userAvatarInclude = {
   creator: true,
@@ -17,7 +18,7 @@ export class UserAvatarsService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create ( createUserAvatarInput : CreateUserAvatarInput, creator : User ) {
+  async create ( createUserAvatarInput : CreateUserAvatarInput, creator : User ) : Promise<UserAvatar> {
     try {
       const userAvatar = await this.prismaService.userAvatars.create({
         data: {
@@ -46,7 +47,7 @@ export class UserAvatarsService {
     return userAvatar
   }
 
-  async update ( id : string, updateUserAvatarInput : UpdateUserAvatarInput, updater : User ) {
+  async update ( id : string, updateUserAvatarInput : UpdateUserAvatarInput, updater : User ) : Promise<UserAvatar> {
     try {
       const userAvatar = await this.prismaService.userAvatars.update({
         where: { id },
@@ -61,7 +62,7 @@ export class UserAvatarsService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) {
+  async deactivate ( id : string, updater : User ) : Promise<UserAvatar> {
     try {
       const userAvatar = await this.prismaService.userAvatars.update({
         where: { id },

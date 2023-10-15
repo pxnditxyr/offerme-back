@@ -22,14 +22,14 @@ export class CategoriesService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create ( createCategoryInput : CreateCategoryInput, user : User ) : Promise<Category> {
+  async create ( createCategoryInput : CreateCategoryInput, creator : User ) : Promise<Category> {
     const { parentId } = createCategoryInput
     if ( parentId ) await this.findOne( parentId )
     try {
       const category = await this.prismaService.categories.create({
         data: {
           ...createCategoryInput,
-          createdBy: user.id,
+          createdBy: creator.id,
         },
       })
       return category

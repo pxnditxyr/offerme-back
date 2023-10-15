@@ -21,15 +21,15 @@ export class CategoryImagesService {
     private readonly categoriesService : CategoriesService
   ) {}
 
-  async create ( createCategoryImageInput : CreateCategoryImageInput, user : User ) : Promise<CategoryImage> {
+  async create ( createCategoryImageInput : CreateCategoryImageInput, creator : User ) : Promise<CategoryImage> {
     const { categoryId } = createCategoryImageInput
     await this.categoriesService.findOne( categoryId )
     try {
-      await this.changeMainImage( categoryId, user )
+      await this.changeMainImage( categoryId, creator )
       const categoryImage = await this.prismaService.categoryImages.create({
         data: {
           ...createCategoryImageInput,
-          createdBy: user.id
+          createdBy: creator.id
         }
       })
       return categoryImage
@@ -65,7 +65,7 @@ export class CategoryImagesService {
     return categoryImage
   }
 
-  async changeMainImage ( categoryId : string, user : User ) : Promise<CategoryImage | null> {
+  async changeMainImage ( categoryId : string, updater : User ) : Promise<CategoryImage | null> {
     const mainImage = await this.findMainImage( categoryId )
     if ( !mainImage ) return null
     try {
@@ -73,7 +73,7 @@ export class CategoryImagesService {
         where: { id: mainImage.id },
         data: {
           isMain: false,
-          updatedBy: user.id
+          updatedBy: updater.id
         }
       })
       return categoryImage
@@ -82,7 +82,7 @@ export class CategoryImagesService {
     }
   }
 
-  async update( id : string, updateCategoryImageInput : UpdateCategoryImageInput, user : User ) : Promise<CategoryImage> {
+  async update( id : string, updateCategoryImageInput : UpdateCategoryImageInput, updater : User ) : Promise<CategoryImage> {
     await this.findOne( id )
     const { categoryId } = updateCategoryImageInput
     if ( categoryId ) await this.categoriesService.findOne( categoryId )
@@ -91,7 +91,7 @@ export class CategoryImagesService {
         where: { id },
         data: {
           ...updateCategoryImageInput,
-          updatedBy: user.id
+          updatedBy: updater.id
         }
       })
       return categoryImage
@@ -100,14 +100,14 @@ export class CategoryImagesService {
     }
   }
 
-  async deactivate ( id : string, user : User ) : Promise<CategoryImage> {
+  async deactivate ( id : string, updater : User ) : Promise<CategoryImage> {
     await this.findOne( id )
     try {
       const categoryImage = await this.prismaService.categoryImages.update({
         where: { id },
         data: {
           status: false,
-          updatedBy: user.id
+          updatedBy: updater.id
         }
       })
       return categoryImage
