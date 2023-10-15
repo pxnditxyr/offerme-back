@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDate, IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, IsUUID } from 'class-validator';
 
 @InputType()
 export class CreateCompanyInput {
@@ -42,7 +42,6 @@ export class CreateCompanyInput {
 
   @Field( () => Date, { nullable: true } )
   @IsOptional()
-  @IsNotEmpty()
-  @IsDateString()
+  @IsDate()
   foundedAt?: Date | null
 }
