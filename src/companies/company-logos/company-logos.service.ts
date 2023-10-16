@@ -1,26 +1,98 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCompanyLogoInput } from './dto/create-company-logo.input';
-import { UpdateCompanyLogoInput } from './dto/update-company-logo.input';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { CreateCompanyLogoInput, UpdateCompanyLogoInput } from './dto/inputs'
+import { PrismaService } from 'src/prisma'
+import { CompanyLogo } from './entities/company-logo.entity'
+import { User } from 'src/users/users/entities/user.entity'
+import { CompaniesService } from '../companies/companies.service'
+import { extractPrismaErrors } from 'src/common/extract-prisma-errors'
+
+const companyLogoIncludes = {
+  company: true,
+  creator: true,
+  updater: true
+}
 
 @Injectable()
 export class CompanyLogosService {
-  create(createCompanyLogoInput: CreateCompanyLogoInput) {
-    return 'This action adds a new companyLogo';
+
+  constructor (
+    @Inject( PrismaService )
+    private readonly prismaService : PrismaService,
+
+    private readonly companiesService : CompaniesService
+  ) {}
+
+  async create ( createCompanyLogoInput: CreateCompanyLogoInput, creator : User ) : Promise<CompanyLogo> {
+    const { companyId } = createCompanyLogoInput
+    await this.companiesService.findOne( companyId )
+    try {
+      const companyLogo = await this.prismaService.companyLogos.create({
+        data: {
+          ...createCompanyLogoInput,
+          createdBy: creator.id
+        }
+      })
+      return companyLogo
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+
   }
 
-  findAll() {
-    return `This action returns all companyLogos`;
+  async findAll () {
+    const companyLogos = await this.prismaService.companyLogos.findMany({
+      include: { ...companyLogoIncludes }
+    })
+
+    return companyLogos
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} companyLogo`;
+  async findOne ( id : string ) {
+    const companyLogo = await this.prismaService.companyLogos.findUnique({
+      where: { id },
+      include: { ...companyLogoIncludes }
+    })
+
+    if ( !companyLogo ) throw new NotFoundException( `Company logo with id ${ id } not found` )
+    return companyLogo
   }
 
-  update(id: number, updateCompanyLogoInput: UpdateCompanyLogoInput) {
-    return `This action updates a #${id} companyLogo`;
+  async update ( id : string, updateCompanyLogoInput : UpdateCompanyLogoInput, updater : User ) : Promise<CompanyLogo> {
+    const { companyId } = updateCompanyLogoInput
+    if ( companyId ) await this.companiesService.findOne( companyId )
+    try {
+      const companyLogo = await this.prismaService.companyLogos.update({
+        where: { id },
+        data: {
+          ...updateCompanyLogoInput,
+          updatedBy: updater.id
+        }
+      })
+      return companyLogo
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} companyLogo`;
+  async deactivate ( id : string, updater : User ) : Promise<CompanyLogo> {
+    try {
+      const companyLogo = await this.prismaService.companyLogos.update({
+        where: { id },
+        data: {
+          status: false,
+          updatedBy: updater.id
+        }
+      })
+      return companyLogo
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  private handlerDBExceptions ( error : any ) : never {
+    console.error( error )
+    const prismaError = extractPrismaErrors( error )
+    if ( prismaError ) throw new BadRequestException( prismaError )
+    throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }

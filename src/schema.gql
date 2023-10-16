@@ -263,8 +263,19 @@ type CompanyCategory {
 }
 
 type CompanyLogo {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  companyId: ID!
+  url: String!
+  alt: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  creator: User
+  updater: User
 }
 
 type CompanyReview {
@@ -422,7 +433,7 @@ type Query {
   companies: [Company!]!
   company(id: ID!): Company!
   companyLogos: [CompanyLogo!]!
-  companyLogo(id: Int!): CompanyLogo!
+  companyLogo(id: ID!): CompanyLogo!
   companyPhones: [CompanyPhone!]!
   companyPhone(id: Int!): CompanyPhone!
   companyAddresses: [CompanyAddress!]!
@@ -511,7 +522,7 @@ type Mutation {
   deactivateCompany(id: ID!): Company!
   createCompanyLogo(createCompanyLogoInput: CreateCompanyLogoInput!): CompanyLogo!
   updateCompanyLogo(updateCompanyLogoInput: UpdateCompanyLogoInput!): CompanyLogo!
-  removeCompanyLogo(id: Int!): CompanyLogo!
+  deactivateCompanyLogo(id: ID!): CompanyLogo!
   createCompanyPhone(createCompanyPhoneInput: CreateCompanyPhoneInput!): CompanyPhone!
   updateCompanyPhone(updateCompanyPhoneInput: UpdateCompanyPhoneInput!): CompanyPhone!
   removeCompanyPhone(id: Int!): CompanyPhone!
@@ -769,14 +780,18 @@ input UpdateCompanyInput {
 }
 
 input CreateCompanyLogoInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companyId: ID!
+  url: String!
+  alt: String!
 }
 
 input UpdateCompanyLogoInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  companyId: ID
+  url: String
+  alt: String
+  id: ID!
+  isMain: Boolean
+  status: Boolean
 }
 
 input CreateCompanyPhoneInput {
