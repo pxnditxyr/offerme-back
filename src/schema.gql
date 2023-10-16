@@ -357,8 +357,18 @@ type Phone {
 }
 
 type CompanyUser {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  companyId: ID!
+  userId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  user: User
+  creator: User
+  updater: User
 }
 
 type PromotionImage {
@@ -461,7 +471,7 @@ type Query {
   productCategories: [ProductCategory!]!
   productCategory(id: Int!): ProductCategory!
   companyUsers: [CompanyUser!]!
-  companyUser(id: Int!): CompanyUser!
+  companyUser(id: ID!): CompanyUser!
   creditCards: [CreditCard!]!
   creditCard(id: Int!): CreditCard!
   userCreditCards: [UserCreditCard!]!
@@ -559,7 +569,7 @@ type Mutation {
   removeProductCategory(id: Int!): ProductCategory!
   createCompanyUser(createCompanyUserInput: CreateCompanyUserInput!): CompanyUser!
   updateCompanyUser(updateCompanyUserInput: UpdateCompanyUserInput!): CompanyUser!
-  removeCompanyUser(id: Int!): CompanyUser!
+  deactivateCompanyUser(id: ID!): CompanyUser!
   createCreditCard(createCreditCardInput: CreateCreditCardInput!): CreditCard!
   updateCreditCard(updateCreditCardInput: UpdateCreditCardInput!): CreditCard!
   removeCreditCard(id: Int!): CreditCard!
@@ -913,14 +923,15 @@ input UpdateProductCategoryInput {
 }
 
 input CreateCompanyUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companyId: ID!
+  userId: ID!
 }
 
 input UpdateCompanyUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  companyId: ID
+  userId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreateCreditCardInput {

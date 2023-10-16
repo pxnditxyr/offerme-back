@@ -4,6 +4,8 @@ import { User } from 'src/users/users/entities/user.entity'
 import { CompanyPhone } from './entities/company-phone.entity'
 import { PrismaService } from 'src/prisma'
 import { extractPrismaErrors } from 'src/common/extract-prisma-errors'
+import { CompaniesService } from '../companies/companies.service'
+import { PhonesService } from 'src/contact-information/phones/phones.service'
 
 const companyPhoneIncludes = {
   company: true,
@@ -17,10 +19,16 @@ export class CompanyPhonesService {
 
   constructor (
     @Inject( PrismaService )
-    private readonly prismaService : PrismaService
+    private readonly prismaService : PrismaService,
+
+    private readonly companiesService : CompaniesService,
+    private readonly phonesService : PhonesService,
   ) {}
 
   async create ( createCompanyPhoneInput  : CreateCompanyPhoneInput, creator : User ) : Promise<CompanyPhone> {
+    const { phoneId, companyId } = createCompanyPhoneInput
+    await this.companiesService.findOne( companyId )
+    await this.phonesService.findOne( phoneId )
     try {
       const companyPhone = await this.prismaService.companyPhones.create({
         data: {
@@ -52,6 +60,9 @@ export class CompanyPhonesService {
 
   async update ( id : string, updateCompanyPhoneInput : UpdateCompanyPhoneInput, updater : User ) : Promise<CompanyPhone> {
     await this.findOne( id )
+    const { phoneId, companyId } = updateCompanyPhoneInput
+    if ( phoneId ) await this.phonesService.findOne( phoneId )
+    if ( companyId ) await this.companiesService.findOne( companyId )
     try {
       const companyPhone = await this.prismaService.companyPhones.update({
         where: { id },

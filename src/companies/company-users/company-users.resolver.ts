@@ -1,35 +1,56 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { CompanyUsersService } from './company-users.service';
-import { CompanyUser } from './entities/company-user.entity';
-import { CreateCompanyUserInput } from './dto/create-company-user.input';
-import { UpdateCompanyUserInput } from './dto/update-company-user.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { CompanyUsersService } from './company-users.service'
+import { CompanyUser } from './entities/company-user.entity'
+import { CreateCompanyUserInput, UpdateCompanyUserInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
 
-@Resolver(() => CompanyUser)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => CompanyUser )
 export class CompanyUsersResolver {
-  constructor(private readonly companyUsersService: CompanyUsersService) {}
+  constructor(
+    private readonly companyUsersService: CompanyUsersService
+  ) {}
 
-  @Mutation(() => CompanyUser)
-  createCompanyUser(@Args('createCompanyUserInput') createCompanyUserInput: CreateCompanyUserInput) {
-    return this.companyUsersService.create(createCompanyUserInput);
+  @Mutation( () => CompanyUser )
+  async createCompanyUser (
+    @Args( 'createCompanyUserInput' ) createCompanyUserInput : CreateCompanyUserInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) : Promise<CompanyUser> {
+    return await this.companyUsersService.create( createCompanyUserInput, user )
   }
 
-  @Query(() => [CompanyUser], { name: 'companyUsers' })
-  findAll() {
-    return this.companyUsersService.findAll();
+  @Query( () => [ CompanyUser ], { name: 'companyUsers' } )
+  async findAll(
+    @CurrentUser([ ValidRoles.ADMIN ]) _user : User
+  ) {
+    return await this.companyUsersService.findAll()
   }
 
-  @Query(() => CompanyUser, { name: 'companyUser' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.companyUsersService.findOne(id);
+  @Query( () => CompanyUser, { name: 'companyUser' } )
+  async findOne(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+
+  ) {
+    return await this.companyUsersService.findOne( id )
   }
 
-  @Mutation(() => CompanyUser)
-  updateCompanyUser(@Args('updateCompanyUserInput') updateCompanyUserInput: UpdateCompanyUserInput) {
-    return this.companyUsersService.update(updateCompanyUserInput.id, updateCompanyUserInput);
+  @Mutation( () => CompanyUser )
+  async updateCompanyUser(
+    @Args( 'updateCompanyUserInput' ) updateCompanyUserInput : UpdateCompanyUserInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) : Promise<CompanyUser> {
+    return await this.companyUsersService.update( updateCompanyUserInput.id, updateCompanyUserInput, user )
   }
 
-  @Mutation(() => CompanyUser)
-  removeCompanyUser(@Args('id', { type: () => Int }) id: number) {
-    return this.companyUsersService.remove(id);
+  @Mutation( () => CompanyUser )
+  async deactivateCompanyUser(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) : Promise<CompanyUser> {
+    return await this.companyUsersService.deactivate( id, user )
   }
 }

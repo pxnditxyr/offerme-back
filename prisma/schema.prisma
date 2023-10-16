@@ -158,8 +158,8 @@ model Users {
   updatedCreditCards             CreditCards[]                   @relation("credit_cards_updated_by")
   createdUserCreditCards         UserCreditCards[]               @relation("user_credit_cards_created_by")
   updatedUserCreditCards         UserCreditCards[]               @relation("user_credit_cards_updated_by")
-  createdCampanyUsers            CampanyUsers[]                  @relation("campany_users_created_by")
-  updatedCampanyUsers            CampanyUsers[]                  @relation("campany_users_updated_by")
+  createdCompanyUsers            CompanyUsers[]                  @relation("company_users_created_by")
+  updatedCompanyUsers            CompanyUsers[]                  @relation("company_users_updated_by")
   createdPromotionRequest        PromotionRequests[]             @relation("promotion_request_created_by")
   updatedPromotionRequest        PromotionRequests[]             @relation("promotion_request_updated_by")
   createdPromotionImages         PromotionImages[]               @relation("promotion_images_created_by")
@@ -190,7 +190,7 @@ model Users {
   phones                    UserPhones[]                    @relation("user_phones_user")
   addresses                 UserAddresses[]                 @relation("user_addresses_user")
   creditCards               UserCreditCards[]               @relation("user_credit_cards_user")
-  companies                 CampanyUsers[]                  @relation("campany_users_user")
+  companies                 CompanyUsers[]                  @relation("company_users_user")
   promotionRequests         PromotionRequests[]             @relation("promotion_request_requesting_user")
   approvedPromotionRequests PromotionStatus[]               @relation("promotion_status_admin_approved_by")
   rejectedPromotionRequests PromotionStatus[]               @relation("promotion_status_admin_rejected_by")
@@ -351,7 +351,7 @@ model Companies {
   addresses         CompanyAddresses[]  @relation("company_addresses_company")
   products          Products[]          @relation("products_company")
   categories        CompanyCategories[] @relation("company_categories_company")
-  users             CampanyUsers[]      @relation("campany_users_company")
+  users             CompanyUsers[]      @relation("company_users_company")
   promotionRequests PromotionRequests[] @relation("promotion_request_company")
   promotions        Promotions[]        @relation("promotions_company")
   reviews           CompanyReviews[]    @relation("company_reviews_company")
@@ -477,7 +477,7 @@ model CompanyCategories {
   @@map("company_categories")
 }
 
-model CampanyUsers {
+model CompanyUsers {
   id        String   @id @default(uuid())
   companyId String
   userId    String
@@ -487,10 +487,10 @@ model CampanyUsers {
   updatedAt DateTime @updatedAt
   updatedBy String?
 
-  company Companies @relation("campany_users_company", fields: [companyId], references: [id])
-  user    Users     @relation("campany_users_user", fields: [userId], references: [id])
-  creator Users?    @relation("campany_users_created_by", fields: [createdBy], references: [id])
-  updater Users?    @relation("campany_users_updated_by", fields: [updatedBy], references: [id])
+  company Companies @relation("company_users_company", fields: [companyId], references: [id])
+  user    Users     @relation("company_users_user", fields: [userId], references: [id])
+  creator Users?    @relation("company_users_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("company_users_updated_by", fields: [updatedBy], references: [id])
 
   @@map("campany_users")
 }
