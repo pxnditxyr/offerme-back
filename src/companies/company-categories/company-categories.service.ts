@@ -60,6 +60,7 @@ export class CompanyCategoriesService {
   }
 
   async update ( id : string, updateCompanyCategoryInput : UpdateCompanyCategoryInput, updater : User ) : Promise<CompanyCategory> {
+    await this.findOne( id )
     const { companyId, categoryId } = updateCompanyCategoryInput
     if ( companyId ) await this.companiesService.findOne( companyId )
     if ( categoryId ) await this.categoriesService.findOne( categoryId )
@@ -80,6 +81,7 @@ export class CompanyCategoriesService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<CompanyCategory> {
+    await this.findOne( id )
     try {
       const companyCategory = await this.prismaService.companyCategories.update({
         where: { id },

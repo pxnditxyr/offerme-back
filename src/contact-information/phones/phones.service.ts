@@ -50,6 +50,7 @@ export class PhonesService {
   }
 
   async update ( id : string, updatePhoneInput : UpdatePhoneInput, updater : User ) : Promise<Phone> {
+    await this.findOne( id )
     try {
       const phone = await this.prismaService.phones.update({
         where: { id },
@@ -65,6 +66,7 @@ export class PhonesService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<Phone> {
+    await this.findOne( id )
     try {
       const phone = await this.prismaService.phones.update({
         where: { id },

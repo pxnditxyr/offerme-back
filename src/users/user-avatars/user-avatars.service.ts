@@ -48,6 +48,7 @@ export class UserAvatarsService {
   }
 
   async update ( id : string, updateUserAvatarInput : UpdateUserAvatarInput, updater : User ) : Promise<UserAvatar> {
+    await this.findOne( id )
     try {
       const userAvatar = await this.prismaService.userAvatars.update({
         where: { id },
@@ -63,6 +64,7 @@ export class UserAvatarsService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<UserAvatar> {
+    await this.findOne( id )
     try {
       const userAvatar = await this.prismaService.userAvatars.update({
         where: { id },

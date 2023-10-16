@@ -166,25 +166,22 @@ type AuthResponse {
   user: UserResponse!
 }
 
-type CompanyPhone {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Phone {
+type Address {
   id: ID!
-  phoneTypeId: ID!
-  number: String!
+  street: String
+  city: String!
+  state: String!
+  country: String!
+  zipCode: String
   status: Boolean!
   createdAt: DateTime!
   createdBy: ID
   updatedAt: DateTime!
   updatedBy: ID
-  phoneType: Subparameter
   creator: User
   updater: User
-  users: [UserPhone!]
-  companies: [CompanyPhone!]
+  users: [User!]
+  companies: [Company!]
 }
 
 type CompanyAddress {
@@ -328,22 +325,35 @@ type Company {
   companies: [CompanyReview!]
 }
 
-type Address {
+type CompanyPhone {
   id: ID!
-  street: String
-  city: String!
-  state: String!
-  country: String!
-  zipCode: String
+  companyId: ID!
+  phoneId: ID!
   status: Boolean!
   createdAt: DateTime!
   createdBy: ID
   updatedAt: DateTime!
   updatedBy: ID
+  company: Company
+  phone: Phone
   creator: User
   updater: User
-  users: [User!]
-  companies: [Company!]
+}
+
+type Phone {
+  id: ID!
+  phoneTypeId: ID!
+  number: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  phoneType: Subparameter
+  creator: User
+  updater: User
+  users: [UserPhone!]
+  companies: [CompanyPhone!]
 }
 
 type CompanyUser {
@@ -435,7 +445,7 @@ type Query {
   companyLogos: [CompanyLogo!]!
   companyLogo(id: ID!): CompanyLogo!
   companyPhones: [CompanyPhone!]!
-  companyPhone(id: Int!): CompanyPhone!
+  companyPhone(id: ID!): CompanyPhone!
   companyAddresses: [CompanyAddress!]!
   companyAddress(id: ID!): CompanyAddress!
   categories: [Category!]!
@@ -525,7 +535,7 @@ type Mutation {
   deactivateCompanyLogo(id: ID!): CompanyLogo!
   createCompanyPhone(createCompanyPhoneInput: CreateCompanyPhoneInput!): CompanyPhone!
   updateCompanyPhone(updateCompanyPhoneInput: UpdateCompanyPhoneInput!): CompanyPhone!
-  removeCompanyPhone(id: Int!): CompanyPhone!
+  deactivateCompanyPhone(id: ID!): CompanyPhone!
   createCompanyAddress(createCompanyAddressInput: CreateCompanyAddressInput!): CompanyAddress!
   updateCompanyAddress(updateCompanyAddressInput: UpdateCompanyAddressInput!): CompanyAddress!
   deactivateCompanyAddress(id: ID!): CompanyAddress!
@@ -795,14 +805,15 @@ input UpdateCompanyLogoInput {
 }
 
 input CreateCompanyPhoneInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companyId: ID!
+  phoneId: ID!
 }
 
 input UpdateCompanyPhoneInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  companyId: ID
+  phoneId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreateCompanyAddressInput {

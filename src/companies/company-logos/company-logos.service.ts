@@ -58,6 +58,7 @@ export class CompanyLogosService {
   }
 
   async update ( id : string, updateCompanyLogoInput : UpdateCompanyLogoInput, updater : User ) : Promise<CompanyLogo> {
+    await this.findOne( id )
     const { companyId } = updateCompanyLogoInput
     if ( companyId ) await this.companiesService.findOne( companyId )
     try {
@@ -75,6 +76,7 @@ export class CompanyLogosService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<CompanyLogo> {
+    await this.findOne( id )
     try {
       const companyLogo = await this.prismaService.companyLogos.update({
         where: { id },
