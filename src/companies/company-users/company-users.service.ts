@@ -5,7 +5,7 @@ import { CompaniesService } from '../companies/companies.service'
 import { UsersService } from 'src/users/users/users.service'
 import { User } from 'src/users/users/entities/user.entity'
 import { CompanyUser } from './entities/company-user.entity'
-import { extractPrismaErrors } from 'src/common/extract-prisma-errors'
+import { extractPrismaErrors } from 'src/utils/extract-prisma-errors'
 
 const companyUserIncludes = {
   user: true,

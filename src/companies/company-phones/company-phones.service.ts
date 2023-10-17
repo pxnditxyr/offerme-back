@@ -3,7 +3,7 @@ import { CreateCompanyPhoneInput, UpdateCompanyPhoneInput } from './dto/inputs'
 import { User } from 'src/users/users/entities/user.entity'
 import { CompanyPhone } from './entities/company-phone.entity'
 import { PrismaService } from 'src/prisma'
-import { extractPrismaErrors } from 'src/common/extract-prisma-errors'
+import { extractPrismaErrors } from 'src/utils/extract-prisma-errors'
 import { CompaniesService } from '../companies/companies.service'
 import { PhonesService } from 'src/contact-information/phones/phones.service'
 
