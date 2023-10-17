@@ -19,12 +19,12 @@ export class ParametersService {
     private readonly prismaService : PrismaService
   ) {}
 
-  async create( createParameterInput : CreateParameterInput, creator : User ) : Promise<Parameter> {
+  async create( createParameterInput : CreateParameterInput, creator? : User ) : Promise<Parameter> {
     try {
       const parameter = await this.prismaService.parameters.create({
         data: {
           ...createParameterInput,
-          createdBy: creator.id
+          createdBy: creator?.id
         }
       })
       return parameter

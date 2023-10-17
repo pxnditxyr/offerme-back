@@ -458,20 +458,20 @@ type Query {
   companyPhone(id: ID!): CompanyPhone!
   companyAddresses: [CompanyAddress!]!
   companyAddress(id: ID!): CompanyAddress!
-  categories: [Category!]!
-  category(id: ID!): Category!
-  categoryImages: [CategoryImage!]!
-  categoryImage(id: ID!): CategoryImage!
   companyCategories: [CompanyCategory!]!
   companyCategory(id: ID!): CompanyCategory!
+  categories: [Category!]!
+  category(id: ID!): Category!
+  companyUsers: [CompanyUser!]!
+  companyUser(id: ID!): CompanyUser!
+  categoryImages: [CategoryImage!]!
+  categoryImage(id: ID!): CategoryImage!
   products: [Product!]!
   product(id: Int!): Product!
   productImages: [ProductImage!]!
   productImage(id: Int!): ProductImage!
   productCategories: [ProductCategory!]!
   productCategory(id: Int!): ProductCategory!
-  companyUsers: [CompanyUser!]!
-  companyUser(id: ID!): CompanyUser!
   creditCards: [CreditCard!]!
   creditCard(id: Int!): CreditCard!
   userCreditCards: [UserCreditCard!]!
@@ -549,15 +549,18 @@ type Mutation {
   createCompanyAddress(createCompanyAddressInput: CreateCompanyAddressInput!): CompanyAddress!
   updateCompanyAddress(updateCompanyAddressInput: UpdateCompanyAddressInput!): CompanyAddress!
   deactivateCompanyAddress(id: ID!): CompanyAddress!
-  createCategory(createCategoryInput: CreateCategoryInput!): Category!
-  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
-  deactivateCategory(id: ID!): Category!
-  createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
-  updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
-  deactivateCategoryImage(id: ID!): CategoryImage!
   createCompanyCategory(createCompanyCategoryInput: CreateCompanyCategoryInput!): CompanyCategory!
   updateCompanyCategory(updateCompanyCategoryInput: UpdateCompanyCategoryInput!): CompanyCategory!
   deactivateCompanyCategory(id: ID!): CompanyCategory!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
+  deactivateCategory(id: ID!): Category!
+  createCompanyUser(createCompanyUserInput: CreateCompanyUserInput!): CompanyUser!
+  updateCompanyUser(updateCompanyUserInput: UpdateCompanyUserInput!): CompanyUser!
+  deactivateCompanyUser(id: ID!): CompanyUser!
+  createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
+  updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
+  deactivateCategoryImage(id: ID!): CategoryImage!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
@@ -567,9 +570,6 @@ type Mutation {
   createProductCategory(createProductCategoryInput: CreateProductCategoryInput!): ProductCategory!
   updateProductCategory(updateProductCategoryInput: UpdateProductCategoryInput!): ProductCategory!
   removeProductCategory(id: Int!): ProductCategory!
-  createCompanyUser(createCompanyUserInput: CreateCompanyUserInput!): CompanyUser!
-  updateCompanyUser(updateCompanyUserInput: UpdateCompanyUserInput!): CompanyUser!
-  deactivateCompanyUser(id: ID!): CompanyUser!
   createCreditCard(createCreditCardInput: CreateCreditCardInput!): CreditCard!
   updateCreditCard(updateCreditCardInput: UpdateCreditCardInput!): CreditCard!
   removeCreditCard(id: Int!): CreditCard!
@@ -612,6 +612,9 @@ type Mutation {
   createCompanyReview(createCompanyReviewInput: CreateCompanyReviewInput!): CompanyReview!
   updateCompanyReview(updateCompanyReviewInput: UpdateCompanyReviewInput!): CompanyReview!
   removeCompanyReview(id: Int!): CompanyReview!
+
+  """Seed database"""
+  seed: Boolean!
 }
 
 input CreateParameterInput {
@@ -842,6 +845,18 @@ input UpdateCompanyAddressInput {
   status: Boolean
 }
 
+input CreateCompanyCategoryInput {
+  companyId: ID!
+  categoryId: ID!
+}
+
+input UpdateCompanyCategoryInput {
+  companyId: ID
+  categoryId: ID
+  id: ID!
+  status: Boolean
+}
+
 input CreateCategoryInput {
   name: String!
   description: String!
@@ -854,6 +869,18 @@ input UpdateCategoryInput {
   description: String
   order: Int
   parentId: ID
+  id: ID!
+  status: Boolean
+}
+
+input CreateCompanyUserInput {
+  companyId: ID!
+  userId: ID!
+}
+
+input UpdateCompanyUserInput {
+  companyId: ID
+  userId: ID
   id: ID!
   status: Boolean
 }
@@ -874,18 +901,6 @@ input UpdateCategoryImageInput {
   alt: String
   id: ID!
   isMain: Boolean
-  status: Boolean
-}
-
-input CreateCompanyCategoryInput {
-  companyId: ID!
-  categoryId: ID!
-}
-
-input UpdateCompanyCategoryInput {
-  companyId: ID
-  categoryId: ID
-  id: ID!
   status: Boolean
 }
 
@@ -920,18 +935,6 @@ input UpdateProductCategoryInput {
   """Example field (placeholder)"""
   exampleField: Int
   id: Int!
-}
-
-input CreateCompanyUserInput {
-  companyId: ID!
-  userId: ID!
-}
-
-input UpdateCompanyUserInput {
-  companyId: ID
-  userId: ID
-  id: ID!
-  status: Boolean
 }
 
 input CreateCreditCardInput {

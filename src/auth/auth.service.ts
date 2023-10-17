@@ -9,6 +9,7 @@ import { SessionsService } from 'src/users/sessions/sessions.service'
 import { JwtService } from '@nestjs/jwt'
 import { AuthResponse } from './types/auth-response.types'
 import { User } from 'src/users/users/entities/user.entity'
+import { ValidRoles } from './enums/valid-roles.enum'
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,7 @@ export class AuthService {
       email, password, googleId, ipAddress, userAgent
     } = signupDto
 
-    const role = await this.rolesService.findByName( 'USER' )
+    const role = await this.rolesService.findByName( ValidRoles.USER )
     const gender = await this.subparametersService.findOne( genderId )
 
     const peopleInfo = await this.peopleInfoService.create({
