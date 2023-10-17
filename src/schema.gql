@@ -460,7 +460,7 @@ type Query {
   companyAddress(id: ID!): CompanyAddress!
   companyCategories: [CompanyCategory!]!
   companyCategory(id: ID!): CompanyCategory!
-  categories: [Category!]!
+  categories(offset: Int = 0, limit: Int = 10): [Category!]!
   category(id: ID!): Category!
   companyUsers: [CompanyUser!]!
   companyUser(id: ID!): CompanyUser!

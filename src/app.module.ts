@@ -30,6 +30,7 @@ import { CategoriesModule, CategoryImagesModule  } from './categories'
 import { ProductsModule, ProductImagesModule, ProductCategoriesModule } from './products'
 import { ReviewsModule, CommentsModule  } from './reviews'
 import { SeedModule } from './seed'
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -53,7 +54,7 @@ import { SeedModule } from './seed'
     PromotionRequestsModule, PromotionImagesModule, PromotionTargetProductsModule,
     DiscountProductsModule, PromotionStatusModule, PromotionPaymentsModule,
     PromotionsModule, CodePromotionDiscountProductsModule, ReviewsModule, CommentsModule,
-    PromotionReviewsModule, CompanyReviewsModule, SeedModule,
+    PromotionReviewsModule, CompanyReviewsModule, SeedModule, CommonModule,
   ]
 })
 export class AppModule {}
