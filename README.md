@@ -33,6 +33,18 @@ cd offerme-back
 ```bash
 bun i
 ```
+4. 🚧 Fixing Bcrypt and Bun Incompatibility 🧩
+Due to the incompatibility between bcrypt and bun, you should perform the following two commands in order to resolve this issue:
+
+```bash
+npm i bcrypt
+```
+
+followed by
+
+```bash
+rm package-lock.json
+```
 
 ## Configuration ⚙️
 
