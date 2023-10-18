@@ -40,17 +40,14 @@ export class CategoriesService {
     }
   }
 
-  async findAll ( { paginationArgs,searchArgs } : findAllOptions  ) {
+  async findAll ( { paginationArgs, searchArgs } : findAllOptions  ) {
     try {
       const { limit, offset } = paginationArgs
       const { search } = searchArgs
       const categories = await this.prismaService.categories.findMany({
         include: { ...categoryIncludes },
         where: {
-          name: {
-            contains: search,
-            mode: 'insensitive'
-          }
+          name: { contains: search, mode: 'insensitive' }
         },
         take: limit,
         skip: offset,

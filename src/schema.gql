@@ -450,7 +450,7 @@ type Query {
   phone(id: ID!): Phone!
   addresses: [Address!]!
   address(id: ID!): Address!
-  companies: [Company!]!
+  companies(offset: Int = 0, limit: Int = 10, search: String): [Company!]!
   company(id: ID!): Company!
   companyLogos: [CompanyLogo!]!
   companyLogo(id: ID!): CompanyLogo!
