@@ -5,6 +5,7 @@ import { PrismaService } from '../../prisma'
 import { RolesService } from '../roles/roles.service'
 import { hashSync } from 'bcrypt'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { extractPrismaExceptions } from 'src/common/exception-catchers'
 
 const userIncludes = {
   peopleInfo: true,
@@ -125,13 +126,9 @@ export class UsersService {
   }
 
   private handlerDBExceptions ( error : any ) : never {
-    if ( error.code === 'P2002' ) {
-      throw new BadRequestException(
-        error.meta.target.map( ( field : string ) =>
-          `The ${ field } is already in use` ).join( ', ' )
-      )
-    }
     console.error( error )
+    const prismaError = extractPrismaExceptions( error )
+    if ( prismaError ) throw new BadRequestException( prismaError )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }

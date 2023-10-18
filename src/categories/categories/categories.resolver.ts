@@ -7,7 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { User } from 'src/users/users/entities/user.entity'
-import { PaginationArgs } from 'src/common/dto/args/pagination.args'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
 @UseGuards( JwtAuthGuard )
 @Resolver( () => Category )
@@ -26,10 +26,10 @@ export class CategoriesResolver {
 
   @Query( () => [ Category ], { name: 'categories' } )
   async findAll (
-    @Args() paginationArgs : PaginationArgs
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs
   ) {
-    console.log( paginationArgs )
-    return await this.categoriesService.findAll()
+    return await this.categoriesService.findAll({ paginationArgs, searchArgs })
   }
 
   @Query( () => Category, { name: 'category' } )

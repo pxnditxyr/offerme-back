@@ -3,9 +3,9 @@ import { CreateCompanyPhoneInput, UpdateCompanyPhoneInput } from './dto/inputs'
 import { User } from 'src/users/users/entities/user.entity'
 import { CompanyPhone } from './entities/company-phone.entity'
 import { PrismaService } from 'src/prisma'
-import { extractPrismaErrors } from 'src/utils/extract-prisma-errors'
 import { CompaniesService } from '../companies/companies.service'
 import { PhonesService } from 'src/contact-information/phones/phones.service'
+import { extractPrismaExceptions } from 'src/common/exception-catchers'
 
 const companyPhoneIncludes = {
   company: true,
@@ -95,7 +95,7 @@ export class CompanyPhonesService {
 
   private handlerDBExceptions ( error : any ) : never {
     console.error( error )
-    const prismaError = extractPrismaErrors( error )
+    const prismaError = extractPrismaExceptions( error )
     if ( prismaError ) throw new BadRequestException( prismaError )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }

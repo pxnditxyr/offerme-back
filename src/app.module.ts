@@ -30,7 +30,7 @@ import { CategoriesModule, CategoryImagesModule  } from './categories'
 import { ProductsModule, ProductImagesModule, ProductCategoriesModule } from './products'
 import { ReviewsModule, CommentsModule  } from './reviews'
 import { SeedModule } from './seed'
-import { CommonModule } from './common/common.module';
+import { CommonModule } from './common'
 
 @Module({
   imports: [

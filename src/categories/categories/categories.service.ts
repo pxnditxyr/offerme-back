@@ -1,8 +1,10 @@
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreateCategoryInput, UpdateCategoryInput } from './dto/inputs'
 import { Category } from './entities/category.entity'
 import { User } from 'src/users/users/entities/user.entity'
 import { PrismaService } from 'src/prisma'
+import { findAllOptions } from 'src/common/interfaces/find-options.interface'
+import { extractPrismaExceptions } from 'src/common/exception-catchers'
 
 const categoryIncludes = {
   images: true,
@@ -36,15 +38,28 @@ export class CategoriesService {
     } catch ( error ) {
       this.handlerDBExceptions( error )
     }
-
   }
 
-  async findAll () {
-    const categories = await this.prismaService.categories.findMany({
-      include: { ...categoryIncludes }
-    })
-
-    return categories
+  async findAll ( { paginationArgs,searchArgs } : findAllOptions  ) {
+    try {
+      const { limit, offset } = paginationArgs
+      const { search } = searchArgs
+      const categories = await this.prismaService.categories.findMany({
+        include: { ...categoryIncludes },
+        where: {
+          name: {
+            contains: search,
+            mode: 'insensitive'
+          }
+        },
+        take: limit,
+        skip: offset,
+        orderBy: { updatedAt: 'desc' }
+      })
+      return categories
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
   async findOne ( id : string ) {
@@ -92,6 +107,8 @@ export class CategoriesService {
 
   private handlerDBExceptions ( error : any ) : never {
     console.error( error )
+    const prismaError = extractPrismaExceptions( error )
+    if ( prismaError ) throw new BadRequestException( prismaError )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }

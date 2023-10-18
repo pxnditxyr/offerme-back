@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma'
 import { CompanyLogo } from './entities/company-logo.entity'
 import { User } from 'src/users/users/entities/user.entity'
 import { CompaniesService } from '../companies/companies.service'
-import { extractPrismaErrors } from 'src/utils/extract-prisma-errors'
+import { extractPrismaExceptions } from 'src/common/exception-catchers'
 
 const companyLogoIncludes = {
   company: true,
@@ -93,7 +93,7 @@ export class CompanyLogosService {
 
   private handlerDBExceptions ( error : any ) : never {
     console.error( error )
-    const prismaError = extractPrismaErrors( error )
+    const prismaError = extractPrismaExceptions( error )
     if ( prismaError ) throw new BadRequestException( prismaError )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
