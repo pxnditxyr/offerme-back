@@ -199,7 +199,6 @@ model Users {
   reviews                   Reviews[]                       @relation("reviews_user")
   comments                  Comments[]                      @relation("comments_user")
   promotions                Promotions[]                    @relation("promotions_user")
-  promotionReviews          PromotionReviews[]              @relation("promotion_reviews_user")
 
   @@map("users")
 }
@@ -850,7 +849,6 @@ model Comments {
 model PromotionReviews {
   id          String   @id @default(uuid())
   reviewId    String
-  userId      String
   promotionId String
   status      Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -859,7 +857,6 @@ model PromotionReviews {
   updatedBy   String?
 
   review    Reviews    @relation("promotion_reviews_review", fields: [reviewId], references: [id])
-  user      Users      @relation("promotion_reviews_user", fields: [userId], references: [id])
   promotion Promotions @relation("promotion_reviews_promotion", fields: [promotionId], references: [id])
   creator   Users?     @relation("promotion_reviews_created_by", fields: [createdBy], references: [id])
   updater   Users?     @relation("promotion_reviews_updated_by", fields: [updatedBy], references: [id])
