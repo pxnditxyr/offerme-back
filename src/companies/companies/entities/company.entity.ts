@@ -3,11 +3,11 @@ import { CompanyAddress } from 'src/companies/company-addresses/entities/company
 import { CompanyCategory } from 'src/companies/company-categories/entities/company-category.entity'
 import { CompanyLogo } from 'src/companies/company-logos/entities/company-logo.entity'
 import { CompanyPhone } from 'src/companies/company-phones/entities/company-phone.entity'
-import { CompanyReview } from 'src/companies/company-reviews/entities/company-review.entity'
 import { Subparameter } from 'src/parametrics/subparameters/entities/subparameter.entity'
 import { Product } from 'src/products/products/entities/product.entity'
 import { PromotionRequest } from 'src/promotions/promotion-requests/entities/promotion-request.entity'
 import { Promotion } from 'src/promotions/promotions/entities/promotion.entity'
+import { CompanyReview } from 'src/reviews/company-reviews/entities/company-review.entity'
 import { User } from 'src/users/users/entities/user.entity'
 
 @ObjectType()

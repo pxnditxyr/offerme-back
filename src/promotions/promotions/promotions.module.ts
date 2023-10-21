@@ -3,6 +3,13 @@ import { PromotionsService } from './promotions.service';
 import { PromotionsResolver } from './promotions.resolver';
 
 @Module({
-  providers: [PromotionsResolver, PromotionsService],
+  providers: [
+    PromotionsResolver,
+    PromotionsService
+  ],
+
+  exports: [
+    PromotionsService
+  ]
 })
 export class PromotionsModule {}

@@ -4,6 +4,5 @@ export { PromotionTargetProductsModule } from './promotion-target-products/promo
 export { PromotionStatusModule } from './promotion-status/promotion-status.module'
 export { PromotionPaymentsModule } from './promotion-payments/promotion-payments.module'
 export { PromotionRequestsModule } from './promotion-requests/promotion-requests.module'
-export { PromotionReviewsModule } from './promotion-reviews/promotion-reviews.module'
 export { CodePromotionDiscountProductsModule } from './code-promotion-discount-products/code-promotion-discount-products.module'
 export { DiscountProductsModule } from './discount-products/discount-products.module'

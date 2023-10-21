@@ -16,11 +16,11 @@ import { PhonesModule, AddressesModule } from './contact-information'
 
 import {
   CompaniesModule, CompanyUsersModule, CompanyCategoriesModule, CompanyAddressesModule,
-  CompanyPhonesModule, CompanyReviewsModule, CompanyLogosModule,
+  CompanyPhonesModule, CompanyLogosModule,
 } from './companies'
 
 import {
-  PromotionReviewsModule, CodePromotionDiscountProductsModule, PromotionsModule, PromotionStatusModule,
+  CodePromotionDiscountProductsModule, PromotionsModule, PromotionStatusModule,
   PromotionPaymentsModule, DiscountProductsModule, PromotionTargetProductsModule,
   PromotionImagesModule, PromotionRequestsModule,
 } from './promotions'
@@ -28,7 +28,7 @@ import {
 import { CreditCardsModule } from './payments'
 import { CategoriesModule, CategoryImagesModule  } from './categories'
 import { ProductsModule, ProductImagesModule, ProductCategoriesModule } from './products'
-import { ReviewsModule, CommentsModule  } from './reviews'
+import { ReviewsModule, CommentsModule, PromotionReviewsModule, CompanyReviewsModule  } from './reviews'
 import { SeedModule } from './seed'
 import { CommonModule } from './common'
 

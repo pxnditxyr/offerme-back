@@ -1,24 +1,18 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Promotion } from 'src/promotions/promotions/entities/promotion.entity';
 import { Review } from 'src/reviews/reviews/entities/review.entity';
 import { User } from 'src/users/users/entities/user.entity';
 
 @ObjectType()
-export class Comment {
-
+export class PromotionReview {
   @Field( () => ID )
   id: string
 
   @Field( () => ID )
-  userId: string
-
-  @Field( () => ID )
   reviewId: string
 
-  @Field( () => String )
-  comment: string
-
-  @Field( () => Date )
-  commentDate: Date
+  @Field( () => ID )
+  promotionId: string
 
   @Field( () => Boolean )
   status: boolean
@@ -35,11 +29,11 @@ export class Comment {
   @Field( () => ID, { nullable: true } )
   updatedBy?: string | null
 
-  @Field( () => User, { nullable: true } )
-  user?: User | null
-
   @Field( () => Review, { nullable: true } )
   review?: Review | null
+
+  @Field( () => Promotion, { nullable: true } )
+  promotion?: Promotion | null
 
   @Field( () => User, { nullable: true } )
   creator?: User | null

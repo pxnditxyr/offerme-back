@@ -1,35 +1,57 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { CommentsService } from './comments.service';
-import { Comment } from './entities/comment.entity';
-import { CreateCommentInput } from './dto/create-comment.input';
-import { UpdateCommentInput } from './dto/update-comment.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { CommentsService } from './comments.service'
+import { Comment } from './entities/comment.entity'
+import { CreateCommentInput, UpdateCommentInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@Resolver(() => Comment)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => Comment )
 export class CommentsResolver {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor (
+    private readonly commentsService: CommentsService
+  ) {}
 
-  @Mutation(() => Comment)
-  createComment(@Args('createCommentInput') createCommentInput: CreateCommentInput) {
-    return this.commentsService.create(createCommentInput);
+  @Mutation( () => Comment )
+  async createComment (
+    @Args( 'createCommentInput' ) createCommentInput : CreateCommentInput,
+    @CurrentUser([ ValidRoles.USER ]) creator : User
+  ) : Promise<Comment> {
+    return await this.commentsService.create( createCommentInput, creator )
   }
 
-  @Query(() => [Comment], { name: 'comments' })
-  findAll() {
-    return this.commentsService.findAll();
+  @Query( () => [ Comment ], { name: 'comments' } )
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs
+  ) {
+    return await this.commentsService.findAll({ paginationArgs, searchArgs })
   }
 
-  @Query(() => Comment, { name: 'comment' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.findOne(id);
+  @Query( () => Comment, { name: 'comment' } )
+  async findOne (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+  ) {
+    return await this.commentsService.findOne( id )
   }
 
-  @Mutation(() => Comment)
-  updateComment(@Args('updateCommentInput') updateCommentInput: UpdateCommentInput) {
-    return this.commentsService.update(updateCommentInput.id, updateCommentInput);
+  @Mutation( () => Comment )
+  async updateComment (
+    @Args( 'updateCommentInput' ) updateCommentInput : UpdateCommentInput,
+    @CurrentUser([ ValidRoles.USER ]) updater : User
+  ) : Promise<Comment> {
+    return await this.commentsService.update( updateCommentInput.id, updateCommentInput, updater )
   }
 
-  @Mutation(() => Comment)
-  removeComment(@Args('id', { type: () => Int }) id: number) {
-    return this.commentsService.remove(id);
+  @Mutation( () => Comment )
+  async removeComment(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.USER ]) updater : User
+  ) {
+    return await this.commentsService.deactivate( id, updater )
   }
 }

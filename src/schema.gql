@@ -275,11 +275,6 @@ type CompanyLogo {
   updater: User
 }
 
-type CompanyReview {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Product {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -290,9 +285,102 @@ type PromotionRequest {
   exampleField: Int!
 }
 
-type Promotion {
+type PromotionPayment {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type Comment {
+  id: ID!
+  userId: ID!
+  reviewId: ID!
+  comment: String!
+  commentDate: DateTime!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  review: Review
+  creator: User
+  updater: User
+}
+
+type CompanyReview {
+  id: ID!
+  reviewId: ID!
+  companyId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  review: Review
+  company: Company
+  creator: User
+  updater: User
+}
+
+type Review {
+  id: ID!
+  userId: ID!
+  review: String!
+  rating: Int!
+  reviewDate: DateTime!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  creator: User
+  updater: User
+  comments: Comment
+  promotionReviews: [PromotionReview!]
+  companyReviews: [CompanyReview!]
+}
+
+type PromotionReview {
+  id: ID!
+  reviewId: ID!
+  promotionId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  review: Review
+  promotion: Promotion
+  creator: User
+  updater: User
+}
+
+type Promotion {
+  id: ID!
+  userId: ID!
+  companyId: ID!
+  promotionPaymentId: ID!
+  title: String!
+  code: String!
+  description: String!
+  promotionTypeId: ID!
+  reason: String!
+  comment: String!
+  promotionStartAt: DateTime!
+  promotionEndAt: DateTime!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  company: Company
+  promotionType: Subparameter
+  promotionPayment: PromotionPayment
+  creator: User
+  updater: User
+  promotionReviews: [PromotionReview!]
 }
 
 type Company {
@@ -386,16 +474,6 @@ type PromotionStatus {
   exampleField: Int!
 }
 
-type PromotionPayment {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PromotionReview {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type CodePromotionDiscountProduct {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -412,16 +490,6 @@ type CreditCard {
 }
 
 type ProductImage {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Review {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Comment {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -492,18 +560,20 @@ type Query {
   codePromotionDiscountProducts: [CodePromotionDiscountProduct!]!
   codePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
   reviews: [Review!]!
-  review(id: Int!): Review!
-  comments: [Comment!]!
-  comment(id: Int!): Comment!
-  promotionReviews: [PromotionReview!]!
-  promotionReview(id: Int!): PromotionReview!
-  companyReviews: [CompanyReview!]!
-  companyReview(id: Int!): CompanyReview!
+  review(id: ID!): Review!
+  comments(offset: Int = 0, limit: Int = 10, search: String): [Comment!]!
+  comment(id: ID!): Comment!
+  promotionReviews(offset: Int = 0, limit: Int = 10, search: String): [PromotionReview!]!
+  promotionReview(id: ID!): PromotionReview!
+  companyReviews(offset: Int = 0, limit: Int = 10, search: String): [CompanyReview!]!
+  companyReview(id: ID!): CompanyReview!
 }
 
 enum ValidRoles {
   ADMIN
   USER
+  SELLER
+  COMPANY_REPRESENTATIVE
 }
 
 type Mutation {
@@ -600,18 +670,15 @@ type Mutation {
   createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   removeCodePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
-  createReview(createReviewInput: CreateReviewInput!): Review!
-  updateReview(updateReviewInput: UpdateReviewInput!): Review!
-  removeReview(id: Int!): Review!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  removeComment(id: Int!): Comment!
+  removeComment(id: ID!): Comment!
   createPromotionReview(createPromotionReviewInput: CreatePromotionReviewInput!): PromotionReview!
   updatePromotionReview(updatePromotionReviewInput: UpdatePromotionReviewInput!): PromotionReview!
-  removePromotionReview(id: Int!): PromotionReview!
+  removePromotionReview(id: ID!): PromotionReview!
   createCompanyReview(createCompanyReviewInput: CreateCompanyReviewInput!): CompanyReview!
   updateCompanyReview(updateCompanyReviewInput: UpdateCompanyReviewInput!): CompanyReview!
-  removeCompanyReview(id: Int!): CompanyReview!
+  deactivateCompanyReview(id: ID!): CompanyReview!
 
   """Seed database"""
   seed: Boolean!
@@ -1047,46 +1114,36 @@ input UpdateCodePromotionDiscountProductInput {
   id: Int!
 }
 
-input CreateReviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateReviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
 input CreateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  reviewId: ID!
+  comment: String!
 }
 
 input UpdateCommentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  id: ID!
+  comment: String!
 }
 
 input CreatePromotionReviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  promotionId: ID!
+  review: String!
+  rating: Int!
 }
 
 input UpdatePromotionReviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  id: ID!
+  review: ID!
 }
 
 input CreateCompanyReviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companyId: ID!
+  review: String!
+  rating: Int!
 }
 
 input UpdateCompanyReviewInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  companyId: ID
+  review: String!
+  rating: Int
+  id: ID!
 }
