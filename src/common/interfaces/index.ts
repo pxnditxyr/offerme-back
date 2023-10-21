@@ -1,1 +1,1 @@
-export { findAllOptions } from './find-options.interface'
+export { IFindAllOptions } from './find-options.interface'

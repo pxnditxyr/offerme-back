@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma'
 import { SubparametersService } from 'src/parametrics/subparameters/subparameters.service'
 import { User } from 'src/users/users/entities/user.entity'
 import { Company } from './entities/company.entity'
-import { findAllOptions } from 'src/common/interfaces'
+import { IFindAllOptions } from 'src/common/interfaces'
 
 const companyIncludes = {
   logos: true,
@@ -49,7 +49,7 @@ export class CompaniesService {
 
   }
 
-  async findAll ( { paginationArgs, searchArgs } : findAllOptions ) {
+  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
     const { search } = searchArgs
     const companies = await this.prismaService.companies.findMany({

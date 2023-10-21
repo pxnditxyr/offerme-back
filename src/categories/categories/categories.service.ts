@@ -3,7 +3,7 @@ import { CreateCategoryInput, UpdateCategoryInput } from './dto/inputs'
 import { Category } from './entities/category.entity'
 import { User } from 'src/users/users/entities/user.entity'
 import { PrismaService } from 'src/prisma'
-import { findAllOptions } from 'src/common/interfaces/find-options.interface'
+import { IFindAllOptions } from 'src/common/interfaces/find-options.interface'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
 
 const categoryIncludes = {
@@ -40,7 +40,7 @@ export class CategoriesService {
     }
   }
 
-  async findAll ( { paginationArgs, searchArgs } : findAllOptions  ) {
+  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions  ) {
     try {
       const { limit, offset } = paginationArgs
       const { search } = searchArgs
