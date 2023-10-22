@@ -531,8 +531,23 @@ type CodePromotionDiscountProduct {
 }
 
 type CreditCard {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  creditCardTypeId: ID!
+  number: String!
+  expMonth: String!
+  expYear: String!
+  cvv: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creditCardType: Subparameter
+  creator: User
+  updater: User
+  users: [UserCreditCard!]
+  promotionPayments: [PromotionPayment!]
 }
 
 type Query {
@@ -581,8 +596,8 @@ type Query {
   productImage(id: ID!): ProductImage!
   productCategories(offset: Int = 0, limit: Int = 10, search: String): [ProductCategory!]!
   productCategory(id: ID!): ProductCategory!
-  creditCards: [CreditCard!]!
-  creditCard(id: Int!): CreditCard!
+  creditCards(offset: Int = 0, limit: Int = 10, search: String): [CreditCard!]!
+  creditCard(id: ID!): CreditCard!
   userCreditCards: [UserCreditCard!]!
   userCreditCard(id: Int!): UserCreditCard!
   promotionRequests: [PromotionRequest!]!
@@ -683,7 +698,7 @@ type Mutation {
   deactivateProductCategory(id: ID!): ProductCategory!
   createCreditCard(createCreditCardInput: CreateCreditCardInput!): CreditCard!
   updateCreditCard(updateCreditCardInput: UpdateCreditCardInput!): CreditCard!
-  removeCreditCard(id: Int!): CreditCard!
+  deactivateCreditCard(id: ID!): CreditCard!
   createUserCreditCard(createUserCreditCardInput: CreateUserCreditCardInput!): UserCreditCard!
   updateUserCreditCard(updateUserCreditCardInput: UpdateUserCreditCardInput!): UserCreditCard!
   removeUserCreditCard(id: Int!): UserCreditCard!
@@ -1063,14 +1078,21 @@ input UpdateProductCategoryInput {
 }
 
 input CreateCreditCardInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  creditCardTypeId: ID!
+  number: String!
+  expMonth: String!
+  expYear: String!
+  cvv: String!
 }
 
 input UpdateCreditCardInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  creditCardTypeId: ID
+  number: String
+  expMonth: String
+  expYear: String
+  cvv: String
+  id: ID!
+  status: Boolean!
 }
 
 input CreateUserCreditCardInput {
