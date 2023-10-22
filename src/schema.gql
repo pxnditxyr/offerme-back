@@ -125,47 +125,6 @@ type Parameter {
   subparameters: [Subparameter!]!
 }
 
-type UserPhone {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type UserAdress {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type UserCreditCard {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PeopleInfoResponse {
-  id: ID!
-  name: String!
-  paternalSurname: String!
-  maternalSurname: String!
-  birthdate: DateTime!
-  genderId: String!
-}
-
-type RoleResponse {
-  id: ID!
-  name: String!
-}
-
-type UserResponse {
-  id: ID!
-  email: String!
-  peopleInfo: PeopleInfoResponse!
-  role: RoleResponse!
-}
-
-type AuthResponse {
-  token: ID!
-  user: UserResponse!
-}
-
 type Address {
   id: ID!
   street: String
@@ -500,6 +459,59 @@ type Phone {
   companies: [CompanyPhone!]
 }
 
+type UserPhone {
+  id: ID!
+  userId: ID!
+  phoneId: ID!
+  isVerified: Boolean!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  phone: Phone
+  creator: User
+  updater: User
+}
+
+type UserAdress {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type UserCreditCard {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PeopleInfoResponse {
+  id: ID!
+  name: String!
+  paternalSurname: String!
+  maternalSurname: String!
+  birthdate: DateTime!
+  genderId: String!
+}
+
+type RoleResponse {
+  id: ID!
+  name: String!
+}
+
+type UserResponse {
+  id: ID!
+  email: String!
+  peopleInfo: PeopleInfoResponse!
+  role: RoleResponse!
+}
+
+type AuthResponse {
+  token: ID!
+  user: UserResponse!
+}
+
 type CompanyUser {
   id: ID!
   companyId: ID!
@@ -565,13 +577,13 @@ type Query {
   session(id: ID!): Session!
   userAvatars: [UserAvatar!]!
   userAvatar(id: ID!): UserAvatar!
-  userPhones: [UserPhone!]!
-  userPhone(id: Int!): UserPhone!
+  userPhones(offset: Int = 0, limit: Int = 10, search: String): [UserPhone!]!
+  userPhone(id: ID!): UserPhone!
+  phones: [Phone!]!
+  phone(id: ID!): Phone!
   userAdresses: [UserAdress!]!
   userAdress(id: Int!): UserAdress!
   revalidateToken: AuthResponse!
-  phones: [Phone!]!
-  phone(id: ID!): Phone!
   addresses: [Address!]!
   address(id: ID!): Address!
   companies(offset: Int = 0, limit: Int = 10, search: String): [Company!]!
@@ -653,13 +665,13 @@ type Mutation {
   deactivateUserAvatar(id: ID!): UserAvatar!
   createUserPhone(createUserPhoneInput: CreateUserPhoneInput!): UserPhone!
   updateUserPhone(updateUserPhoneInput: UpdateUserPhoneInput!): UserPhone!
-  removeUserPhone(id: Int!): UserPhone!
-  createUserAdress(createUserAdressInput: CreateUserAdressInput!): UserAdress!
-  updateUserAdress(updateUserAdressInput: UpdateUserAdressInput!): UserAdress!
-  removeUserAdress(id: Int!): UserAdress!
+  deactivateUserPhone(id: ID!): UserPhone!
   createPhone(createPhoneInput: CreatePhoneInput!): Phone!
   updatePhone(updatePhoneInput: UpdatePhoneInput!): Phone!
   deactivatePhone(id: ID!): Phone!
+  createUserAdress(createUserAdressInput: CreateUserAdressInput!): UserAdress!
+  updateUserAdress(updateUserAdressInput: UpdateUserAdressInput!): UserAdress!
+  removeUserAdress(id: Int!): UserAdress!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
   deactivateAddress(id: ID!): Address!
@@ -850,25 +862,17 @@ input UpdateUserAvatarInput {
 }
 
 input CreateUserPhoneInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  userId: ID!
+  phoneId: ID!
 }
 
 input UpdateUserPhoneInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
-
-input CreateUserAdressInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-input UpdateUserAdressInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  userId: ID
+  phoneId: ID
+  id: ID!
+  isVerified: Boolean
+  isMain: Boolean
+  status: Boolean
 }
 
 input CreatePhoneInput {
@@ -881,6 +885,17 @@ input UpdatePhoneInput {
   number: String
   id: ID!
   status: Boolean
+}
+
+input CreateUserAdressInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateUserAdressInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }
 
 input CreateAddressInput {

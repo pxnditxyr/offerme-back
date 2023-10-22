@@ -65,7 +65,7 @@ export class CategoryImagesService {
     return categoryImage
   }
 
-  async changeMainImage ( categoryId : string, updater : User ) : Promise<CategoryImage | null> {
+  private async changeMainImage ( categoryId : string, updater : User ) : Promise<CategoryImage | null> {
     const mainImage = await this.findMainImage( categoryId )
     if ( !mainImage ) return null
     try {

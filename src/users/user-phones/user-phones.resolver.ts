@@ -1,35 +1,57 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { UserPhonesService } from './user-phones.service';
-import { UserPhone } from './entities/user-phone.entity';
-import { CreateUserPhoneInput } from './dto/create-user-phone.input';
-import { UpdateUserPhoneInput } from './dto/update-user-phone.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { UserPhonesService } from './user-phones.service'
+import { UserPhone } from './entities/user-phone.entity'
+import { CreateUserPhoneInput, UpdateUserPhoneInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from '../users/entities/user.entity'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 
-@Resolver(() => UserPhone)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => UserPhone )
 export class UserPhonesResolver {
-  constructor(private readonly userPhonesService: UserPhonesService) {}
+  constructor (
+    private readonly userPhonesService: UserPhonesService
+  ) {}
 
-  @Mutation(() => UserPhone)
-  createUserPhone(@Args('createUserPhoneInput') createUserPhoneInput: CreateUserPhoneInput) {
-    return this.userPhonesService.create(createUserPhoneInput);
+  @Mutation( () => UserPhone )
+  async createUserPhone(
+    @Args( 'createUserPhoneInput' ) createUserPhoneInput : CreateUserPhoneInput,
+    @CurrentUser([ ValidRoles.USER, ValidRoles.ADMIN ]) creator : User
+  ) : Promise<UserPhone> {
+    return await this.userPhonesService.create( createUserPhoneInput, creator )
   }
 
-  @Query(() => [UserPhone], { name: 'userPhones' })
-  findAll() {
-    return this.userPhonesService.findAll();
+  @Query( () => [ UserPhone ], { name: 'userPhones' } )
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs
+  ) {
+    return await this.userPhonesService.findAll({ paginationArgs, searchArgs })
   }
 
-  @Query(() => UserPhone, { name: 'userPhone' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.userPhonesService.findOne(id);
+  @Query( () => UserPhone, { name: 'userPhone' } )
+  async findOne (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) {
+    return await this.userPhonesService.findOne( id )
   }
 
-  @Mutation(() => UserPhone)
-  updateUserPhone(@Args('updateUserPhoneInput') updateUserPhoneInput: UpdateUserPhoneInput) {
-    return this.userPhonesService.update(updateUserPhoneInput.id, updateUserPhoneInput);
+  @Mutation( () => UserPhone )
+  async updateUserPhone (
+    @Args( 'updateUserPhoneInput' ) updateUserPhoneInput : UpdateUserPhoneInput,
+    @CurrentUser([ ValidRoles.USER, ValidRoles.ADMIN ]) updater : User
+  ) : Promise<UserPhone> {
+    return await this.userPhonesService.update( updateUserPhoneInput.id, updateUserPhoneInput, updater )
   }
 
-  @Mutation(() => UserPhone)
-  removeUserPhone(@Args('id', { type: () => Int }) id: number) {
-    return this.userPhonesService.remove(id);
+  @Mutation( () => UserPhone )
+  async deactivateUserPhone (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.USER, ValidRoles.ADMIN ]) updater : User
+  ) : Promise<UserPhone> {
+    return this.userPhonesService.deactivate( id, updater )
   }
 }
