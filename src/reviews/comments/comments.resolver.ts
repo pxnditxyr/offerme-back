@@ -48,7 +48,7 @@ export class CommentsResolver {
   }
 
   @Mutation( () => Comment )
-  async removeComment(
+  async deactivateComment (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.USER ]) updater : User
   ) {

@@ -47,10 +47,10 @@ export class RolesResolver {
   }
 
   @Mutation( () => Role )
-  deactivateRole (
+  async deactivateRole (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
   ) : Promise<Role> {
-    return this.rolesService.deactivate( id, user )
+    return await this.rolesService.deactivate( id, user )
   }
 }

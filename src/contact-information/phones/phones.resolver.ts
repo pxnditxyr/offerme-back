@@ -47,7 +47,7 @@ export class PhonesResolver {
   }
 
   @Mutation( () => Phone )
-  async removePhone(
+  async deactivatePhone (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
   ) : Promise<Phone> {

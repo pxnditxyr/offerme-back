@@ -275,9 +275,44 @@ type CompanyLogo {
   updater: User
 }
 
-type Product {
+type ProductImage {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type DiscountProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type PromotionTargetProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  companyId: ID!
+  productTypeId: ID!
+  stock: Int!
+  price: Float!
+  code: String!
+  notes: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  productType: Subparameter
+  creator: User
+  updater: User
+  images: [ProductImage!]
+  categories: [ProductCategory!]
+  promotionRequests: [PromotionTargetProduct!]
+  discountProducts: [DiscountProduct!]
 }
 
 type PromotionRequest {
@@ -464,11 +499,6 @@ type PromotionImage {
   exampleField: Int!
 }
 
-type PromotionTargetProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type PromotionStatus {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -479,17 +509,7 @@ type CodePromotionDiscountProduct {
   exampleField: Int!
 }
 
-type DiscountProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type CreditCard {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type ProductImage {
   """Example field (placeholder)"""
   exampleField: Int!
 }
@@ -534,8 +554,8 @@ type Query {
   companyUser(id: ID!): CompanyUser!
   categoryImages: [CategoryImage!]!
   categoryImage(id: ID!): CategoryImage!
-  products: [Product!]!
-  product(id: Int!): Product!
+  products(offset: Int = 0, limit: Int = 10, search: String): [Product!]!
+  product(id: ID!): Product!
   productImages: [ProductImage!]!
   productImage(id: Int!): ProductImage!
   productCategories: [ProductCategory!]!
@@ -603,7 +623,7 @@ type Mutation {
   removeUserAdress(id: Int!): UserAdress!
   createPhone(createPhoneInput: CreatePhoneInput!): Phone!
   updatePhone(updatePhoneInput: UpdatePhoneInput!): Phone!
-  removePhone(id: ID!): Phone!
+  deactivatePhone(id: ID!): Phone!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
   deactivateAddress(id: ID!): Address!
@@ -633,7 +653,7 @@ type Mutation {
   deactivateCategoryImage(id: ID!): CategoryImage!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
-  removeProduct(id: Int!): Product!
+  deactivateProduct(id: ID!): Product!
   createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
   updateProductImage(updateProductImageInput: UpdateProductImageInput!): ProductImage!
   removeProductImage(id: Int!): ProductImage!
@@ -672,10 +692,10 @@ type Mutation {
   removeCodePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
-  removeComment(id: ID!): Comment!
+  deactivateComment(id: ID!): Comment!
   createPromotionReview(createPromotionReviewInput: CreatePromotionReviewInput!): PromotionReview!
   updatePromotionReview(updatePromotionReviewInput: UpdatePromotionReviewInput!): PromotionReview!
-  removePromotionReview(id: ID!): PromotionReview!
+  deactivatePromotionReview(id: ID!): PromotionReview!
   createCompanyReview(createCompanyReviewInput: CreateCompanyReviewInput!): CompanyReview!
   updateCompanyReview(updateCompanyReviewInput: UpdateCompanyReviewInput!): CompanyReview!
   deactivateCompanyReview(id: ID!): CompanyReview!
@@ -972,14 +992,27 @@ input UpdateCategoryImageInput {
 }
 
 input CreateProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  description: String!
+  companyId: ID!
+  productTypeId: ID!
+  stock: Int!
+  price: Float!
+  code: String!
+  notes: String!
 }
 
 input UpdateProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  name: String
+  description: String
+  companyId: ID
+  productTypeId: ID
+  stock: Int
+  price: Float
+  code: String
+  notes: String
+  id: ID!
+  status: Boolean
 }
 
 input CreateProductImageInput {

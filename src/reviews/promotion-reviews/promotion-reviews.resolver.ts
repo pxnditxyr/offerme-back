@@ -19,7 +19,7 @@ export class PromotionReviewsResolver {
 
   @Mutation( () => PromotionReview )
   async createPromotionReview (
-    @Args('createPromotionReviewInput') createPromotionReviewInput: CreatePromotionReviewInput,
+    @Args( 'createPromotionReviewInput' ) createPromotionReviewInput : CreatePromotionReviewInput,
     @CurrentUser([ ValidRoles.USER ]) creator : User
   ) : Promise<PromotionReview> {
     return await this.promotionReviewsService.create( createPromotionReviewInput, creator )
@@ -47,7 +47,7 @@ export class PromotionReviewsResolver {
   }
 
   @Mutation( () => PromotionReview )
-  async removePromotionReview (
+  async deactivatePromotionReview (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.USER ]) updater : User
   ) {
