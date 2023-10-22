@@ -1,35 +1,57 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { ProductsService } from './products.service';
-import { Product } from './entities/product.entity';
-import { CreateProductInput } from './dto/create-product.input';
-import { UpdateProductInput } from './dto/update-product.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { ProductsService } from './products.service'
+import { Product } from './entities/product.entity'
+import { CreateProductInput, UpdateProductInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@Resolver(() => Product)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => Product )
 export class ProductsResolver {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor (
+    private readonly productsService : ProductsService
+  ) {}
 
-  @Mutation(() => Product)
-  createProduct(@Args('createProductInput') createProductInput: CreateProductInput) {
-    return this.productsService.create(createProductInput);
+  @Mutation( () => Product )
+  async createProduct (
+    @Args( 'createProductInput' ) createProductInput : CreateProductInput,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
+  ) : Promise<Product> {
+    return await this.productsService.create( createProductInput, creator )
   }
 
-  @Query(() => [Product], { name: 'products' })
-  findAll() {
-    return this.productsService.findAll();
+  @Query( () => [ Product ], { name: 'products' } )
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs
+  ) {
+    return await this.productsService.findAll({ paginationArgs, searchArgs })
   }
 
-  @Query(() => Product, { name: 'product' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.findOne(id);
+  @Query( () => Product, { name: 'product' } )
+  async findOne (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) {
+    return await this.productsService.findOne( id )
   }
 
-  @Mutation(() => Product)
-  updateProduct(@Args('updateProductInput') updateProductInput: UpdateProductInput) {
-    return this.productsService.update(updateProductInput.id, updateProductInput);
+  @Mutation( () => Product )
+  async updateProduct (
+    @Args( 'updateProductInput' ) updateProductInput : UpdateProductInput,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+  ) {
+    return await this.productsService.update( updateProductInput.id, updateProductInput, updater )
   }
 
-  @Mutation(() => Product)
-  removeProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.productsService.remove(id);
+  @Mutation( () => Product )
+  async deactivateProduct (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+  ) {
+    return await this.productsService.deactivate( id, updater )
   }
 }
