@@ -219,9 +219,70 @@ type CategoryImage {
   updater: User
 }
 
-type ProductCategory {
+type ProductImage {
+  id: ID!
+  productId: ID!
+  url: String!
+  alt: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  product: Product
+  creator: User
+  updater: User
+}
+
+type DiscountProduct {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type PromotionTargetProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  companyId: ID!
+  productTypeId: ID!
+  stock: Int!
+  price: Float!
+  code: String!
+  notes: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  productType: Subparameter
+  creator: User
+  updater: User
+  images: [ProductImage!]
+  categories: [ProductCategory!]
+  promotionRequests: [PromotionTargetProduct!]
+  discountProducts: [DiscountProduct!]
+}
+
+type ProductCategory {
+  id: ID!
+  productId: ID!
+  categoryId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  product: Product
+  category: Category
+  creator: User
+  updater: User
 }
 
 type Category {
@@ -273,46 +334,6 @@ type CompanyLogo {
   company: Company
   creator: User
   updater: User
-}
-
-type ProductImage {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type DiscountProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PromotionTargetProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Product {
-  id: ID!
-  name: String!
-  description: String!
-  companyId: ID!
-  productTypeId: ID!
-  stock: Int!
-  price: Float!
-  code: String!
-  notes: String!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  company: Company
-  productType: Subparameter
-  creator: User
-  updater: User
-  images: [ProductImage!]
-  categories: [ProductCategory!]
-  promotionRequests: [PromotionTargetProduct!]
-  discountProducts: [DiscountProduct!]
 }
 
 type PromotionRequest {
@@ -556,10 +577,10 @@ type Query {
   categoryImage(id: ID!): CategoryImage!
   products(offset: Int = 0, limit: Int = 10, search: String): [Product!]!
   product(id: ID!): Product!
-  productImages: [ProductImage!]!
-  productImage(id: Int!): ProductImage!
-  productCategories: [ProductCategory!]!
-  productCategory(id: Int!): ProductCategory!
+  productImages(offset: Int = 0, limit: Int = 10, search: String): [ProductImage!]!
+  productImage(id: ID!): ProductImage!
+  productCategories(offset: Int = 0, limit: Int = 10, search: String): [ProductCategory!]!
+  productCategory(id: ID!): ProductCategory!
   creditCards: [CreditCard!]!
   creditCard(id: Int!): CreditCard!
   userCreditCards: [UserCreditCard!]!
@@ -656,10 +677,10 @@ type Mutation {
   deactivateProduct(id: ID!): Product!
   createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
   updateProductImage(updateProductImageInput: UpdateProductImageInput!): ProductImage!
-  removeProductImage(id: Int!): ProductImage!
+  deactivateProductImage(id: ID!): ProductImage!
   createProductCategory(createProductCategoryInput: CreateProductCategoryInput!): ProductCategory!
   updateProductCategory(updateProductCategoryInput: UpdateProductCategoryInput!): ProductCategory!
-  removeProductCategory(id: Int!): ProductCategory!
+  deactivateProductCategory(id: ID!): ProductCategory!
   createCreditCard(createCreditCardInput: CreateCreditCardInput!): CreditCard!
   updateCreditCard(updateCreditCardInput: UpdateCreditCardInput!): CreditCard!
   removeCreditCard(id: Int!): CreditCard!
@@ -1016,25 +1037,29 @@ input UpdateProductInput {
 }
 
 input CreateProductImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  productId: ID!
+  url: String!
+  alt: String!
 }
 
 input UpdateProductImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  productId: ID
+  url: String
+  alt: String
+  id: ID!
+  status: Boolean
 }
 
 input CreateProductCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  productId: ID!
+  categoryId: ID!
 }
 
 input UpdateProductCategoryInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  productId: ID
+  categoryId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreateCreditCardInput {
