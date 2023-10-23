@@ -8,7 +8,7 @@ import { ParametersModule, SubparametersModule } from './parametrics'
 
 import {
   RolesModule, PeopleInfoModule, UsersModule, SessionsModule,
-  UserAvatarsModule, UserPhonesModule, UserAdressesModule, UserCreditCardsModule,
+  UserAvatarsModule, UserPhonesModule, UserAddressesModule, UserCreditCardsModule,
 } from './users'
 
 import { AuthModule } from './auth'
@@ -45,7 +45,7 @@ import { CommonModule } from './common'
     }),
     ParametersModule, SubparametersModule,
     PeopleInfoModule, UsersModule, RolesModule, SessionsModule,
-    UserAvatarsModule, UserPhonesModule, UserAdressesModule, AuthModule,
+    UserAvatarsModule, UserPhonesModule, UserAddressesModule, AuthModule,
     PhonesModule, AddressesModule,
     CompaniesModule, CompanyLogosModule, CompanyPhonesModule, CompanyAddressesModule, CompanyCategoriesModule, CompanyUsersModule, 
     CategoriesModule, CategoryImagesModule,

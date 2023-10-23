@@ -68,6 +68,7 @@ export class ProductCategoriesService {
   }
 
   async update ( id : string, updateProductCategoryInput : UpdateProductCategoryInput, updater : User ) : Promise<ProductCategory> {
+    await this.findOne( id )
     const { productId, categoryId } = updateProductCategoryInput
     if ( productId ) await this.productsService.findOne( productId )
     if ( categoryId ) await this.categoriesService.findOne( categoryId )
@@ -86,6 +87,7 @@ export class ProductCategoriesService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<ProductCategory> {
+    await this.findOne( id )
     try {
       const productCategory = await this.prismaService.productCategories.update({
         where: { id },

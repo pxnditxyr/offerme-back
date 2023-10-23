@@ -476,14 +476,55 @@ type UserPhone {
   updater: User
 }
 
-type UserAdress {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type UserAddress {
+  id: ID!
+  userId: ID!
+  addressId: ID!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  address: Address
+  creator: User
+  updater: User
+}
+
+type CreditCard {
+  id: ID!
+  creditCardTypeId: ID!
+  number: String!
+  expMonth: String!
+  expYear: String!
+  cvv: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creditCardType: Subparameter
+  creator: User
+  updater: User
+  users: [UserCreditCard!]
+  promotionPayments: [PromotionPayment!]
 }
 
 type UserCreditCard {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  userId: ID!
+  creditCardId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  creditCard: CreditCard
+  creator: User
+  updater: User
 }
 
 type PeopleInfoResponse {
@@ -542,26 +583,6 @@ type CodePromotionDiscountProduct {
   exampleField: Int!
 }
 
-type CreditCard {
-  id: ID!
-  creditCardTypeId: ID!
-  number: String!
-  expMonth: String!
-  expYear: String!
-  cvv: String!
-  isMain: Boolean!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  creditCardType: Subparameter
-  creator: User
-  updater: User
-  users: [UserCreditCard!]
-  promotionPayments: [PromotionPayment!]
-}
-
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -581,11 +602,11 @@ type Query {
   userPhone(id: ID!): UserPhone!
   phones: [Phone!]!
   phone(id: ID!): Phone!
-  userAdresses: [UserAdress!]!
-  userAdress(id: Int!): UserAdress!
-  revalidateToken: AuthResponse!
+  userAddresses(offset: Int = 0, limit: Int = 10, search: String): [UserAddress!]!
+  userAddress(id: ID!): UserAddress!
   addresses: [Address!]!
   address(id: ID!): Address!
+  revalidateToken: AuthResponse!
   companies(offset: Int = 0, limit: Int = 10, search: String): [Company!]!
   company(id: ID!): Company!
   companyLogos: [CompanyLogo!]!
@@ -610,8 +631,8 @@ type Query {
   productCategory(id: ID!): ProductCategory!
   creditCards(offset: Int = 0, limit: Int = 10, search: String): [CreditCard!]!
   creditCard(id: ID!): CreditCard!
-  userCreditCards: [UserCreditCard!]!
-  userCreditCard(id: Int!): UserCreditCard!
+  userCreditCards(offset: Int = 0, limit: Int = 10, search: String): [UserCreditCard!]!
+  userCreditCard(id: ID!): UserCreditCard!
   promotionRequests: [PromotionRequest!]!
   promotionRequest(id: Int!): PromotionRequest!
   promotionImages: [PromotionImage!]!
@@ -669,9 +690,9 @@ type Mutation {
   createPhone(createPhoneInput: CreatePhoneInput!): Phone!
   updatePhone(updatePhoneInput: UpdatePhoneInput!): Phone!
   deactivatePhone(id: ID!): Phone!
-  createUserAdress(createUserAdressInput: CreateUserAdressInput!): UserAdress!
-  updateUserAdress(updateUserAdressInput: UpdateUserAdressInput!): UserAdress!
-  removeUserAdress(id: Int!): UserAdress!
+  createUserAddress(createUserAddressInput: CreateUserAddressInput!): UserAddress!
+  updateUserAddress(updateUserAddressInput: UpdateUserAddressInput!): UserAddress!
+  deactivateUserAddress(id: ID!): UserAddress!
   createAddress(createAddressInput: CreateAddressInput!): Address!
   updateAddress(updateAddressInput: UpdateAddressInput!): Address!
   deactivateAddress(id: ID!): Address!
@@ -713,7 +734,7 @@ type Mutation {
   deactivateCreditCard(id: ID!): CreditCard!
   createUserCreditCard(createUserCreditCardInput: CreateUserCreditCardInput!): UserCreditCard!
   updateUserCreditCard(updateUserCreditCardInput: UpdateUserCreditCardInput!): UserCreditCard!
-  removeUserCreditCard(id: Int!): UserCreditCard!
+  deactivateUserCreditCard(id: ID!): UserCreditCard!
   createPromotionRequest(createPromotionRequestInput: CreatePromotionRequestInput!): PromotionRequest!
   updatePromotionRequest(updatePromotionRequestInput: UpdatePromotionRequestInput!): PromotionRequest!
   removePromotionRequest(id: Int!): PromotionRequest!
@@ -887,15 +908,17 @@ input UpdatePhoneInput {
   status: Boolean
 }
 
-input CreateUserAdressInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreateUserAddressInput {
+  userId: ID!
+  addressId: ID!
 }
 
-input UpdateUserAdressInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UpdateUserAddressInput {
+  userId: ID
+  addressId: ID
+  id: ID!
+  isMain: Boolean
+  status: Boolean
 }
 
 input CreateAddressInput {
@@ -1111,14 +1134,15 @@ input UpdateCreditCardInput {
 }
 
 input CreateUserCreditCardInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  userId: ID!
+  creditCardId: ID!
 }
 
 input UpdateUserCreditCardInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  userId: ID
+  creditCardId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreatePromotionRequestInput {

@@ -1,9 +1,9 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql'
-import { CreditCard } from 'src/payments/credit-cards/entities/credit-card.entity'
+import { Address } from 'src/contact-information/addresses/entities/address.entity'
 import { User } from 'src/users/users/entities/user.entity'
 
 @ObjectType()
-export class UserCreditCard {
+export class UserAddress {
   @Field( () => ID )
   id: string
 
@@ -11,7 +11,10 @@ export class UserCreditCard {
   userId: string
 
   @Field( () => ID )
-  creditCardId: string
+  addressId: string
+
+  @Field( () => Boolean )
+  isMain: boolean
 
   @Field( () => Boolean )
   status: boolean
@@ -31,8 +34,8 @@ export class UserCreditCard {
   @Field( () => User, { nullable: true } )
   user?: User | null
 
-  @Field( () => CreditCard, { nullable: true } )
-  creditCard?: CreditCard | null
+  @Field( () => Address, { nullable: true } )
+  address?: Address | null
 
   @Field( () => User, { nullable: true } )
   creator?: User | null

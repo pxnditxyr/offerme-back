@@ -120,6 +120,7 @@ export class UserPhonesService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<UserPhone> {
+    await this.findOne( id )
     try {
       const userPhone = await this.prismaService.userPhones.update({
         where: { id },

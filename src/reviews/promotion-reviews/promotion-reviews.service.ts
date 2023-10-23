@@ -78,6 +78,7 @@ export class PromotionReviewsService {
   }
 
   async update( id : string, updatePromotionReviewInput : UpdatePromotionReviewInput, updater : User ) : Promise<PromotionReview> {
+    await this.findOne( id )
     const promotionReview= await this.findOne( id )
     const { review } = updatePromotionReviewInput
     await this.reviewsService.update( promotionReview.id, { id: promotionReview.id, review }, updater )

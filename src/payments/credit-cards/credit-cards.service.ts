@@ -71,6 +71,7 @@ export class CreditCardsService {
   }
 
   async update ( id : string, updateCreditCardInput : UpdateCreditCardInput, updater : User ) : Promise<CreditCard> {
+    await this.findOne( id )
     const { creditCardTypeId } = updateCreditCardInput
     if ( creditCardTypeId ) await this.subparametersService.findOne( creditCardTypeId )
     try {
@@ -88,6 +89,7 @@ export class CreditCardsService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<CreditCard> {
+    await this.findOne( id )
     try {
       const creditCard = await this.prismaService.creditCards.update({
         where: { id },
