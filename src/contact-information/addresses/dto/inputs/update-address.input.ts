@@ -11,5 +11,5 @@ export class UpdateAddressInput extends PartialType( CreateAddressInput ) {
   @Field( () => Boolean, { nullable: true } )
   @IsOptional()
   @IsBoolean()
-  status: boolean
+  status?: boolean
 }
