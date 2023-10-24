@@ -295,14 +295,101 @@ type CompanyLogo {
   updater: User
 }
 
-type PromotionRequest {
+type PromotionImage {
   """Example field (placeholder)"""
   exampleField: Int!
 }
 
+type UserCreditCard {
+  id: ID!
+  userId: ID!
+  creditCardId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  user: User
+  creditCard: CreditCard
+  creator: User
+  updater: User
+}
+
+type CreditCard {
+  id: ID!
+  creditCardTypeId: ID!
+  number: String!
+  expMonth: String!
+  expYear: String!
+  cvv: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  creditCardType: Subparameter
+  creator: User
+  updater: User
+  users: [UserCreditCard!]
+  promotionPayments: [PromotionPayment!]
+}
+
 type PromotionPayment {
+  id: ID!
+  promotionRequestId: ID!
+  paymentMethodId: ID!
+  amount: Float!
+  creditCardId: ID
+  voucher: String
+  paymentDate: DateTime!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  promotionRequest: PromotionRequest
+  paymentMethod: Subparameter
+  creditCard: CreditCard
+  creator: User
+  updater: User
+}
+
+type PromotionStatus {
   """Example field (placeholder)"""
   exampleField: Int!
+}
+
+type PromotionRequest {
+  id: ID!
+  requestingUserId: ID!
+  companyId: ID!
+  title: String!
+  code: String!
+  description: String!
+  promotionTypeId: ID!
+  reason: String!
+  comment: String!
+  promotionStartAt: DateTime!
+  promotionEndAt: DateTime!
+  inversionAmount: Float!
+  currencyId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  requestingUser: User
+  company: Company
+  promotionType: Subparameter
+  currency: Subparameter
+  creator: User
+  updater: User
+  images: [PromotionImage!]
+  targetProducts: [PromotionTargetProduct!]
+  promotionStatus: [PromotionStatus!]
+  promotionPayments: [PromotionPayment!]
+  discountProducts: [DiscountProduct!]
 }
 
 type Comment {
@@ -492,41 +579,6 @@ type UserAddress {
   updater: User
 }
 
-type CreditCard {
-  id: ID!
-  creditCardTypeId: ID!
-  number: String!
-  expMonth: String!
-  expYear: String!
-  cvv: String!
-  isMain: Boolean!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  creditCardType: Subparameter
-  creator: User
-  updater: User
-  users: [UserCreditCard!]
-  promotionPayments: [PromotionPayment!]
-}
-
-type UserCreditCard {
-  id: ID!
-  userId: ID!
-  creditCardId: ID!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  user: User
-  creditCard: CreditCard
-  creator: User
-  updater: User
-}
-
 type PeopleInfoResponse {
   id: ID!
   name: String!
@@ -566,16 +618,6 @@ type CompanyUser {
   user: User
   creator: User
   updater: User
-}
-
-type PromotionImage {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type PromotionStatus {
-  """Example field (placeholder)"""
-  exampleField: Int!
 }
 
 type CodePromotionDiscountProduct {
@@ -633,8 +675,8 @@ type Query {
   creditCard(id: ID!): CreditCard!
   userCreditCards(offset: Int = 0, limit: Int = 10, search: String): [UserCreditCard!]!
   userCreditCard(id: ID!): UserCreditCard!
-  promotionRequests: [PromotionRequest!]!
-  promotionRequest(id: Int!): PromotionRequest!
+  promotionRequests(offset: Int = 0, limit: Int = 10, search: String): [PromotionRequest!]!
+  promotionRequest(id: ID!): PromotionRequest!
   promotionImages: [PromotionImage!]!
   promotionImage(id: Int!): PromotionImage!
   promotionTargetProducts: [PromotionTargetProduct!]!
@@ -642,10 +684,10 @@ type Query {
   discountProducts: [DiscountProduct!]!
   discountProduct(id: Int!): DiscountProduct!
   promotionStatus(id: Int!): PromotionStatus!
-  promotionPayments: [PromotionPayment!]!
-  promotionPayment(id: Int!): PromotionPayment!
-  promotions: [Promotion!]!
-  promotion(id: Int!): Promotion!
+  promotionPayments(offset: Int = 0, limit: Int = 10, search: String): [PromotionPayment!]!
+  promotionPayment(id: ID!): PromotionPayment!
+  promotions(offset: Int = 0, limit: Int = 10, search: String): [Promotion!]!
+  promotion(id: ID!): Promotion!
   codePromotionDiscountProducts: [CodePromotionDiscountProduct!]!
   codePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
   reviews: [Review!]!
@@ -737,7 +779,7 @@ type Mutation {
   deactivateUserCreditCard(id: ID!): UserCreditCard!
   createPromotionRequest(createPromotionRequestInput: CreatePromotionRequestInput!): PromotionRequest!
   updatePromotionRequest(updatePromotionRequestInput: UpdatePromotionRequestInput!): PromotionRequest!
-  removePromotionRequest(id: Int!): PromotionRequest!
+  deactivatePromotionRequest(id: ID!): PromotionRequest!
   createPromotionImage(createPromotionImageInput: CreatePromotionImageInput!): PromotionImage!
   updatePromotionImage(updatePromotionImageInput: UpdatePromotionImageInput!): PromotionImage!
   removePromotionImage(id: Int!): PromotionImage!
@@ -752,10 +794,10 @@ type Mutation {
   removePromotionStatus(id: Int!): PromotionStatus!
   createPromotionPayment(createPromotionPaymentInput: CreatePromotionPaymentInput!): PromotionPayment!
   updatePromotionPayment(updatePromotionPaymentInput: UpdatePromotionPaymentInput!): PromotionPayment!
-  removePromotionPayment(id: Int!): PromotionPayment!
+  deactivatePromotionPayment(id: ID!): PromotionPayment!
   createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
   updatePromotion(updatePromotionInput: UpdatePromotionInput!): Promotion!
-  removePromotion(id: Int!): Promotion!
+  deactivatePromotion(id: ID!): Promotion!
   createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   removeCodePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
@@ -1146,14 +1188,33 @@ input UpdateUserCreditCardInput {
 }
 
 input CreatePromotionRequestInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  companyId: ID!
+  title: String!
+  code: String!
+  description: String!
+  promotionTypeId: ID!
+  reason: String!
+  comment: String!
+  promotionStartAt: DateTime!
+  promotionEndAt: DateTime!
+  inversionAmount: Float!
+  currencyId: ID!
 }
 
 input UpdatePromotionRequestInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  companyId: ID
+  title: String
+  code: String
+  description: String
+  promotionTypeId: ID
+  reason: String
+  comment: String
+  promotionStartAt: DateTime
+  promotionEndAt: DateTime
+  inversionAmount: Float
+  currencyId: ID
+  id: ID!
+  status: Boolean
 }
 
 input CreatePromotionImageInput {
@@ -1201,25 +1262,53 @@ input UpdatePromotionStatusInput {
 }
 
 input CreatePromotionPaymentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  promotionRequestId: ID!
+  paymentMethodId: ID!
+  amount: Float
+  creditCardId: ID
+  voucher: String
+  paymentDate: DateTime
 }
 
 input UpdatePromotionPaymentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  promotionRequestId: ID
+  paymentMethodId: ID
+  amount: Float
+  creditCardId: ID
+  voucher: String
+  paymentDate: DateTime
+  id: ID!
+  status: Boolean
 }
 
 input CreatePromotionInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  userId: ID!
+  companyId: ID!
+  promotionPaymentId: ID!
+  title: String!
+  code: String!
+  description: String!
+  promotionTypeId: ID!
+  reason: String!
+  comment: String!
+  promotionStartAt: DateTime!
+  promotionEndAt: DateTime!
 }
 
 input UpdatePromotionInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  userId: ID
+  companyId: ID
+  promotionPaymentId: ID
+  title: String
+  code: String
+  description: String
+  promotionTypeId: ID
+  reason: String
+  comment: String
+  promotionStartAt: DateTime
+  promotionEndAt: DateTime
+  id: ID!
+  status: Boolean
 }
 
 input CreateCodePromotionDiscountProductInput {

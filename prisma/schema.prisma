@@ -48,6 +48,7 @@ model Subparameters {
   promotionRequestType   PromotionRequests[] @relation("promotion_request_promotion_type")
   paymentMethod          PromotionPayments[] @relation("promotion_payments_payment_method")
   promotionType          Promotions[]        @relation("promotions_promotion_type")
+  currency               PromotionRequests[] @relation("promotion_request_currency")
 
   @@map("subparameters")
 }
@@ -616,6 +617,7 @@ model PromotionRequests {
   promotionStartAt DateTime @db.Date
   promotionEndAt   DateTime @db.Date
   inversionAmount  Float    @default(0)
+  currencyId       String
   status           Boolean  @default(true)
   createdAt        DateTime @default(now())
   createdBy        String?
@@ -625,6 +627,7 @@ model PromotionRequests {
   requestingUser Users         @relation("promotion_request_requesting_user", fields: [requestingUserId], references: [id])
   company        Companies     @relation("promotion_request_company", fields: [companyId], references: [id])
   promotionType  Subparameters @relation("promotion_request_promotion_type", fields: [promotionTypeId], references: [id])
+  currency       Subparameters @relation("promotion_request_currency", fields: [currencyId], references: [id])
   creator        Users?        @relation("promotion_request_created_by", fields: [createdBy], references: [id])
   updater        Users?        @relation("promotion_request_updated_by", fields: [updatedBy], references: [id])
 
