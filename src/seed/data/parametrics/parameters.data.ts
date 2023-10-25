@@ -35,4 +35,8 @@ export const parametersData = [
     name: 'promotion type',
     description: 'Type of promotion',
   },
+  {
+    name: 'currency',
+    description: 'Type of currency',
+  }
 ]

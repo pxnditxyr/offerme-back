@@ -8,9 +8,14 @@
     "start:dev": "nest start --watch",
     "start:prod": "bun ."
   },
-  "keywords": [],
+  "keywords": [
+    "Nest Js",
+    "GraphQL",
+    "TypeScript",
+    "Prisma"
+  ],
   "author": "Pxndxs",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@apollo/server": "^4.9.3",
     "@as-integrations/fastify": "^2.1.0",

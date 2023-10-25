@@ -257,6 +257,25 @@ export const subparametersData = () => {
     },
   ]
 
+  const currencyParameterId = 'currency'
+  const currencySubparameters = [
+    {
+      name: 'Bs.',
+      description: 'Boliviano',
+      parameterId: currencyParameterId,
+    },
+    {
+      name: 'USD',
+      description: 'Dólar estadounidense',
+      parameterId: currencyParameterId,
+    },
+    {
+      name: 'EUR',
+      description: 'Euro',
+      parameterId: currencyParameterId,
+    }
+  ]
+
   return [
     ...genderSubparameters,
     ...documentTypeSubparameters,
@@ -266,6 +285,7 @@ export const subparametersData = () => {
     ...creditCardTypeSubparameters,
     ...promotionRequestTypeSubparameters,
     ...paymentMethodSubparameters,
+    ...currencySubparameters,
   ]
 
 }

@@ -1,6 +1,6 @@
-# Initializing Project Offer Me | Nest 🦁, GraphQL 🌐 & Prisma 📐
+# Offer Me 🌟 | Nest 🦁, GraphQL 🌐 & Prisma 📐 Back-end
 
-Short project description.
+The Discount Management System is a Nest.js-based backend solution that serves as the core engine for a web application focused on discounts. Its primary function is to provide business logic and data access for managing promotions, discount codes, and user and company authentication. The application utilizes GraphQL as a query interface to interact with the backend and Prisma as the ORM for database management, ensuring flexibility and efficiency in serving discount-related data and functionality to both users and businesses.
 
 ## Prerequisites 📋
 
@@ -84,7 +84,8 @@ Run the application in Development Mode: 🚀
 bun start:dev
 ```
 
-The application will be available at `http://localhost:3001` 🌐.
+The application will be available at `http://localhost:3001/graphql` 🌐.
+You could also click on the latest log in your terminal with "bun start:dev" if you prefer to do it that way 🌐.
 
 ## Technologies Used 🛠️
 
