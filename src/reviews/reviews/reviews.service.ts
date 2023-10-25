@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, InternalServerErrorException } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreateReviewInput, UpdateReviewInput } from './dto/inputs'
 import { PrismaService } from 'src/prisma'
 import { User } from 'src/users/users/entities/user.entity'
@@ -42,6 +42,7 @@ export class ReviewsService {
       const review = await this.prismaService.reviews.findUnique({
         where: { id }
       })
+      if ( !review ) throw new NotFoundException( `Review with id ${ id } not found` )
       return review
     } catch ( error ) {
       this.handlerDBExceptions( error )
