@@ -1,26 +1,109 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePromotionImageInput } from './dto/create-promotion-image.input';
-import { UpdatePromotionImageInput } from './dto/update-promotion-image.input';
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { CreatePromotionImageInput, UpdatePromotionImageInput } from './dto/inputs'
+import { PrismaService } from 'src/prisma'
+import { PromotionRequestsService } from '../promotion-requests/promotion-requests.service'
+import { PromotionImage } from './entities/promotion-image.entity'
+import { User } from 'src/users/users/entities/user.entity'
+import { extractPrismaExceptions } from 'src/common/exception-catchers'
+import { IFindAllOptions } from 'src/common/interfaces'
+
+const promotionImageIncludes = {
+  promotionRequest: true,
+  creator: true,
+  updater: true
+}
 
 @Injectable()
 export class PromotionImagesService {
-  create(createPromotionImageInput: CreatePromotionImageInput) {
-    return 'This action adds a new promotionImage';
+
+  constructor (
+    @Inject( PrismaService )
+    private readonly prismaService : PrismaService,
+
+    private readonly promotionRequestsService : PromotionRequestsService
+  ) {}
+
+  async create ( createPromotionImageInput : CreatePromotionImageInput, creator : User ) : Promise<PromotionImage> {
+    const { promotionRequestId } = createPromotionImageInput
+    await this.promotionRequestsService.findOne( promotionRequestId )
+    try {
+      const promotionImage = await this.prismaService.promotionImages.create({
+        data: {
+          ...createPromotionImageInput,
+          createdBy: creator.id
+        }
+      })
+      return promotionImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  findAll() {
-    return `This action returns all promotionImages`;
+  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
+    const { limit, offset } = paginationArgs
+    const { search } = searchArgs
+    try {
+      const promotionImages = await this.prismaService.promotionImages.findMany({
+        take: limit,
+        skip: offset,
+        where: {
+          alt: { contains: search, mode: 'insensitive' }
+        },
+        include: { ...promotionImageIncludes }
+      })
+      return promotionImages
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} promotionImage`;
+  async findOne ( id : string ) {
+    const promotionImage = await this.prismaService.promotionImages.findUnique({
+      where: { id },
+      include: { ...promotionImageIncludes }
+    })
+    if ( !promotionImage ) throw new NotFoundException( `PromotionImage with id ${ id } not found` )
+    return promotionImage
   }
 
-  update(id: number, updatePromotionImageInput: UpdatePromotionImageInput) {
-    return `This action updates a #${id} promotionImage`;
+  async update ( id : string, updatePromotionImageInput : UpdatePromotionImageInput, updater : User ) {
+    await this.findOne( id )
+    const { promotionRequestId } = updatePromotionImageInput
+    if ( promotionRequestId ) await this.promotionRequestsService.findOne( promotionRequestId )
+    try {
+      const promotionImage = await this.prismaService.promotionImages.update({
+        where: { id },
+        data: {
+          ...updatePromotionImageInput,
+          updatedBy: updater.id
+        }
+      })
+      return promotionImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} promotionImage`;
+  async deactivate ( id : string, updater : User ) {
+    await this.findOne( id )
+    try {
+      const promotionImage = await this.prismaService.promotionImages.update({
+        where: { id },
+        data: {
+          status: false,
+          updatedBy: updater.id
+        }
+      })
+      return promotionImage
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
+  private handlerDBExceptions ( error : any ) : never {
+    console.error( error )
+    const prismaErrors = extractPrismaExceptions( error )
+    if ( prismaErrors ) throw new BadRequestException( prismaErrors )
+    throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }

@@ -9,6 +9,7 @@ import { CompaniesService } from 'src/companies/companies/companies.service'
 import { PromotionPaymentsService } from '../promotion-payments/promotion-payments.service'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
 import { IFindAllOptions } from 'src/common/interfaces'
+import { PromotionRequestsService } from '../promotion-requests/promotion-requests.service'
 
 const promotionIncludes = {
   promotionType: true,
@@ -29,15 +30,17 @@ export class PromotionsService {
     private readonly subparametersService : SubparametersService,
     private readonly usersService : UsersService,
     private readonly companiesService : CompaniesService,
-    private readonly promotionPaymentsService : PromotionPaymentsService
+    private readonly promotionPaymentsService : PromotionPaymentsService,
+    private readonly promotionRequestsService : PromotionRequestsService
   ) {}
 
   async create ( createPromotionInput : CreatePromotionInput, creator : User ) : Promise<Promotion> {
-    const { userId, companyId, promotionTypeId, promotionPaymentId } = createPromotionInput
+    const { userId, companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = createPromotionInput
     await this.usersService.findOne( userId )
     await this.companiesService.findOne( companyId )
     await this.subparametersService.findOne( promotionTypeId )
     await this.promotionPaymentsService.findOne( promotionPaymentId )
+    await this.promotionRequestsService.findOne( promotionRequestId )
     try {
       const promotion = await this.prismaService.promotions.create({
         data: {
@@ -84,11 +87,12 @@ export class PromotionsService {
 
   async update ( id : string, updatePromotionInput : UpdatePromotionInput, updater : User ) : Promise<Promotion> {
     await this.findOne( id )
-    const { userId, companyId, promotionTypeId, promotionPaymentId } = updatePromotionInput
+    const { userId, companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = updatePromotionInput
     if ( userId ) await this.usersService.findOne( userId )
     if ( companyId ) await this.companiesService.findOne( companyId )
     if ( promotionTypeId ) await this.subparametersService.findOne( promotionTypeId )
     if ( promotionPaymentId ) await this.promotionPaymentsService.findOne( promotionPaymentId )
+    if ( promotionRequestId ) await this.promotionRequestsService.findOne( promotionRequestId )
     try {
       const promotion = await this.prismaService.promotions.update({
         where: { id },

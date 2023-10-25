@@ -636,6 +636,7 @@ model PromotionRequests {
   promotionStatus   PromotionStatus[]         @relation("promotion_status_promotion_request")
   promotionPayments PromotionPayments[]       @relation("promotion_payments_promotion_request")
   discountProducts  DiscountProducts[]        @relation("discount_products_promotion_request")
+  promotions        Promotions[]              @relation("promotions_promotion_request")
 
   @@map("promotion_requests")
 }
@@ -759,6 +760,7 @@ model Promotions {
   userId             String
   companyId          String
   promotionPaymentId String
+  promotionRequestId String
   title              String   @db.VarChar(255)
   code               String   @unique @db.VarChar(255)
   description        String   @db.VarChar(255)
@@ -776,6 +778,7 @@ model Promotions {
   user             Users             @relation("promotions_user", fields: [userId], references: [id])
   company          Companies         @relation("promotions_company", fields: [companyId], references: [id])
   promotionType    Subparameters     @relation("promotions_promotion_type", fields: [promotionTypeId], references: [id])
+  promotionRequest PromotionRequests @relation("promotions_promotion_request", fields: [promotionRequestId], references: [id])
   promotionPayment PromotionPayments @relation("promotions_promotion_payment", fields: [promotionPaymentId], references: [id])
   creator          Users?            @relation("promotions_created_by", fields: [createdBy], references: [id])
   updater          Users?            @relation("promotions_updated_by", fields: [updatedBy], references: [id])

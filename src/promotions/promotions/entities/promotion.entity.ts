@@ -2,6 +2,7 @@ import { ObjectType, Field, ID } from '@nestjs/graphql'
 import { Company } from 'src/companies/companies/entities/company.entity'
 import { Subparameter } from 'src/parametrics/subparameters/entities/subparameter.entity'
 import { PromotionPayment } from 'src/promotions/promotion-payments/entities/promotion-payment.entity'
+import { PromotionRequest } from 'src/promotions/promotion-requests/entities/promotion-request.entity'
 import { PromotionReview } from 'src/reviews/promotion-reviews/entities/promotion-review.entity'
 import { User } from 'src/users/users/entities/user.entity'
 
@@ -18,6 +19,9 @@ export class Promotion {
 
   @Field( () => ID )
   promotionPaymentId: string
+
+  @Field( () => ID )
+  promotionRequestId: string
 
   @Field( () => String )
   title: string
@@ -66,6 +70,9 @@ export class Promotion {
 
   @Field( () => Subparameter, { nullable: true } )
   promotionType?: Subparameter | null
+
+  @Field( () => PromotionRequest, { nullable: true } )
+  promotionRequest?: PromotionRequest | null
 
   @Field( () => PromotionPayment, { nullable: true } )
   promotionPayment?: PromotionPayment | null

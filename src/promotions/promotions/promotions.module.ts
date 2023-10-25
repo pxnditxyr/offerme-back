@@ -6,6 +6,7 @@ import { SubparametersModule } from 'src/parametrics'
 import { UsersModule } from 'src/users'
 import { CompaniesModule } from 'src/companies'
 import { PromotionPaymentsModule } from '../promotion-payments/promotion-payments.module'
+import { PromotionRequestsModule } from '../promotion-requests/promotion-requests.module'
 
 @Module({
   providers: [
@@ -17,7 +18,8 @@ import { PromotionPaymentsModule } from '../promotion-payments/promotion-payment
     SubparametersModule,
     UsersModule,
     CompaniesModule,
-    PromotionPaymentsModule
+    PromotionPaymentsModule,
+    PromotionRequestsModule
   ],
   exports: [
     PromotionsService

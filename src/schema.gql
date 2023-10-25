@@ -200,8 +200,18 @@ type DiscountProduct {
 }
 
 type PromotionImage {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  promotionRequestId: ID!
+  url: String!
+  alt: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  promotionRequest: PromotionRequest
+  creator: User
+  updater: User
 }
 
 type UserCreditCard {
@@ -492,6 +502,7 @@ type Promotion {
   userId: ID!
   companyId: ID!
   promotionPaymentId: ID!
+  promotionRequestId: ID!
   title: String!
   code: String!
   description: String!
@@ -508,6 +519,7 @@ type Promotion {
   user: User
   company: Company
   promotionType: Subparameter
+  promotionRequest: PromotionRequest
   promotionPayment: PromotionPayment
   creator: User
   updater: User
@@ -706,8 +718,8 @@ type Query {
   userCreditCard(id: ID!): UserCreditCard!
   promotionRequests(offset: Int = 0, limit: Int = 10, search: String): [PromotionRequest!]!
   promotionRequest(id: ID!): PromotionRequest!
-  promotionImages: [PromotionImage!]!
-  promotionImage(id: Int!): PromotionImage!
+  promotionImages(offset: Int = 0, limit: Int = 10, search: String): [PromotionImage!]!
+  promotionImage(id: ID!): PromotionImage!
   promotionTargetProducts(offset: Int = 0, limit: Int = 10, search: String): [PromotionTargetProduct!]!
   promotionTargetProduct(id: ID!): PromotionTargetProduct!
   discountProducts: [DiscountProduct!]!
@@ -811,7 +823,7 @@ type Mutation {
   deactivatePromotionRequest(id: ID!): PromotionRequest!
   createPromotionImage(createPromotionImageInput: CreatePromotionImageInput!): PromotionImage!
   updatePromotionImage(updatePromotionImageInput: UpdatePromotionImageInput!): PromotionImage!
-  removePromotionImage(id: Int!): PromotionImage!
+  deactivatePromotionImage(id: ID!): PromotionImage!
   createPromotionTargetProduct(createPromotionTargetProductInput: CreatePromotionTargetProductInput!): PromotionTargetProduct!
   updatePromotionTargetProduct(updatePromotionTargetProductInput: UpdatePromotionTargetProductInput!): PromotionTargetProduct!
   deactivatePromotionTargetProduct(id: ID!): PromotionTargetProduct!
@@ -1249,14 +1261,17 @@ input UpdatePromotionRequestInput {
 }
 
 input CreatePromotionImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  promotionRequestId: ID!
+  url: String!
+  alt: String!
 }
 
 input UpdatePromotionImageInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  promotionRequestId: ID
+  url: String
+  alt: String
+  id: ID!
+  status: Boolean
 }
 
 input CreatePromotionTargetProductInput {
@@ -1328,6 +1343,7 @@ input CreatePromotionInput {
   userId: ID!
   companyId: ID!
   promotionPaymentId: ID!
+  promotionRequestId: ID!
   title: String!
   code: String!
   description: String!
@@ -1342,6 +1358,7 @@ input UpdatePromotionInput {
   userId: ID
   companyId: ID
   promotionPaymentId: ID
+  promotionRequestId: ID
   title: String
   code: String
   description: String

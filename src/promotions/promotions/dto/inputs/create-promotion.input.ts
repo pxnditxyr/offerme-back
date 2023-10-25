@@ -15,6 +15,10 @@ export class CreatePromotionInput {
   @IsUUID()
   promotionPaymentId: string
 
+  @Field( () => ID )
+  @IsUUID()
+  promotionRequestId: string
+
   @Field( () => String )
   @IsNotEmpty()
   @IsString()
