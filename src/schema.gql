@@ -199,102 +199,6 @@ type DiscountProduct {
   exampleField: Int!
 }
 
-type PromotionTargetProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Product {
-  id: ID!
-  name: String!
-  description: String!
-  companyId: ID!
-  productTypeId: ID!
-  stock: Int!
-  price: Float!
-  code: String!
-  notes: String!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  company: Company
-  productType: Subparameter
-  creator: User
-  updater: User
-  images: [ProductImage!]
-  categories: [ProductCategory!]
-  promotionRequests: [PromotionTargetProduct!]
-  discountProducts: [DiscountProduct!]
-}
-
-type ProductCategory {
-  id: ID!
-  productId: ID!
-  categoryId: ID!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  product: Product
-  category: Category
-  creator: User
-  updater: User
-}
-
-type Category {
-  id: ID!
-  name: String!
-  description: String!
-  order: Int!
-  parentId: ID
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  parent: Category
-  children: [Category!]
-  creator: User
-  updater: User
-  images: [CategoryImage!]
-  companies: [CompanyCategory!]
-  products: [ProductCategory!]
-}
-
-type CompanyCategory {
-  id: ID!
-  companyId: ID!
-  categoryId: ID!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  company: Company
-  category: Category
-  creator: User
-  updater: User
-}
-
-type CompanyLogo {
-  id: ID!
-  companyId: ID!
-  url: String!
-  alt: String!
-  isMain: Boolean!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  company: Company
-  creator: User
-  updater: User
-}
-
 type PromotionImage {
   """Example field (placeholder)"""
   exampleField: Int!
@@ -390,6 +294,113 @@ type PromotionRequest {
   promotionStatus: [PromotionStatus!]
   promotionPayments: [PromotionPayment!]
   discountProducts: [DiscountProduct!]
+}
+
+type PromotionTargetProduct {
+  id: ID!
+  promotionRequestId: ID!
+  productId: ID!
+  description: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  promotionRequest: PromotionRequest
+  product: Product
+  creator: User
+  updater: User
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  companyId: ID!
+  productTypeId: ID!
+  stock: Int!
+  price: Float!
+  code: String!
+  notes: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  productType: Subparameter
+  creator: User
+  updater: User
+  images: [ProductImage!]
+  categories: [ProductCategory!]
+  promotionRequests: [PromotionTargetProduct!]
+  discountProducts: [DiscountProduct!]
+}
+
+type ProductCategory {
+  id: ID!
+  productId: ID!
+  categoryId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  product: Product
+  category: Category
+  creator: User
+  updater: User
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String!
+  order: Int!
+  parentId: ID
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  parent: Category
+  children: [Category!]
+  creator: User
+  updater: User
+  images: [CategoryImage!]
+  companies: [CompanyCategory!]
+  products: [ProductCategory!]
+}
+
+type CompanyCategory {
+  id: ID!
+  companyId: ID!
+  categoryId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  category: Category
+  creator: User
+  updater: User
+}
+
+type CompanyLogo {
+  id: ID!
+  companyId: ID!
+  url: String!
+  alt: String!
+  isMain: Boolean!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  creator: User
+  updater: User
 }
 
 type Comment {
@@ -679,8 +690,8 @@ type Query {
   promotionRequest(id: ID!): PromotionRequest!
   promotionImages: [PromotionImage!]!
   promotionImage(id: Int!): PromotionImage!
-  promotionTargetProducts: [PromotionTargetProduct!]!
-  promotionTargetProduct(id: Int!): PromotionTargetProduct!
+  promotionTargetProducts(offset: Int = 0, limit: Int = 10, search: String): [PromotionTargetProduct!]!
+  promotionTargetProduct(id: ID!): PromotionTargetProduct!
   discountProducts: [DiscountProduct!]!
   discountProduct(id: Int!): DiscountProduct!
   promotionStatus(id: Int!): PromotionStatus!
@@ -785,7 +796,7 @@ type Mutation {
   removePromotionImage(id: Int!): PromotionImage!
   createPromotionTargetProduct(createPromotionTargetProductInput: CreatePromotionTargetProductInput!): PromotionTargetProduct!
   updatePromotionTargetProduct(updatePromotionTargetProductInput: UpdatePromotionTargetProductInput!): PromotionTargetProduct!
-  removePromotionTargetProduct(id: Int!): PromotionTargetProduct!
+  deactivatePromotionTargetProduct(id: ID!): PromotionTargetProduct!
   createDiscountProduct(createDiscountProductInput: CreateDiscountProductInput!): DiscountProduct!
   updateDiscountProduct(updateDiscountProductInput: UpdateDiscountProductInput!): DiscountProduct!
   removeDiscountProduct(id: Int!): DiscountProduct!
@@ -1229,14 +1240,17 @@ input UpdatePromotionImageInput {
 }
 
 input CreatePromotionTargetProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  promotionRequestId: ID!
+  productId: ID!
+  description: String!
 }
 
 input UpdatePromotionTargetProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  promotionRequestId: ID
+  productId: ID
+  description: String
+  id: ID!
+  status: Boolean
 }
 
 input CreateDiscountProductInput {
