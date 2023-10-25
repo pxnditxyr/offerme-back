@@ -1,35 +1,57 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { DiscountProductsService } from './discount-products.service';
-import { DiscountProduct } from './entities/discount-product.entity';
-import { CreateDiscountProductInput } from './dto/create-discount-product.input';
-import { UpdateDiscountProductInput } from './dto/update-discount-product.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { DiscountProductsService } from './discount-products.service'
+import { DiscountProduct } from './entities/discount-product.entity'
+import { CreateDiscountProductInput, UpdateDiscountProductInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@Resolver(() => DiscountProduct)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => DiscountProduct )
 export class DiscountProductsResolver {
-  constructor(private readonly discountProductsService: DiscountProductsService) {}
+  constructor (
+    private readonly discountProductsService: DiscountProductsService
+  ) {}
 
-  @Mutation(() => DiscountProduct)
-  createDiscountProduct(@Args('createDiscountProductInput') createDiscountProductInput: CreateDiscountProductInput) {
-    return this.discountProductsService.create(createDiscountProductInput);
+  @Mutation( () => DiscountProduct )
+  async createDiscountProduct (
+    @Args( 'createDiscountProductInput' ) createDiscountProductInput : CreateDiscountProductInput,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
+  ) : Promise<DiscountProduct> {
+    return await this.discountProductsService.create( createDiscountProductInput, creator )
   }
 
-  @Query(() => [DiscountProduct], { name: 'discountProducts' })
-  findAll() {
-    return this.discountProductsService.findAll();
+  @Query( () => [ DiscountProduct ], { name: 'discountProducts' } )
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs
+  ) {
+    return await this.discountProductsService.findAll({ paginationArgs, searchArgs })
   }
 
-  @Query(() => DiscountProduct, { name: 'discountProduct' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.discountProductsService.findOne(id);
+  @Query( () => DiscountProduct, { name: 'discountProduct' } )
+  async findOne(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) {
+    return await this.discountProductsService.findOne( id )
   }
 
-  @Mutation(() => DiscountProduct)
-  updateDiscountProduct(@Args('updateDiscountProductInput') updateDiscountProductInput: UpdateDiscountProductInput) {
-    return this.discountProductsService.update(updateDiscountProductInput.id, updateDiscountProductInput);
+  @Mutation( () => DiscountProduct )
+  async updateDiscountProduct (
+    @Args( 'updateDiscountProductInput' ) updateDiscountProductInput : UpdateDiscountProductInput,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+  ) : Promise<DiscountProduct> {
+    return await this.discountProductsService.update( updateDiscountProductInput.id, updateDiscountProductInput, updater )
   }
 
-  @Mutation(() => DiscountProduct)
-  removeDiscountProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.discountProductsService.remove(id);
+  @Mutation( () => DiscountProduct )
+  async deactivateDiscountProduct (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+  ) : Promise<DiscountProduct> {
+    return await this.discountProductsService.deactivate( id, updater )
   }
 }

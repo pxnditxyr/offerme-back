@@ -1,35 +1,73 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { CodePromotionDiscountProductsService } from './code-promotion-discount-products.service';
-import { CodePromotionDiscountProduct } from './entities/code-promotion-discount-product.entity';
-import { CreateCodePromotionDiscountProductInput } from './dto/create-code-promotion-discount-product.input';
-import { UpdateCodePromotionDiscountProductInput } from './dto/update-code-promotion-discount-product.input';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
+import { CodePromotionDiscountProductsService } from './code-promotion-discount-products.service'
+import { CodePromotionDiscountProduct } from './entities/code-promotion-discount-product.entity'
+import { CreateCodePromotionDiscountProductInput, UpdateCodePromotionDiscountProductInput } from './dto/inputs'
+import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { User } from 'src/users/users/entities/user.entity'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@Resolver(() => CodePromotionDiscountProduct)
+@UseGuards( JwtAuthGuard )
+@Resolver( () => CodePromotionDiscountProduct )
 export class CodePromotionDiscountProductsResolver {
-  constructor(private readonly codePromotionDiscountProductsService: CodePromotionDiscountProductsService) {}
+  constructor (
+    private readonly codePromotionDiscountProductsService: CodePromotionDiscountProductsService
+  ) {}
 
-  @Mutation(() => CodePromotionDiscountProduct)
-  createCodePromotionDiscountProduct(@Args('createCodePromotionDiscountProductInput') createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput) {
-    return this.codePromotionDiscountProductsService.create(createCodePromotionDiscountProductInput);
+  @Mutation( () => CodePromotionDiscountProduct )
+  async createCodePromotionDiscountProduct (
+    @Args( 'createCodePromotionDiscountProductInput' ) createCodePromotionDiscountProductInput : CreateCodePromotionDiscountProductInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) creator : User
+  ) : Promise<CodePromotionDiscountProduct> {
+    return await this.codePromotionDiscountProductsService.create( createCodePromotionDiscountProductInput, creator )
   }
 
-  @Query(() => [CodePromotionDiscountProduct], { name: 'codePromotionDiscountProducts' })
-  findAll() {
-    return this.codePromotionDiscountProductsService.findAll();
+  @Query( () => [ CodePromotionDiscountProduct ], { name: 'codePromotionDiscountProducts' } )
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs
+  ) { 
+    return await this.codePromotionDiscountProductsService.findAll({ paginationArgs, searchArgs })
   }
 
-  @Query(() => CodePromotionDiscountProduct, { name: 'codePromotionDiscountProduct' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.codePromotionDiscountProductsService.findOne(id);
+  @Query( () => CodePromotionDiscountProduct, { name: 'codePromotionDiscountProduct' } )
+  async findOne (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
+  ) {
+    return await this.codePromotionDiscountProductsService.findOne( id )
   }
 
-  @Mutation(() => CodePromotionDiscountProduct)
-  updateCodePromotionDiscountProduct(@Args('updateCodePromotionDiscountProductInput') updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput) {
-    return this.codePromotionDiscountProductsService.update(updateCodePromotionDiscountProductInput.id, updateCodePromotionDiscountProductInput);
+  @Mutation( () => CodePromotionDiscountProduct )
+  async updateCodePromotionDiscountProduct (
+    @Args( 'updateCodePromotionDiscountProductInput' ) updateCodePromotionDiscountProductInput : UpdateCodePromotionDiscountProductInput,
+    @CurrentUser([ ValidRoles.ADMIN ]) updater : User
+  ) : Promise<CodePromotionDiscountProduct> {
+    return await this.codePromotionDiscountProductsService.update( updateCodePromotionDiscountProductInput.id, updateCodePromotionDiscountProductInput, updater )
   }
 
-  @Mutation(() => CodePromotionDiscountProduct)
-  removeCodePromotionDiscountProduct(@Args('id', { type: () => Int }) id: number) {
-    return this.codePromotionDiscountProductsService.remove(id);
+  @Mutation( () => CodePromotionDiscountProduct )
+  async redeemDiscountCoupon (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.USER ]) user : User
+  ) : Promise<CodePromotionDiscountProduct> {
+    return await this.codePromotionDiscountProductsService.redeemDiscountCoupon( id, user )
+  }
+
+  @Mutation( () => CodePromotionDiscountProduct )
+  async forgetDiscountCoupon (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.USER ]) user : User
+  ) : Promise<CodePromotionDiscountProduct> {
+    return await this.codePromotionDiscountProductsService.forgetDiscountCoupon( id, user )
+  }
+
+  @Mutation( () => CodePromotionDiscountProduct )
+  async deactivateCodePromotionDiscountProduct(
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN ]) updater : User
+  ) : Promise<CodePromotionDiscountProduct> {
+    return await this.codePromotionDiscountProductsService.deactivate( id, updater )
   }
 }

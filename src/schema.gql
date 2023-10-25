@@ -194,9 +194,22 @@ type ProductImage {
   updater: User
 }
 
-type DiscountProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
+type CodePromotionDiscountProduct {
+  id: ID!
+  code: String!
+  discountProductId: ID!
+  used: Boolean!
+  usedAt: DateTime
+  usedBy: ID
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  discountProduct: DiscountProduct
+  user: User
+  creator: User
+  updater: User
 }
 
 type PromotionImage {
@@ -292,6 +305,22 @@ type PromotionStatus {
   updater: User
 }
 
+type PromotionTargetProduct {
+  id: ID!
+  promotionRequestId: ID!
+  productId: ID!
+  description: String!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  promotionRequest: PromotionRequest
+  product: Product
+  creator: User
+  updater: User
+}
+
 type PromotionRequest {
   id: ID!
   requestingUserId: ID!
@@ -324,20 +353,27 @@ type PromotionRequest {
   discountProducts: [DiscountProduct!]
 }
 
-type PromotionTargetProduct {
+type DiscountProduct {
   id: ID!
-  promotionRequestId: ID!
   productId: ID!
+  userId: ID!
+  promotionRequestId: ID!
+  title: String!
   description: String!
+  discountPercentage: Float!
+  discountAmount: Float!
+  discountPrice: Float!
   status: Boolean!
   createdAt: DateTime!
   createdBy: ID
   updatedAt: DateTime!
   updatedBy: ID
-  promotionRequest: PromotionRequest
   product: Product
+  user: User
+  promotionRequest: PromotionRequest
   creator: User
   updater: User
+  codePromotion: [CodePromotionDiscountProduct!]
 }
 
 type Product {
@@ -661,11 +697,6 @@ type CompanyUser {
   updater: User
 }
 
-type CodePromotionDiscountProduct {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -722,15 +753,15 @@ type Query {
   promotionImage(id: ID!): PromotionImage!
   promotionTargetProducts(offset: Int = 0, limit: Int = 10, search: String): [PromotionTargetProduct!]!
   promotionTargetProduct(id: ID!): PromotionTargetProduct!
-  discountProducts: [DiscountProduct!]!
-  discountProduct(id: Int!): DiscountProduct!
+  discountProducts(offset: Int = 0, limit: Int = 10, search: String): [DiscountProduct!]!
+  discountProduct(id: ID!): DiscountProduct!
   promotionStatus(id: ID!): PromotionStatus!
   promotionPayments(offset: Int = 0, limit: Int = 10, search: String): [PromotionPayment!]!
   promotionPayment(id: ID!): PromotionPayment!
   promotions(offset: Int = 0, limit: Int = 10, search: String): [Promotion!]!
   promotion(id: ID!): Promotion!
-  codePromotionDiscountProducts: [CodePromotionDiscountProduct!]!
-  codePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
+  codePromotionDiscountProducts(offset: Int = 0, limit: Int = 10, search: String): [CodePromotionDiscountProduct!]!
+  codePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
   reviews: [Review!]!
   review(id: ID!): Review!
   comments(offset: Int = 0, limit: Int = 10, search: String): [Comment!]!
@@ -829,7 +860,7 @@ type Mutation {
   deactivatePromotionTargetProduct(id: ID!): PromotionTargetProduct!
   createDiscountProduct(createDiscountProductInput: CreateDiscountProductInput!): DiscountProduct!
   updateDiscountProduct(updateDiscountProductInput: UpdateDiscountProductInput!): DiscountProduct!
-  removeDiscountProduct(id: Int!): DiscountProduct!
+  deactivateDiscountProduct(id: ID!): DiscountProduct!
   createPromotionStatus(createPromotionStatusInput: CreatePromotionStatusInput!): PromotionStatus!
   updatePromotionStatus(updatePromotionStatusInput: UpdatePromotionStatusInput!): PromotionStatus!
   approvePromotionStatus(statusUpdatePromotionStatusInput: StatusUpdatePromotionStatusInput!): PromotionStatus!
@@ -843,7 +874,9 @@ type Mutation {
   deactivatePromotion(id: ID!): Promotion!
   createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
-  removeCodePromotionDiscountProduct(id: Int!): CodePromotionDiscountProduct!
+  redeemDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
+  forgetDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
+  deactivateCodePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   deactivateComment(id: ID!): Comment!
@@ -1289,14 +1322,25 @@ input UpdatePromotionTargetProductInput {
 }
 
 input CreateDiscountProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  productId: ID!
+  promotionRequestId: ID!
+  title: String!
+  description: String!
+  discountPercentage: Float!
+  discountAmount: Float!
+  discountPrice: Float!
 }
 
 input UpdateDiscountProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  productId: ID
+  promotionRequestId: ID
+  title: String
+  description: String
+  discountPercentage: Float
+  discountAmount: Float
+  discountPrice: Float
+  id: ID!
+  status: Boolean!
 }
 
 input CreatePromotionStatusInput {
@@ -1372,14 +1416,17 @@ input UpdatePromotionInput {
 }
 
 input CreateCodePromotionDiscountProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  code: String!
+  discountProductId: ID!
 }
 
 input UpdateCodePromotionDiscountProductInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  code: String
+  discountProductId: ID
+  id: ID!
+  used: Boolean!
+  usedAt: DateTime
+  usedBy: ID
 }
 
 input CreateCommentInput {

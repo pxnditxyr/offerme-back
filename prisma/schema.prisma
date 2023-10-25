@@ -791,7 +791,7 @@ model Promotions {
 model CodePromotionDiscountProducts {
   id                 String    @id @default(uuid())
   code               String    @unique @db.VarChar(255)
-  discounctProductId String
+  discountProductId  String
   used               Boolean   @default(false)
   usedAt             DateTime? @db.Date
   usedBy             String?
@@ -801,7 +801,7 @@ model CodePromotionDiscountProducts {
   updatedAt          DateTime  @updatedAt
   updatedBy          String?
 
-  discountProduct DiscountProducts @relation("code_promotion_discount_products_discount_product", fields: [discounctProductId], references: [id])
+  discountProduct DiscountProducts @relation("code_promotion_discount_products_discount_product", fields: [discountProductId], references: [id])
   user            Users?           @relation("code_promotion_discount_products_user", fields: [usedBy], references: [id])
   creator         Users?           @relation("code_promotion_discount_products_created_by", fields: [createdBy], references: [id])
   updater         Users?           @relation("code_promotion_discount_products_updated_by", fields: [updatedBy], references: [id])
