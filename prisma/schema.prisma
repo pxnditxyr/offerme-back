@@ -712,8 +712,8 @@ model PromotionStatus {
   adminRejectedStatus Boolean   @default(false)
   adminRejectedAt     DateTime? @db.Date
   adminRejectedBy     String?
-  adminComment        String    @db.VarChar(255)
-  adminReason         String    @db.VarChar(255)
+  adminComment        String?   @db.VarChar(255)
+  adminReason         String?   @db.VarChar(255)
   status              Boolean   @default(true)
   createdAt           DateTime  @default(now())
   createdBy           String?

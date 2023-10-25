@@ -70,6 +70,7 @@ export class PromotionTargetProductsService {
   }
 
   async update ( id : string, updatePromotionTargetProductInput : UpdatePromotionTargetProductInput, updater : User ) : Promise<PromotionTargetProduct> {
+    await this.findOne( id )
     const { promotionRequestId, productId } = updatePromotionTargetProductInput
     if ( promotionRequestId ) await this.promotionRequestsService.findOne( promotionRequestId )
     if ( productId ) await this.productsService.findOne( productId )
@@ -88,6 +89,7 @@ export class PromotionTargetProductsService {
   }
 
   async deactivate ( id : string, updater : User ) : Promise<PromotionTargetProduct> {
+    await this.findOne( id )
     try {
       const promotionTargetProduct = await this.prismaService.promotionTargetProducts.update({
         where: { id },

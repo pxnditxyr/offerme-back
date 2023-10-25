@@ -260,8 +260,26 @@ type PromotionPayment {
 }
 
 type PromotionStatus {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  promotionRequestId: ID!
+  adminApprovedStatus: Boolean!
+  adminApprovedAt: DateTime
+  adminApprovedBy: ID
+  adminRejectedStatus: Boolean!
+  adminRejectedAt: DateTime
+  adminRejectedBy: ID
+  adminComment: String
+  adminReason: String
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  promotionRequest: PromotionRequest
+  adminApproved: User
+  adminRejected: User
+  creator: User
+  updater: User
 }
 
 type PromotionRequest {
@@ -694,7 +712,7 @@ type Query {
   promotionTargetProduct(id: ID!): PromotionTargetProduct!
   discountProducts: [DiscountProduct!]!
   discountProduct(id: Int!): DiscountProduct!
-  promotionStatus(id: Int!): PromotionStatus!
+  promotionStatus(id: ID!): PromotionStatus!
   promotionPayments(offset: Int = 0, limit: Int = 10, search: String): [PromotionPayment!]!
   promotionPayment(id: ID!): PromotionPayment!
   promotions(offset: Int = 0, limit: Int = 10, search: String): [Promotion!]!
@@ -802,7 +820,9 @@ type Mutation {
   removeDiscountProduct(id: Int!): DiscountProduct!
   createPromotionStatus(createPromotionStatusInput: CreatePromotionStatusInput!): PromotionStatus!
   updatePromotionStatus(updatePromotionStatusInput: UpdatePromotionStatusInput!): PromotionStatus!
-  removePromotionStatus(id: Int!): PromotionStatus!
+  approvePromotionStatus(statusUpdatePromotionStatusInput: StatusUpdatePromotionStatusInput!): PromotionStatus!
+  rejectPromotionStatus(statusUpdatePromotionStatusInput: StatusUpdatePromotionStatusInput!): PromotionStatus!
+  deactivatePromotionStatus(id: ID!): PromotionStatus!
   createPromotionPayment(createPromotionPaymentInput: CreatePromotionPaymentInput!): PromotionPayment!
   updatePromotionPayment(updatePromotionPaymentInput: UpdatePromotionPaymentInput!): PromotionPayment!
   deactivatePromotionPayment(id: ID!): PromotionPayment!
@@ -1265,14 +1285,23 @@ input UpdateDiscountProductInput {
 }
 
 input CreatePromotionStatusInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  promotionRequestId: ID!
 }
 
 input UpdatePromotionStatusInput {
-  """Example field (placeholder)"""
-  exampleField: Int
+  promotionRequestId: ID
   id: Int!
+  adminApprovedStatus: Boolean
+  adminRejectedStatus: Boolean!
+  adminComment: String!
+  adminReason: String!
+  status: Boolean
+}
+
+input StatusUpdatePromotionStatusInput {
+  id: Int!
+  adminComment: String!
+  adminReason: String!
 }
 
 input CreatePromotionPaymentInput {
