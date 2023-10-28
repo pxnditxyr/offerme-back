@@ -6,11 +6,9 @@ Content-Type: application/json
   "maternalSurname": "ex mat",
   "paternalSurname": "ex pat",
   "name": "example name",
-  "email": "example13@example.com",
+  "email": "example15@example.com",
   "password": "Hola123#",
-  "genderId": "a1b6195a-1e89-4517-8f6d-2acc7ce04530",
-  "ipAddress": "192.168.0.2",
-  "userAgent": "Mozilla/5.0 (Windows NT 10.0 Win64 x64 rv:89.0) Gecko/20100101 Firefox/89.0"
+  "genderId": "b78ec694-6435-455b-9665-0532b245ea51"
 }
 
 POST http://localhost:3001/auth/signin
@@ -18,9 +16,7 @@ Content-Type: application/json
 
 {
   "email": "pxndxs@pxndxs.com",
-  "password": "Hola123#",
-  "ipAddress": "192.168.0.2",
-  "userAgent": "Mozilla/5.0 (Windows NT 10.0 Win64 x64 rv:89.0) Gecko/20100101 Firefox/89.0"
+  "password": "Hola123#"
 }
 
 POST http://localhost:3001/auth/signin
@@ -28,7 +24,5 @@ Content-Type: application/json
 
 {
   "email": "example13@example.com",
-  "password": "Hola123#",
-  "ipAddress": "192.168.0.2",
-  "userAgent": "Mozilla/5.0 (Windows NT 10.0 Win64 x64 rv:89.0) Gecko/20100101 Firefox/89.0"
+  "password": "Hola123#"
 }

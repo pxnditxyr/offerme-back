@@ -7,12 +7,4 @@ export class SigninDto {
   @IsNotEmpty()
   @IsString()
   password: string
-
-  @IsNotEmpty()
-  @IsString()
-  ipAddress: string
-
-  @IsNotEmpty()
-  @IsString()
-  userAgent: string
 }

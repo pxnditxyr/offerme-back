@@ -23,11 +23,11 @@ export class AuthService {
     private readonly jwtService : JwtService
   ) {}
 
-  async signup ( signupDto : SignupDto ) : Promise<AuthResponse> {
+  async signup ( signupDto : SignupDto, request : Request, ipAddress : string ) : Promise<AuthResponse> {
 
     const {
-      birthdate, maternalSurname, paternalSurname, name, genderId,
-      email, password, googleId, ipAddress, userAgent
+      birthdate, maternalSurname, paternalSurname,
+      name, genderId, email, password, googleId
     } = signupDto
 
     const role = await this.rolesService.findByName( ValidRoles.USER )
@@ -55,7 +55,7 @@ export class AuthService {
       userId: user.id,
       token,
       ipAddress,
-      userAgent
+      userAgent: request.headers[ 'user-agent' ]
     })
 
     try {
@@ -84,8 +84,8 @@ export class AuthService {
     }
   }
 
-  async signin ( signinDto : SigninDto ) : Promise<AuthResponse> {
-    const { email, password, ipAddress, userAgent } = signinDto
+  async signin ( signinDto : SigninDto, request : Request, ipAddress : string ) : Promise<AuthResponse> {
+    const { email, password } = signinDto
     try {
       const user = await this.usersService.findByEmail( email )
       if ( !compareSync( password, user.password ) ) throw new UnauthorizedException( 'Invalid credentials' )
@@ -94,7 +94,7 @@ export class AuthService {
         userId: user.id,
         token,
         ipAddress,
-        userAgent
+        userAgent: request.headers[ 'user-agent' ]
       })
 
       return {

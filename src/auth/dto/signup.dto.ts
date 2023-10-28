@@ -29,12 +29,4 @@ export class SignupDto {
   @IsOptional()
   @IsString()
   googleId?: string
-
-  @IsNotEmpty()
-  @IsString()
-  ipAddress: string
-
-  @IsNotEmpty()
-  @IsString()
-  userAgent: string
 }
