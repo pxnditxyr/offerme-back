@@ -682,6 +682,11 @@ type AuthResponse {
   user: UserResponse!
 }
 
+type GenderResponse {
+  id: ID!
+  name: String!
+}
+
 type CompanyUser {
   id: ID!
   companyId: ID!
@@ -721,6 +726,7 @@ type Query {
   addresses: [Address!]!
   address(id: ID!): Address!
   revalidateToken: AuthResponse!
+  genders: [GenderResponse!]!
   companies(offset: Int = 0, limit: Int = 10, search: String): [Company!]!
   company(id: ID!): Company!
   companyLogos: [CompanyLogo!]!

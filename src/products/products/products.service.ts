@@ -9,7 +9,14 @@ import { SubparametersService } from 'src/parametrics/subparameters/subparameter
 import { IFindAllOptions } from 'src/common/interfaces'
 
 const productIncludes = {
-
+  images: true,
+  company: true,
+  creator: true,
+  updater: true,
+  categories: true,
+  productType: true,
+  discountProducts: true,
+  promotionRequests: true
 }
 
 @Injectable()
@@ -111,7 +118,7 @@ export class ProductsService {
   }
 
   private handlerDBExceptions ( error : any ) : never {
-    console.log( error )
+    console.error( error )
     const prismaErrors = extractPrismaExceptions( error )
     if ( prismaErrors ) throw new BadRequestException( prismaErrors )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )

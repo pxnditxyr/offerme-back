@@ -1,9 +1,10 @@
-import { Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { CreateSubparameterInput, UpdateSubparameterInput } from './dto/inputs'
 import { PrismaService } from '../../prisma'
 import { ParametersService } from '../parameters/parameters.service'
 import { Subparameter } from './entities/subparameter.entity'
 import { User } from 'src/users/users/entities/user.entity'
+import { extractPrismaExceptions } from 'src/common/exception-catchers'
 
 const subparameterIncludes = {
   parameter: true,
@@ -45,6 +46,17 @@ export class SubparametersService {
       include: { ...subparameterIncludes }
     })
     return subparameters
+  }
+  async findAllByParameterName ( parameterName : string ) {
+    const parameter = await this.parametersService.findOne( parameterName )
+    try {
+      const subparameters = await this.prismaService.subparameters.findMany({
+        where: { parameterId: parameter.id },
+      })
+      return subparameters
+    } catch ( error ) {
+      this.handlerDBException( error )
+    }
   }
 
   async findOne ( id : string ) {
@@ -92,6 +104,8 @@ export class SubparametersService {
   
   private handlerDBException ( error : any ) : never {
     console.error( error )
+    const prismaErrors = extractPrismaExceptions( error )
+    if ( prismaErrors ) throw new BadRequestException( prismaErrors )
     throw new InternalServerErrorException( 'Unexpected error, please check logs' )
   }
 }

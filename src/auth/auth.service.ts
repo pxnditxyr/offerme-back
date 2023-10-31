@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt'
 import { AuthResponse } from './types/auth-response.types'
 import { User } from 'src/users/users/entities/user.entity'
 import { ValidRoles } from './enums/valid-roles.enum'
+import { GenderResponse } from './types'
 
 @Injectable()
 export class AuthService {
@@ -58,68 +59,60 @@ export class AuthService {
       userAgent: request.headers[ 'user-agent' ]
     })
 
-    try {
-      return {
-        user: {
-          id: user.id,
-          email: user.email,
-          peopleInfo: {
-            id: peopleInfo.id,
-            name: peopleInfo.name,
-            paternalSurname: peopleInfo.paternalSurname,
-            maternalSurname: peopleInfo.maternalSurname,
-            birthdate: peopleInfo.birthdate,
-            genderId: peopleInfo.genderId
-          },
-          role: {
-            id: role.id,
-            name: role.name
-          },
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        peopleInfo: {
+          id: peopleInfo.id,
+          name: peopleInfo.name,
+          paternalSurname: peopleInfo.paternalSurname,
+          maternalSurname: peopleInfo.maternalSurname,
+          birthdate: peopleInfo.birthdate,
+          genderId: peopleInfo.genderId
         },
-        token
-      }
-    } catch ( error ) {
-      console.error( error )
-      throw new InternalServerErrorException( 'Unexpected error, please check the logs' )
+        role: {
+          id: role.id,
+          name: role.name
+        },
+      },
+      token
     }
   }
 
   async signin ( signinDto : SigninDto, request : Request, ipAddress : string ) : Promise<AuthResponse> {
     const { email, password } = signinDto
-    try {
-      const user = await this.usersService.findByEmail( email )
-      if ( !compareSync( password, user.password ) ) throw new UnauthorizedException( 'Invalid credentials' )
-      const token = this.getJwtToken( user.id )
-      await this.sessionsService.create({
-        userId: user.id,
-        token,
-        ipAddress,
-        userAgent: request.headers[ 'user-agent' ]
-      })
+    const user = await this.usersService.findByEmail( email )
+    
+    if ( !compareSync( password, user.password ) ) throw new UnauthorizedException( 'Invalid credentials' )
+    const token = this.getJwtToken( user.id )
+    await this.sessionsService.create({
+      userId: user.id,
+      token,
+      ipAddress,
+      userAgent: request.headers[ 'user-agent' ]
+    })
 
-      return {
-        user: {
-          id: user.id,
-          email: user.email,
-          peopleInfo: {
-            id: user.peopleInfo.id,
-            name: user.peopleInfo.name,
-            paternalSurname: user.peopleInfo.paternalSurname,
-            maternalSurname: user.peopleInfo.maternalSurname,
-            birthdate: user.peopleInfo.birthdate,
-            genderId: user.peopleInfo.genderId
-          },
-          role: {
-            id: user.role.id,
-            name: user.role.name
-          },
+    return {
+      user: {
+        id: user.id,
+        email: user.email,
+        peopleInfo: {
+          id: user.peopleInfo.id,
+          name: user.peopleInfo.name,
+          paternalSurname: user.peopleInfo.paternalSurname,
+          maternalSurname: user.peopleInfo.maternalSurname,
+          birthdate: user.peopleInfo.birthdate,
+          genderId: user.peopleInfo.genderId
         },
-        token
-      }
-    } catch ( error ) {
-      console.error( error )
-      throw new UnauthorizedException( 'Invalid credentials' )
+        role: {
+          id: user.role.id,
+          name: user.role.name
+        },
+      },
+      token
     }
+    
   }
 
   revalidateToken ( user : User ) : AuthResponse {
@@ -152,6 +145,12 @@ export class AuthService {
     const user = await this.usersService.findOne( id )
     if ( !user.status ) throw new UnauthorizedException( 'This user has been deactivated, please contact the administrator' )
     return user
+  }
+
+  async findAllGenders () : Promise<GenderResponse[]> {
+    const genders = await this.subparametersService.findAllByParameterName( 'gender' )
+    const activeGenders = genders.filter( ({ status }) => status )
+    return activeGenders.map( ({ id, name }) => ({ id, name }) )
   }
 
   private getJwtToken ( id : string ) : string {

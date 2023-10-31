@@ -28,7 +28,6 @@ export class UsersResolver {
     @Args() validRoles : ValidRolesArgs,
     @CurrentUser([ ValidRoles.ADMIN ]) _user : User
   ) {
-    console.log( validRoles )
     return await this.usersService.findAll( validRoles.roles )
   }
 

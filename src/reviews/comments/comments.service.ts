@@ -27,7 +27,6 @@ export class CommentsService {
 
   async create ( createCommentInput : CreateCommentInput, creator : User ) : Promise<Comment> {
     const { reviewId } = createCommentInput
-    console.log( reviewId )
     await this.reviewsService.findOne( reviewId )
     try {
       const comment = await this.prismaService.comments.create({

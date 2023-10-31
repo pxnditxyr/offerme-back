@@ -87,7 +87,7 @@ export class UsersService {
         avatars: true,
       }
     })
-    if ( !user ) throw new NotFoundException( `User ${ email } not found` )
+    if ( !user ) throw new NotFoundException( `Email ${ email } does not exist` )
     return user
   }
 

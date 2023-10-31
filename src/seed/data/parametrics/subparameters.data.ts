@@ -17,8 +17,8 @@ export const subparametersData = () => {
       parameterId: genderParameterId,
     },
     {
-      name: 'Género fluido',
-      description: 'Género fluido',
+      name: 'Otro',
+      description: 'Otro',
       parameterId: genderParameterId,
     },
   ]
