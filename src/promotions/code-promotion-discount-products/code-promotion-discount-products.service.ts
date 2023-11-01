@@ -103,15 +103,33 @@ export class CodePromotionDiscountProductsService {
     }
   }
 
+  async getDiscountCoupon ( id : string, user : User ) : Promise<CodePromotionDiscountProduct> {
+    await this.findOne( id )
+    try {
+      const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.update({
+        where: { id },
+        data: {
+          isUsed: true,
+          usedAt: new Date(),
+          usedBy: user.id,
+          updatedBy: user.id,
+        }
+      })
+      return codePromotionDiscountProducts
+    } catch ( error ) {
+      this.handlerDBExceptions( error )
+    }
+  }
+
   async redeemDiscountCoupon ( id : string, user : User ) : Promise<CodePromotionDiscountProduct> {
     await this.findOne( id )
     try {
       const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.update({
         where: { id },
         data: {
-          used: true,
-          usedAt: new Date(),
-          usedBy: user.id,
+          isRedeemed: true,
+          redeemedAt: new Date(),
+          redeemedBy: user.id,
           updatedBy: user.id,
         }
       })
@@ -128,7 +146,7 @@ export class CodePromotionDiscountProductsService {
       const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.update({
         where: { id },
         data: {
-          used: false,
+          isUsed: false,
           updatedBy: user.id,
         }
       })

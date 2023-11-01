@@ -11,7 +11,7 @@ export class UpdateCodePromotionDiscountProductInput extends PartialType(CreateC
   @Field( () => Boolean )
   @IsOptional()
   @IsBoolean()
-  used: boolean
+  isUsed: boolean
 
   @Field( () => Date, { nullable: true } )
   @IsOptional()
@@ -22,4 +22,19 @@ export class UpdateCodePromotionDiscountProductInput extends PartialType(CreateC
   @IsOptional()
   @IsUUID()
   usedBy?: string | null
+
+  @Field( () => Boolean )
+  @IsOptional()
+  @IsBoolean()
+  isRedeemed: boolean
+
+  @Field( () => Date, { nullable: true } )
+  @IsOptional()
+  @IsDate()
+  redeemedAt?: Date | null
+
+  @Field( () => ID, { nullable: true } )
+  @IsOptional()
+  @IsUUID()
+  redeemedBy?: string | null
 }

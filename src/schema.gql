@@ -198,16 +198,19 @@ type CodePromotionDiscountProduct {
   id: ID!
   code: String!
   discountProductId: ID!
-  used: Boolean!
+  isUsed: Boolean!
   usedAt: DateTime
   usedBy: ID
+  isRedeemed: Boolean!
+  redeemedAt: DateTime
+  redeemedBy: ID
   status: Boolean!
   createdAt: DateTime!
   createdBy: ID
   updatedAt: DateTime!
   updatedBy: ID
   discountProduct: DiscountProduct
-  user: User
+  used: User
   creator: User
   updater: User
 }
@@ -880,6 +883,7 @@ type Mutation {
   deactivatePromotion(id: ID!): Promotion!
   createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
+  getDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   redeemDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   forgetDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   deactivateCodePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
@@ -1430,9 +1434,12 @@ input UpdateCodePromotionDiscountProductInput {
   code: String
   discountProductId: ID
   id: ID!
-  used: Boolean!
+  isUsed: Boolean!
   usedAt: DateTime
   usedBy: ID
+  isRedeemed: Boolean!
+  redeemedAt: DateTime
+  redeemedBy: ID
 }
 
 input CreateCommentInput {

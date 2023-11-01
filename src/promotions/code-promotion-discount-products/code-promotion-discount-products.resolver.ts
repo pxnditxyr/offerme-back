@@ -48,9 +48,17 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
-  async redeemDiscountCoupon (
+  async getDiscountCoupon (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.USER ]) user : User
+  ) : Promise<CodePromotionDiscountProduct> {
+    return await this.codePromotionDiscountProductsService.redeemDiscountCoupon( id, user )
+  }
+
+  @Mutation( () => CodePromotionDiscountProduct )
+  async redeemDiscountCoupon (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.SELLER ]) user : User
   ) : Promise<CodePromotionDiscountProduct> {
     return await this.codePromotionDiscountProductsService.redeemDiscountCoupon( id, user )
   }

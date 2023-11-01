@@ -14,13 +14,22 @@ export class CodePromotionDiscountProduct {
   discountProductId: string
 
   @Field( () => Boolean )
-  used: boolean
+  isUsed: boolean
 
   @Field( () => Date, { nullable: true } )
   usedAt?: Date | null
 
   @Field( () => ID, { nullable: true } )
   usedBy?: string | null
+
+  @Field( () => Boolean )
+  isRedeemed: boolean
+
+  @Field( () => Date, { nullable: true } )
+  redeemedAt?: Date | null
+
+  @Field( () => ID, { nullable: true } )
+  redeemedBy?: string | null
 
   @Field( () => Boolean )
   status: boolean
@@ -41,7 +50,7 @@ export class CodePromotionDiscountProduct {
   discountProduct?: DiscountProduct | null
 
   @Field( () => User, { nullable: true } )
-  user?: User | null
+  used?: User | null
 
   @Field( () => User, { nullable: true } )
   creator?: User | null

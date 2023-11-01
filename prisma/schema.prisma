@@ -196,7 +196,8 @@ model Users {
   approvedPromotionRequests PromotionStatus[]               @relation("promotion_status_admin_approved_by")
   rejectedPromotionRequests PromotionStatus[]               @relation("promotion_status_admin_rejected_by")
   discountProducts          DiscountProducts[]              @relation("discount_products_user")
-  usedCodePromotion         CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_user")
+  usedCodePromotion         CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_used_by")
+  redeemedCodePromotion     CodePromotionDiscountProducts[] @relation("code_promotion_discount_products_redeemed_by")
   reviews                   Reviews[]                       @relation("reviews_user")
   comments                  Comments[]                      @relation("comments_user")
   promotions                Promotions[]                    @relation("promotions_user")
@@ -792,9 +793,12 @@ model CodePromotionDiscountProducts {
   id                 String    @id @default(uuid())
   code               String    @unique @db.VarChar(255)
   discountProductId  String
-  used               Boolean   @default(false)
+  isUsed             Boolean   @default(false)
   usedAt             DateTime? @db.Date
   usedBy             String?
+  isRedeemed         Boolean   @default(false)
+  redeemedAt         DateTime? @db.Date
+  redeemedBy         String?
   status             Boolean   @default(true)
   createdAt          DateTime  @default(now())
   createdBy          String?
@@ -802,7 +806,8 @@ model CodePromotionDiscountProducts {
   updatedBy          String?
 
   discountProduct DiscountProducts @relation("code_promotion_discount_products_discount_product", fields: [discountProductId], references: [id])
-  user            Users?           @relation("code_promotion_discount_products_user", fields: [usedBy], references: [id])
+  used            Users?           @relation("code_promotion_discount_products_used_by", fields: [usedBy], references: [id])
+  redeemed        Users?           @relation("code_promotion_discount_products_redeemed_by", fields: [redeemedBy], references: [id])
   creator         Users?           @relation("code_promotion_discount_products_created_by", fields: [createdBy], references: [id])
   updater         Users?           @relation("code_promotion_discount_products_updated_by", fields: [updatedBy], references: [id])
 
