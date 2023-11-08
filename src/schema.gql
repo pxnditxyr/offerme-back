@@ -705,6 +705,27 @@ type CompanyUser {
   updater: User
 }
 
+type ManagementUser {
+  id: ID!
+  email: String!
+  peopleInfo: PeopleInfo!
+  role: Role!
+  mainAvatar: String
+  mainPhone: String
+  mainAddress: Address
+  isVerifiedEmail: Boolean!
+  googleId: String
+  status: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  creator: User
+  updater: User
+  avatars: [UserAvatar!]!
+  phones: [Phone!]!
+  addresses: [Address!]!
+  creditCards: [CreditCard!]!
+}
+
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -779,6 +800,8 @@ type Query {
   promotionReview(id: ID!): PromotionReview!
   companyReviews(offset: Int = 0, limit: Int = 10, search: String): [CompanyReview!]!
   companyReview(id: ID!): CompanyReview!
+  managementUsers(offset: Int = 0, limit: Int = 10, search: String): [ManagementUser!]!
+  managementUser(id: ID!): ManagementUser!
 }
 
 enum ValidRoles {
@@ -899,6 +922,9 @@ type Mutation {
 
   """Seed database"""
   seed: Boolean!
+  createManagementUser(createManagementUserInput: CreateManagementUserInput!): ManagementUser!
+  updateManagementUser(updateManagementUserInput: UpdateManagementUserInput!): ManagementUser!
+  deactivateManagementUser(id: ID!): ManagementUser!
 }
 
 input CreateParameterInput {
@@ -1474,4 +1500,32 @@ input UpdateCompanyReviewInput {
   review: String!
   rating: Int
   id: ID!
+}
+
+input CreateManagementUserInput {
+  email: String!
+  password: String!
+  name: String!
+  paternalSurname: String!
+  maternalSurname: String!
+  documentTypeId: ID
+  documentNumber: String
+  birthdate: DateTime!
+  genderId: ID!
+  roleId: ID!
+}
+
+input UpdateManagementUserInput {
+  email: String
+  password: String
+  name: String
+  paternalSurname: String
+  maternalSurname: String
+  documentTypeId: ID
+  documentNumber: String
+  birthdate: DateTime
+  genderId: ID
+  roleId: ID
+  id: ID!
+  status: Boolean
 }

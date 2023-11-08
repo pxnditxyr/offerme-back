@@ -21,12 +21,12 @@ export class CreatePeopleInfoInput {
   @Field( () => ID, { nullable: true } )
   @IsOptional()
   @IsString()
-  documentTypeId?: string
+  documentTypeId?: string | null
 
   @Field( () => String, { nullable: true } )
   @IsOptional()
   @IsString()
-  documentNumber?: string
+  documentNumber?: string | null
 
   @Field( () => Date )
   @IsDateString()

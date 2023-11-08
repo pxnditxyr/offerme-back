@@ -6,6 +6,7 @@ import { RolesService } from '../roles/roles.service'
 import { hashSync } from 'bcrypt'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
+import { SubparametersService } from 'src/parametrics/subparameters/subparameters.service'
 
 const userIncludes = {
   peopleInfo: true,
@@ -23,7 +24,8 @@ export class UsersService {
     @Inject( PrismaService )
     private readonly prismaService : PrismaService,
 
-    private readonly rolesService : RolesService
+    private readonly rolesService : RolesService,
+    private readonly subparametersService : SubparametersService
   ) {}
 
   async create ( createUserInput : CreateUserInput, creator?: User ) : Promise<User> {
@@ -72,6 +74,8 @@ export class UsersService {
       }
     })
     if ( !user ) throw new NotFoundException( `User ${ id } not found` )
+    const gender = await this.subparametersService.findOne( user.peopleInfo.genderId )
+    user.peopleInfo.genderId = gender.name
     return user
   }
 

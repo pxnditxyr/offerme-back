@@ -11,7 +11,7 @@ export class UpdateUserInput extends PartialType( CreateUserInput ) {
   @Field( () => Boolean, { nullable: true } )
   @IsOptional()
   @IsBoolean()
-  isVerifiedEmail: boolean
+  isVerifiedEmail?: boolean
 
   @Field( () => Boolean, { nullable: true } )
   @IsOptional()

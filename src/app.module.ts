@@ -32,6 +32,8 @@ import { ReviewsModule, CommentsModule, PromotionReviewsModule, CompanyReviewsMo
 import { SeedModule } from './seed'
 import { CommonModule } from './common'
 
+import { ManagementUsersModule } from './management'
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -55,6 +57,7 @@ import { CommonModule } from './common'
     DiscountProductsModule, PromotionStatusModule, PromotionPaymentsModule,
     PromotionsModule, CodePromotionDiscountProductsModule, ReviewsModule, CommentsModule,
     PromotionReviewsModule, CompanyReviewsModule, SeedModule, CommonModule,
+    ManagementUsersModule
   ]
 })
 export class AppModule {}

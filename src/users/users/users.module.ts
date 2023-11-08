@@ -3,6 +3,7 @@ import { UsersService } from './users.service'
 import { UsersResolver } from './users.resolver'
 import { PrismaService } from '../../prisma'
 import { RolesModule } from '../roles/roles.module'
+import { SubparametersModule } from 'src/parametrics'
 
 @Module({
   providers: [
@@ -11,7 +12,8 @@ import { RolesModule } from '../roles/roles.module'
     PrismaService
   ],
   imports: [
-    RolesModule
+    RolesModule,
+    SubparametersModule
   ],
   exports: [
     UsersService

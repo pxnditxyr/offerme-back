@@ -9,5 +9,6 @@ import { PrismaService } from 'src/prisma'
     UserAvatarsService,
     PrismaService
   ],
+  exports: [ UserAvatarsService ]
 })
 export class UserAvatarsModule {}
