@@ -63,7 +63,7 @@ cp .env.example .env
 1. If you're using a containerized database, you can use Docker Compose to start it: 🐋
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 2. Then, run Prisma migrations: 🔄
@@ -86,6 +86,8 @@ bun start:dev
 
 The application will be available at `http://localhost:3001/graphql` 🌐.
 You could also click on the latest log in your terminal with "bun start:dev" if you prefer to do it that way 🌐.
+
+Finally you could run the seed mutation in the GraphQL link to have some essential data to start working
 
 ## Technologies Used 🛠️
 
