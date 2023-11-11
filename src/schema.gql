@@ -731,11 +731,12 @@ type Query {
   parameter(term: String!): Parameter!
   subparameters: [Subparameter!]!
   subparameter(id: ID!): Subparameter!
+  subparametersByParameterName(parameterName: String!): [Subparameter!]!
   peopleInfo: [PeopleInfo!]!
   personInfo(id: ID!): PeopleInfo!
   users(roles: [ValidRoles!] = []): [User!]!
   user(id: ID!): User!
-  roles: [Role!]!
+  roles(status: Boolean): [Role!]!
   role(id: ID!): Role!
   sessions: [Session!]!
   session(id: ID!): Session!

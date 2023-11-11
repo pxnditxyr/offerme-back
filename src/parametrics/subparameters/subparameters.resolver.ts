@@ -53,4 +53,11 @@ export class SubparametersResolver {
   ) : Promise<Subparameter> {
     return await this.subparametersService.deactivate( id, user )
   }
+
+  @Query( () => [ Subparameter ], { name: 'subparametersByParameterName' } )
+  async findAllByParameterName (
+    @Args( 'parameterName' ) parameterName : string
+  ) : Promise<Subparameter[]> {
+    return await this.subparametersService.findAllByParameterName( parameterName )
+  }
 }

@@ -51,7 +51,10 @@ export class SubparametersService {
     const parameter = await this.parametersService.findOne( parameterName )
     try {
       const subparameters = await this.prismaService.subparameters.findMany({
-        where: { parameterId: parameter.id },
+        where: {
+          parameterId: parameter.id,
+          status: true
+        },
       })
       return subparameters
     } catch ( error ) {
@@ -60,8 +63,6 @@ export class SubparametersService {
   }
 
   async findOne ( id : string ) {
-    // TODO: don't return subparameters with status false
-    // TODO: don't return subparameters with parameter status false
     const subparameter = await this.prismaService.subparameters.findUnique({
       where: { id },
       include: { ...subparameterIncludes }

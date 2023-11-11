@@ -32,8 +32,13 @@ export class RolesService {
     }
   }
 
-  async findAll () {
+  async findAll ( status : boolean ) {
+    if ( status === null ) return await this.prismaService.roles.findMany({
+      include: { ...roleIncludes }
+    })
+
     const roles = await this.prismaService.roles.findMany({
+      where: { status },
       include: { ...roleIncludes }
     })
     return roles

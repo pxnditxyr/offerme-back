@@ -25,9 +25,10 @@ export class RolesResolver {
 
   @Query( () => [ Role ], { name: 'roles' } )
   async findAll (
-    @CurrentUser([ ValidRoles.ADMIN ]) _user : User
+    @Args( 'status', { nullable: true } ) status : boolean,
+    @CurrentUser([ ValidRoles.ADMIN ]) _user : User,
   ) {
-    return await this.rolesService.findAll()
+    return await this.rolesService.findAll( status )
   }
 
   @Query( () => Role, { name: 'role' } )
