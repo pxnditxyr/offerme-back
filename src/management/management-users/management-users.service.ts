@@ -60,35 +60,6 @@ export class ManagementUsersService {
     const { email, password, roleId } = createManagementUserInput
     await this.rolesService.findOne( roleId )
     const user = await this.usersService.create( { email, password, roleId, peopleInfoId: peopleInfo.id }, creator )
-    // const peopleInfoWithRelations = await this.peopleInfoService.findOne( peopleInfo.id )
-    // const userWithRelations = await this.usersService.findOne( user.id )
-    // const avatars = await this.prismaService.userAvatars.findMany( { where: { userId: user.id } } )
-    // const phones = await this.prismaService.phones.findMany( { where: { users: { some: { id: user.id } } } } )
-    // const addresses = await this.prismaService.addresses.findMany( { where: { users: { some: { id: user.id } } } } )
-    // const creditCards = await this.prismaService.creditCards.findMany( { where: { users: { some: { id: user.id } } } } )
-    // const mainAvatar = avatars.find( avatar => avatar.isMain )
-    // const mainPhone = await this.prismaService.phones.findFirst({ where: { users: { some: { id: user.id, isMain: true } } } })
-    // const mainAddress = await this.prismaService.addresses.findFirst({ where: { users: { some: { id: user.id, isMain: true } } } })
-    // return {
-    //   id: userWithRelations.id,
-    //   email: userWithRelations.email,
-    //   isVerifiedEmail: userWithRelations.isVerifiedEmail,
-    //   googleId: userWithRelations.googleId,
-    //   status: userWithRelations.status,
-    //   createdAt: userWithRelations.createdAt,
-    //   updatedAt: userWithRelations.updatedAt,
-    //   creator: userWithRelations.creator,
-    //   updater: userWithRelations.updater,
-    //   peopleInfo: peopleInfoWithRelations,
-    //   role: userWithRelations.role,
-    //   mainAvatar: mainAvatar?.url || null,
-    //   mainPhone: mainPhone?.number || null,
-    //   mainAddress: mainAddress,
-    //   avatars,
-    //   phones,
-    //   addresses,
-    //   creditCards,
-    // }
     const userWithRelations = await this.findOne( user.id )
     return userWithRelations
   }
@@ -195,7 +166,9 @@ export class ManagementUsersService {
     const peopleWithoutNull = getNotNullObjectValues( { name, paternalSurname, maternalSurname, genderId, birthdate, documentNumber, documentTypeId } )
     await this.peopleInfoService.update( beforeUser.peopleInfo.id, {
       ...peopleWithoutNull,
-      id: beforeUser.peopleInfo.id
+      id: beforeUser.peopleInfo.id,
+      documentTypeId: ( updateManagementUserInput.documentTypeId === null ) ? null : beforeUser.peopleInfo.documentTypeId,
+      documentNumber: ( updateManagementUserInput.documentNumber === null || updateManagementUserInput.documentTypeId === null ) ? null : beforeUser.peopleInfo.documentNumber
     } , updater )
     const { email, password, roleId, status } = updateManagementUserInput
     if ( roleId ) await this.rolesService.findOne( roleId )

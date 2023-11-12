@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql'
-import { IsDate, IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from 'class-validator'
+import { IsDate, IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from 'class-validator'
 
 @InputType()
 export class CreateManagementUserInput {
