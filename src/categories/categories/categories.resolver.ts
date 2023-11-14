@@ -48,10 +48,10 @@ export class CategoriesResolver {
   }
 
   @Mutation( () => Category )
-  async deactivateCategory (
+  async toggleStatusCategory (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
-  ) {
-    return await this.categoriesService.deactivate( id, user )
+  ) : Promise<Category> {
+    return await this.categoriesService.toggleStatus( id, user )
   }
 }

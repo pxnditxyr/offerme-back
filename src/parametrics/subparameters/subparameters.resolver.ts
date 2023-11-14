@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
 import { User } from 'src/users/users/entities/user.entity'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
 @Resolver( () => Subparameter )
 export class SubparametersResolver {
@@ -56,8 +57,10 @@ export class SubparametersResolver {
 
   @Query( () => [ Subparameter ], { name: 'subparametersByParameterName' } )
   async findAllByParameterName (
-    @Args( 'parameterName' ) parameterName : string
+    @Args( 'parameterName' ) parameterName : string,
+    @Args() searchArgs : SearchArgs,
+    @Args() paginationArgs : PaginationArgs
   ) : Promise<Subparameter[]> {
-    return await this.subparametersService.findAllByParameterName( parameterName )
+    return await this.subparametersService.findAllByParameterName( parameterName, { searchArgs, paginationArgs } )
   }
 }

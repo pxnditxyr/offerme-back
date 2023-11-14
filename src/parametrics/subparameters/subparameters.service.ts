@@ -5,6 +5,8 @@ import { ParametersService } from '../parameters/parameters.service'
 import { Subparameter } from './entities/subparameter.entity'
 import { User } from 'src/users/users/entities/user.entity'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
+import { SearchArgs } from 'src/common/dto/args'
+import { IFindAllOptions } from 'src/common/interfaces'
 
 const subparameterIncludes = {
   parameter: true,
@@ -47,13 +49,14 @@ export class SubparametersService {
     })
     return subparameters
   }
-  async findAllByParameterName ( parameterName : string ) {
+  async findAllByParameterName ( parameterName : string, { searchArgs } : IFindAllOptions ) {
+    const { status } = searchArgs
     const parameter = await this.parametersService.findOne( parameterName )
     try {
       const subparameters = await this.prismaService.subparameters.findMany({
         where: {
           parameterId: parameter.id,
-          status: true
+          status: status ?? undefined
         },
       })
       return subparameters

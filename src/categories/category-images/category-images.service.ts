@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma'
 import { User } from 'src/users/users/entities/user.entity'
 import { CategoryImage } from './entities/category-image.entity'
 import { CategoriesService } from '../categories/categories.service'
+import { IFindAllOptions } from 'src/common/interfaces'
 
 const categoryImageIncludes = {
   creator: true,
@@ -38,8 +39,12 @@ export class CategoryImagesService {
     }
   }
 
-  async findAll () {
+  async findAll ( { searchArgs } : IFindAllOptions ) : Promise<CategoryImage[]> {
+    const { status } = searchArgs
     const categoryImages = await this.prismaService.categoryImages.findMany({
+      where: {
+        status: status ?? undefined
+      },
       include: { ...categoryImageIncludes }
     })
     return categoryImages
@@ -100,13 +105,13 @@ export class CategoryImagesService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<CategoryImage> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<CategoryImage> {
+    const currentCategoryImage = await this.findOne( id )
     try {
       const categoryImage = await this.prismaService.categoryImages.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentCategoryImage.status,
           updatedBy: updater.id
         }
       })

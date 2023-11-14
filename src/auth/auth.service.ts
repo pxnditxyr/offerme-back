@@ -148,7 +148,7 @@ export class AuthService {
   }
 
   async findAllGenders () : Promise<GenderResponse[]> {
-    const genders = await this.subparametersService.findAllByParameterName( 'gender' )
+    const genders = await this.subparametersService.findAllByParameterName( 'gender', { paginationArgs: { offset: 0, limit: 1 }, searchArgs: { status: true } } )
     const activeGenders = genders.filter( ({ status }) => status )
     return activeGenders.map( ({ id, name }) => ({ id, name }) )
   }

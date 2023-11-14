@@ -43,14 +43,18 @@ export class CategoriesService {
   async findAll ( { paginationArgs, searchArgs } : IFindAllOptions  ) {
     try {
       const { limit, offset } = paginationArgs
-      const { search } = searchArgs
+      const { search, status } = searchArgs
       const categories = await this.prismaService.categories.findMany({
         include: { ...categoryIncludes },
         where: {
-          name: { contains: search, mode: 'insensitive' }
+          OR: [
+            { name: { contains: search || '', mode: 'insensitive' } },
+            { description: { contains: search || '', mode: 'insensitive' } }
+          ],
+          status: status ?? undefined
         },
-        take: limit,
-        skip: offset,
+        take: limit ?? undefined,
+        skip: offset ?? undefined,
         orderBy: { updatedAt: 'desc' }
       })
       return categories
@@ -86,13 +90,13 @@ export class CategoriesService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<Category> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<Category> {
+    const currentCategory = await this.findOne( id )
     try {
       const category = await this.prismaService.categories.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentCategory.status,
           updatedBy: updater.id
         }
       })

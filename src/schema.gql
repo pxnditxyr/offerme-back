@@ -731,7 +731,7 @@ type Query {
   parameter(term: String!): Parameter!
   subparameters: [Subparameter!]!
   subparameter(id: ID!): Subparameter!
-  subparametersByParameterName(parameterName: String!): [Subparameter!]!
+  subparametersByParameterName(parameterName: String!, search: String = "", status: Boolean = null, offset: Int = 0, limit: Int = 10000): [Subparameter!]!
   peopleInfo: [PeopleInfo!]!
   personInfo(id: ID!): PeopleInfo!
   users(roles: [ValidRoles!] = []): [User!]!
@@ -742,17 +742,17 @@ type Query {
   session(id: ID!): Session!
   userAvatars: [UserAvatar!]!
   userAvatar(id: ID!): UserAvatar!
-  userPhones(offset: Int = 0, limit: Int = 10, search: String): [UserPhone!]!
+  userPhones(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [UserPhone!]!
   userPhone(id: ID!): UserPhone!
   phones: [Phone!]!
   phone(id: ID!): Phone!
-  userAddresses(offset: Int = 0, limit: Int = 10, search: String): [UserAddress!]!
+  userAddresses(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [UserAddress!]!
   userAddress(id: ID!): UserAddress!
   addresses: [Address!]!
   address(id: ID!): Address!
   revalidateToken: AuthResponse!
   genders: [GenderResponse!]!
-  companies(offset: Int = 0, limit: Int = 10, search: String): [Company!]!
+  companies(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Company!]!
   company(id: ID!): Company!
   companyLogos: [CompanyLogo!]!
   companyLogo(id: ID!): CompanyLogo!
@@ -762,46 +762,46 @@ type Query {
   companyAddress(id: ID!): CompanyAddress!
   companyCategories: [CompanyCategory!]!
   companyCategory(id: ID!): CompanyCategory!
-  categories(offset: Int = 0, limit: Int = 10, search: String): [Category!]!
+  categories(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Category!]!
   category(id: ID!): Category!
   companyUsers: [CompanyUser!]!
   companyUser(id: ID!): CompanyUser!
-  categoryImages: [CategoryImage!]!
+  categoryImages(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [CategoryImage!]!
   categoryImage(id: ID!): CategoryImage!
-  products(offset: Int = 0, limit: Int = 10, search: String): [Product!]!
+  products(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Product!]!
   product(id: ID!): Product!
-  productImages(offset: Int = 0, limit: Int = 10, search: String): [ProductImage!]!
+  productImages(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [ProductImage!]!
   productImage(id: ID!): ProductImage!
-  productCategories(offset: Int = 0, limit: Int = 10, search: String): [ProductCategory!]!
+  productCategories(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [ProductCategory!]!
   productCategory(id: ID!): ProductCategory!
-  creditCards(offset: Int = 0, limit: Int = 10, search: String): [CreditCard!]!
+  creditCards(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [CreditCard!]!
   creditCard(id: ID!): CreditCard!
-  userCreditCards(offset: Int = 0, limit: Int = 10, search: String): [UserCreditCard!]!
+  userCreditCards(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [UserCreditCard!]!
   userCreditCard(id: ID!): UserCreditCard!
-  promotionRequests(offset: Int = 0, limit: Int = 10, search: String): [PromotionRequest!]!
+  promotionRequests(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionRequest!]!
   promotionRequest(id: ID!): PromotionRequest!
-  promotionImages(offset: Int = 0, limit: Int = 10, search: String): [PromotionImage!]!
+  promotionImages(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionImage!]!
   promotionImage(id: ID!): PromotionImage!
-  promotionTargetProducts(offset: Int = 0, limit: Int = 10, search: String): [PromotionTargetProduct!]!
+  promotionTargetProducts(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionTargetProduct!]!
   promotionTargetProduct(id: ID!): PromotionTargetProduct!
-  discountProducts(offset: Int = 0, limit: Int = 10, search: String): [DiscountProduct!]!
+  discountProducts(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [DiscountProduct!]!
   discountProduct(id: ID!): DiscountProduct!
   promotionStatus(id: ID!): PromotionStatus!
-  promotionPayments(offset: Int = 0, limit: Int = 10, search: String): [PromotionPayment!]!
+  promotionPayments(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionPayment!]!
   promotionPayment(id: ID!): PromotionPayment!
-  promotions(offset: Int = 0, limit: Int = 10, search: String): [Promotion!]!
+  promotions(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Promotion!]!
   promotion(id: ID!): Promotion!
-  codePromotionDiscountProducts(offset: Int = 0, limit: Int = 10, search: String): [CodePromotionDiscountProduct!]!
+  codePromotionDiscountProducts(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [CodePromotionDiscountProduct!]!
   codePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
   reviews: [Review!]!
   review(id: ID!): Review!
-  comments(offset: Int = 0, limit: Int = 10, search: String): [Comment!]!
+  comments(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Comment!]!
   comment(id: ID!): Comment!
-  promotionReviews(offset: Int = 0, limit: Int = 10, search: String): [PromotionReview!]!
+  promotionReviews(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionReview!]!
   promotionReview(id: ID!): PromotionReview!
-  companyReviews(offset: Int = 0, limit: Int = 10, search: String): [CompanyReview!]!
+  companyReviews(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [CompanyReview!]!
   companyReview(id: ID!): CompanyReview!
-  managementUsers(offset: Int = 0, limit: Int = 10, search: String): [ManagementUser!]!
+  managementUsers(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [ManagementUser!]!
   managementUser(id: ID!): ManagementUser!
 }
 
@@ -860,13 +860,13 @@ type Mutation {
   deactivateCompanyCategory(id: ID!): CompanyCategory!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Category!
-  deactivateCategory(id: ID!): Category!
+  toggleStatusCategory(id: ID!): Category!
   createCompanyUser(createCompanyUserInput: CreateCompanyUserInput!): CompanyUser!
   updateCompanyUser(updateCompanyUserInput: UpdateCompanyUserInput!): CompanyUser!
   deactivateCompanyUser(id: ID!): CompanyUser!
   createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
   updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
-  deactivateCategoryImage(id: ID!): CategoryImage!
+  toggleStatusCategoryImage(id: ID!): CategoryImage!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   deactivateProduct(id: ID!): Product!
