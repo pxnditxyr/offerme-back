@@ -3,6 +3,7 @@ import { CompanyAddress } from 'src/companies/company-addresses/entities/company
 import { CompanyCategory } from 'src/companies/company-categories/entities/company-category.entity'
 import { CompanyLogo } from 'src/companies/company-logos/entities/company-logo.entity'
 import { CompanyPhone } from 'src/companies/company-phones/entities/company-phone.entity'
+import { CompanyUser } from 'src/companies/company-users/entities/company-user.entity'
 import { Subparameter } from 'src/parametrics/subparameters/entities/subparameter.entity'
 import { Product } from 'src/products/products/entities/product.entity'
 import { PromotionRequest } from 'src/promotions/promotion-requests/entities/promotion-request.entity'
@@ -81,8 +82,8 @@ export class Company {
   @Field( () => [ CompanyCategory ], { nullable: true } )
   categories?: CompanyCategory[]
 
-  @Field( () => [ User ], { nullable: true } )
-  users?: User[]
+  @Field( () => [ CompanyUser ], { nullable: true } )
+  users?: CompanyUser[]
 
   @Field( () => [ PromotionRequest ], { nullable: true } )
   promotionRequests?: PromotionRequest[]

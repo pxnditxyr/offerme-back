@@ -19,6 +19,7 @@ const companyIncludes = {
   updater: true,
   addresses: true,
   categories: true,
+  users: true
 }
 
 @Injectable()

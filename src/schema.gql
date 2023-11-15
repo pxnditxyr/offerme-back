@@ -470,6 +470,21 @@ type CompanyLogo {
   updater: User
 }
 
+type CompanyUser {
+  id: ID!
+  companyId: ID!
+  userId: ID!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  user: User
+  creator: User
+  updater: User
+}
+
 type Comment {
   id: ID!
   userId: ID!
@@ -589,7 +604,7 @@ type Company {
   addresses: [CompanyAddress!]
   products: [Product!]
   categories: [CompanyCategory!]
-  users: [User!]
+  users: [CompanyUser!]
   promotionRequests: [PromotionRequest!]
   promotions: [Promotion!]
   companies: [CompanyReview!]
@@ -688,21 +703,6 @@ type AuthResponse {
 type GenderResponse {
   id: ID!
   name: String!
-}
-
-type CompanyUser {
-  id: ID!
-  companyId: ID!
-  userId: ID!
-  status: Boolean!
-  createdAt: DateTime!
-  createdBy: ID
-  updatedAt: DateTime!
-  updatedBy: ID
-  company: Company
-  user: User
-  creator: User
-  updater: User
 }
 
 type ManagementUser {
