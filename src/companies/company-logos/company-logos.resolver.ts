@@ -47,10 +47,10 @@ export class CompanyLogosResolver {
   }
 
   @Mutation( () => CompanyLogo )
-  async deactivateCompanyLogo (
+  async toggleStatusCompanyLogo (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
   ) : Promise<CompanyLogo> {
-    return await this.companyLogosService.deactivate( id, user )
+    return await this.companyLogosService.toggleStatus( id, user )
   }
 }

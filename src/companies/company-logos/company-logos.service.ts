@@ -75,13 +75,13 @@ export class CompanyLogosService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<CompanyLogo> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<CompanyLogo> {
+    const currentCompanyLogo = await this.findOne( id )
     try {
       const companyLogo = await this.prismaService.companyLogos.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentCompanyLogo.status,
           updatedBy: updater.id
         }
       })

@@ -49,10 +49,10 @@ export class CompaniesResolver {
   }
 
   @Mutation( () => Company )
-  async deactivateCompany (
+  async toggleStatusCompany (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
   ) {
-    return this.companiesService.deactivate( id, user )
+    return this.companiesService.toggleStatus( id, user )
   }
 }

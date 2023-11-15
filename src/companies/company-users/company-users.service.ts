@@ -77,13 +77,13 @@ export class CompanyUsersService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<CompanyUser> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<CompanyUser> {
+    const currentCompanyUser = await this.findOne( id )
     try {
       const companyUser = await this.prismaService.companyUsers.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentCompanyUser.status,
           updatedBy: updater.id
         }
       })

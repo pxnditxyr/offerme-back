@@ -845,10 +845,10 @@ type Mutation {
   deactivateAddress(id: ID!): Address!
   createCompany(createCompanyInput: CreateCompanyInput!): Company!
   updateCompany(updateCompanyInput: UpdateCompanyInput!): Company!
-  deactivateCompany(id: ID!): Company!
+  toggleStatusCompany(id: ID!): Company!
   createCompanyLogo(createCompanyLogoInput: CreateCompanyLogoInput!): CompanyLogo!
   updateCompanyLogo(updateCompanyLogoInput: UpdateCompanyLogoInput!): CompanyLogo!
-  deactivateCompanyLogo(id: ID!): CompanyLogo!
+  toggleStatusCompanyLogo(id: ID!): CompanyLogo!
   createCompanyPhone(createCompanyPhoneInput: CreateCompanyPhoneInput!): CompanyPhone!
   updateCompanyPhone(updateCompanyPhoneInput: UpdateCompanyPhoneInput!): CompanyPhone!
   deactivateCompanyPhone(id: ID!): CompanyPhone!
@@ -863,7 +863,7 @@ type Mutation {
   toggleStatusCategory(id: ID!): Category!
   createCompanyUser(createCompanyUserInput: CreateCompanyUserInput!): CompanyUser!
   updateCompanyUser(updateCompanyUserInput: UpdateCompanyUserInput!): CompanyUser!
-  deactivateCompanyUser(id: ID!): CompanyUser!
+  toggleStatusCompanyUser(id: ID!): CompanyUser!
   createCategoryImage(createCategoryImageInput: CreateCategoryImageInput!): CategoryImage!
   updateCategoryImage(updateCategoryImageInput: UpdateCategoryImageInput!): CategoryImage!
   toggleStatusCategoryImage(id: ID!): CategoryImage!

@@ -55,10 +55,10 @@ export class CompaniesService {
     const companies = await this.prismaService.companies.findMany({
       include: { ...companyIncludes },
       where: {
-        name: { contains: search, mode: 'insensitive' }
+        name: { contains: search || '', mode: 'insensitive' }
       },
-      take: limit,
-      skip: offset
+      take: limit || undefined,
+      skip: offset || undefined,
     })
     
 
@@ -94,13 +94,13 @@ export class CompaniesService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<Company> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<Company> {
+    const currentCompany = await this.findOne( id )
     try {
       const company = await this.prismaService.companies.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentCompany.status,
           updatedBy: updater.id,
         }
       })
