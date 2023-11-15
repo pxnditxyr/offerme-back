@@ -101,13 +101,13 @@ export class ProductsService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<Product> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<Product> {
+    const currentProduct = await this.findOne( id )
     try {
       const product = await this.prismaService.products.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentProduct.status,
           updatedBy: updater.id
         }
       })

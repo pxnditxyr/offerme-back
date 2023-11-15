@@ -48,10 +48,10 @@ export class ProductCategoriesResolver {
   }
 
   @Mutation( () => ProductCategory )
-  async deactivateProductCategory (
+  async toggleStatusProductCategory (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) updater : User
   ) : Promise<ProductCategory> {
-    return await this.productCategoriesService.deactivate( id, updater )
+    return await this.productCategoriesService.toggleStatus( id, updater )
   }
 }

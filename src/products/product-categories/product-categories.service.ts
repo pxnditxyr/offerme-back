@@ -86,13 +86,13 @@ export class ProductCategoriesService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<ProductCategory> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<ProductCategory> {
+    const currentProductCategory = await this.findOne( id )
     try {
       const productCategory = await this.prismaService.productCategories.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentProductCategory.status,
           updatedBy: updater.id,
         }
       })

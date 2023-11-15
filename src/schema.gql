@@ -869,13 +869,13 @@ type Mutation {
   toggleStatusCategoryImage(id: ID!): CategoryImage!
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
-  deactivateProduct(id: ID!): Product!
+  toggleStatusProduct(id: ID!): Product!
   createProductImage(createProductImageInput: CreateProductImageInput!): ProductImage!
   updateProductImage(updateProductImageInput: UpdateProductImageInput!): ProductImage!
-  deactivateProductImage(id: ID!): ProductImage!
+  toggleStatusProductImage(id: ID!): ProductImage!
   createProductCategory(createProductCategoryInput: CreateProductCategoryInput!): ProductCategory!
   updateProductCategory(updateProductCategoryInput: UpdateProductCategoryInput!): ProductCategory!
-  deactivateProductCategory(id: ID!): ProductCategory!
+  toggleStatusProductCategory(id: ID!): ProductCategory!
   createCreditCard(createCreditCardInput: CreateCreditCardInput!): CreditCard!
   updateCreditCard(updateCreditCardInput: UpdateCreditCardInput!): CreditCard!
   deactivateCreditCard(id: ID!): CreditCard!

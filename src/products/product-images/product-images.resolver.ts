@@ -48,10 +48,10 @@ export class ProductImagesResolver {
   }
 
   @Mutation( () => ProductImage )
-  async deactivateProductImage (
+  async toggleStatusProductImage (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
   ) : Promise<ProductImage> {
-    return await this.productImagesService.deactivate( id, updater )
+    return await this.productImagesService.toggleStatus( id, updater )
   }
 }

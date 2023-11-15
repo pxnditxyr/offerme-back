@@ -81,13 +81,13 @@ export class ProductImagesService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<ProductImage> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<ProductImage> {
+    const currentProductImage = await this.findOne( id )
     try {
       const productImage = await this.prismaService.productImages.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentProductImage.status,
           updatedBy: updater.id,
         }
       })
