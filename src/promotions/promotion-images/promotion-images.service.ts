@@ -84,13 +84,13 @@ export class PromotionImagesService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) {
+    const currentPromotionImage = await this.findOne( id )
     try {
       const promotionImage = await this.prismaService.promotionImages.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentPromotionImage.status,
           updatedBy: updater.id
         }
       })

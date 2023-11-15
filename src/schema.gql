@@ -884,33 +884,33 @@ type Mutation {
   deactivateUserCreditCard(id: ID!): UserCreditCard!
   createPromotionRequest(createPromotionRequestInput: CreatePromotionRequestInput!): PromotionRequest!
   updatePromotionRequest(updatePromotionRequestInput: UpdatePromotionRequestInput!): PromotionRequest!
-  deactivatePromotionRequest(id: ID!): PromotionRequest!
+  toggleStatusPromotionRequest(id: ID!): PromotionRequest!
   createPromotionImage(createPromotionImageInput: CreatePromotionImageInput!): PromotionImage!
   updatePromotionImage(updatePromotionImageInput: UpdatePromotionImageInput!): PromotionImage!
-  deactivatePromotionImage(id: ID!): PromotionImage!
+  toggleStatusPromotionImage(id: ID!): PromotionImage!
   createPromotionTargetProduct(createPromotionTargetProductInput: CreatePromotionTargetProductInput!): PromotionTargetProduct!
   updatePromotionTargetProduct(updatePromotionTargetProductInput: UpdatePromotionTargetProductInput!): PromotionTargetProduct!
-  deactivatePromotionTargetProduct(id: ID!): PromotionTargetProduct!
+  toggleStatusPromotionTargetProduct(id: ID!): PromotionTargetProduct!
   createDiscountProduct(createDiscountProductInput: CreateDiscountProductInput!): DiscountProduct!
   updateDiscountProduct(updateDiscountProductInput: UpdateDiscountProductInput!): DiscountProduct!
-  deactivateDiscountProduct(id: ID!): DiscountProduct!
+  toggleStatusDiscountProduct(id: ID!): DiscountProduct!
   createPromotionStatus(createPromotionStatusInput: CreatePromotionStatusInput!): PromotionStatus!
   updatePromotionStatus(updatePromotionStatusInput: UpdatePromotionStatusInput!): PromotionStatus!
   approvePromotionStatus(statusUpdatePromotionStatusInput: StatusUpdatePromotionStatusInput!): PromotionStatus!
   rejectPromotionStatus(statusUpdatePromotionStatusInput: StatusUpdatePromotionStatusInput!): PromotionStatus!
-  deactivatePromotionStatus(id: ID!): PromotionStatus!
+  toggleStatusPromotionStatus(id: ID!): PromotionStatus!
   createPromotionPayment(createPromotionPaymentInput: CreatePromotionPaymentInput!): PromotionPayment!
   updatePromotionPayment(updatePromotionPaymentInput: UpdatePromotionPaymentInput!): PromotionPayment!
   deactivatePromotionPayment(id: ID!): PromotionPayment!
   createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
   updatePromotion(updatePromotionInput: UpdatePromotionInput!): Promotion!
-  deactivatePromotion(id: ID!): Promotion!
+  toggleStatusPromotion(id: ID!): Promotion!
   createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   getDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   redeemDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   forgetDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
-  deactivateCodePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
+  toggleStatusCodePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   deactivateComment(id: ID!): Comment!

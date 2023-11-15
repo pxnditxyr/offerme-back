@@ -94,13 +94,13 @@ export class DiscountProductsService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<DiscountProduct> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<DiscountProduct> {
+    const currentDiscountProduct = await this.findOne( id )
     try {
       const discountProduct = await this.prismaService.discountProducts.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentDiscountProduct.status,
           updatedBy: updater.id
         }
       })

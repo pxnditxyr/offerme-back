@@ -48,10 +48,10 @@ export class PromotionTargetProductsResolver {
   }
 
   @Mutation( () => PromotionTargetProduct )
-  async deactivatePromotionTargetProduct (
+  async toggleStatusPromotionTargetProduct (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
   ) {
-    return await this.promotionTargetProductsService.deactivate( id, updater )
+    return await this.promotionTargetProductsService.toggleStatus( id, updater )
   }
 }

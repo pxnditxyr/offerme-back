@@ -49,10 +49,10 @@ export class PromotionImagesResolver {
   }
 
   @Mutation( () => PromotionImage )
-  async deactivatePromotionImage (
+  async toggleStatusPromotionImage (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) updater : User
   ) {
-    return this.promotionImagesService.deactivate( id, updater )
+    return this.promotionImagesService.toggleStatus( id, updater )
   }
 }

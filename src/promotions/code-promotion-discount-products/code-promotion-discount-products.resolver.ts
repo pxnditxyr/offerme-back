@@ -72,10 +72,10 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
-  async deactivateCodePromotionDiscountProduct(
+  async toggleStatusCodePromotionDiscountProduct(
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) updater : User
   ) : Promise<CodePromotionDiscountProduct> {
-    return await this.codePromotionDiscountProductsService.deactivate( id, updater )
+    return await this.codePromotionDiscountProductsService.toggleStatus( id, updater )
   }
 }

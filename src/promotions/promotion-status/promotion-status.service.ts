@@ -80,13 +80,13 @@ export class PromotionStatusService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<PromotionStatus> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<PromotionStatus> {
+    const currentPromotionStatus = await this.findOne( id )
     try {
       const promotionStatus = await this.prismaService.promotionStatus.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentPromotionStatus.status,
           updatedBy: updater.id,
         }
       })

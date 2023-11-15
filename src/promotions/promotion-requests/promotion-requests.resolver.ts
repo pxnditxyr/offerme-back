@@ -48,10 +48,10 @@ export class PromotionRequestsResolver {
   }
 
   @Mutation( () => PromotionRequest )
-  async deactivatePromotionRequest (
+  async toggleStatusPromotionRequest (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
   ) : Promise<PromotionRequest> {
-    return await this.promotionRequestsService.deactivate( id, updater )
+    return await this.promotionRequestsService.toggleStatus( id, updater )
   }
 }

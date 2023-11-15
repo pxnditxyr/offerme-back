@@ -65,7 +65,7 @@ export class CodePromotionDiscountProductsService {
       where: { id },
       include: { ...codePromotionDiscountProductIncludes }
     })
-    if ( codePromotionDiscountProduct ) throw new NotFoundException( `Code Promotion Discount Product with id ${ id } not found` )
+    if ( !codePromotionDiscountProduct ) throw new NotFoundException( `Code Promotion Discount Product with id ${ id } not found` )
     return codePromotionDiscountProduct
   }
 
@@ -87,13 +87,13 @@ export class CodePromotionDiscountProductsService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<CodePromotionDiscountProduct> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<CodePromotionDiscountProduct> {
+    const currentToggleStatus = await this.findOne( id )
     try {
       const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentToggleStatus.status,
           updatedBy: updater.id
         }
       })
