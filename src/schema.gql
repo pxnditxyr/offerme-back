@@ -726,6 +726,11 @@ type ManagementUser {
   creditCards: [CreditCard!]!
 }
 
+type ManagementProduct {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
 type Query {
   parameters: [Parameter!]!
   parameter(term: String!): Parameter!
@@ -803,6 +808,8 @@ type Query {
   companyReview(id: ID!): CompanyReview!
   managementUsers(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [ManagementUser!]!
   managementUser(id: ID!): ManagementUser!
+  managementProducts: [ManagementProduct!]!
+  managementProduct(id: Int!): ManagementProduct!
 }
 
 enum ValidRoles {
@@ -926,6 +933,9 @@ type Mutation {
   createManagementUser(createManagementUserInput: CreateManagementUserInput!): ManagementUser!
   updateManagementUser(updateManagementUserInput: UpdateManagementUserInput!): ManagementUser!
   deactivateManagementUser(id: ID!): ManagementUser!
+  createManagementProduct(createManagementProductInput: CreateManagementProductInput!): ManagementProduct!
+  updateManagementProduct(updateManagementProductInput: UpdateManagementProductInput!): ManagementProduct!
+  removeManagementProduct(id: Int!): ManagementProduct!
 }
 
 input CreateParameterInput {
@@ -1529,4 +1539,15 @@ input UpdateManagementUserInput {
   roleId: ID
   id: ID!
   status: Boolean
+}
+
+input CreateManagementProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateManagementProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
 }

@@ -32,7 +32,7 @@ import { ReviewsModule, CommentsModule, PromotionReviewsModule, CompanyReviewsMo
 import { SeedModule } from './seed'
 import { CommonModule } from './common'
 
-import { ManagementUsersModule } from './management'
+import { ManagementUsersModule, ManagementProductsModule } from './management'
 
 @Module({
   imports: [
@@ -57,7 +57,8 @@ import { ManagementUsersModule } from './management'
     DiscountProductsModule, PromotionStatusModule, PromotionPaymentsModule,
     PromotionsModule, CodePromotionDiscountProductsModule, ReviewsModule, CommentsModule,
     PromotionReviewsModule, CompanyReviewsModule, SeedModule, CommonModule,
-    ManagementUsersModule
+    ManagementUsersModule,
+    ManagementProductsModule
   ]
 })
 export class AppModule {}
