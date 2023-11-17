@@ -41,14 +41,21 @@ export class SubparametersService {
     }
   }
 
-  async findAll () {
-    // TODO: don't return subparameters with status false
-    // TODO: don't return subparameters with parameter status false
+  async findAll ( { searchArgs, paginationArgs } : IFindAllOptions ) {
+    const { limit, offset } = paginationArgs
+    const { search, status } = searchArgs
     const subparameters = await this.prismaService.subparameters.findMany({
-      include: { ...subparameterIncludes }
+      include: { ...subparameterIncludes },
+      where: {
+        status: status ?? undefined,
+        name: { contains: search ?? '' }
+      },
+      take: limit ?? undefined,
+      skip: offset ?? undefined
     })
     return subparameters
   }
+
   async findAllByParameterName ( parameterName : string, { searchArgs } : IFindAllOptions ) {
     const { status } = searchArgs
     const parameter = await this.parametersService.findOne( parameterName )

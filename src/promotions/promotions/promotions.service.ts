@@ -57,24 +57,25 @@ export class PromotionsService {
 
   async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
-    const { search  } = searchArgs
+    const { search, status  } = searchArgs
     try {
       const promotions = await this.prismaService.promotions.findMany({
-        take: limit,
-        skip: offset,
+        take: limit ?? undefined,
+        skip: offset ?? undefined,
         where: {
           OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } },
-          ]
+            { title: { contains: search || '', mode: 'insensitive' } },
+            { description: { contains: search || '', mode: 'insensitive' } },
+            { code: { contains: search || '', mode: 'insensitive' } }
+          ],
+          status: status ?? undefined
         },
         include: { ...promotionIncludes }
       })
       return promotions
     } catch ( error ) {
       this.handlerDBExceptions( error )
-    }
-  }
+    } }
 
   async findOne ( id : string ) : Promise<Promotion> {
     const promotion = await this.prismaService.promotions.findUnique({

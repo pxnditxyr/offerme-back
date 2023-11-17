@@ -49,17 +49,21 @@ export class ProductsService {
 
   async findAll ( { searchArgs, paginationArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
-    const { search } = searchArgs
+    const { search, status } = searchArgs
+
+
     const products = await this.prismaService.products.findMany({
       where: {
-        name: {
-          contains: search,
-          mode: 'insensitive'
-        }
+        OR: [
+          { name: { contains: search ?? '', mode: 'insensitive' } },
+          { description: { contains: search ?? '', mode: 'insensitive' } },
+          { code: { contains: search ?? '', mode: 'insensitive' } }
+        ],
+        status: status ?? undefined
       },
       include: { ...productIncludes },
-      take: limit,
-      skip: offset
+      take: limit ?? undefined,
+      skip: offset ?? undefined
     })
     return products
   }

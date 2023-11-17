@@ -4,6 +4,7 @@ import { Parameter } from '../parameters/entities/parameter.entity'
 import { PrismaService } from '../../prisma'
 import { isUUID } from 'class-validator'
 import { User } from 'src/users/users/entities/user.entity'
+import { IFindAllOptions } from 'src/common/interfaces'
 
 const parameterIncludes = {
   subparameters: true,
@@ -33,10 +34,18 @@ export class ParametersService {
     }
   }
 
-  async findAll() {
+  async findAll( { searchArgs, paginationArgs } : IFindAllOptions ) {
+    const { limit, offset } = paginationArgs
+    const { search, status } = searchArgs
     // TODO: don't return parameters with status false
     const parameters = await this.prismaService.parameters.findMany({
-      include: { ...parameterIncludes }
+      include: { ...parameterIncludes },
+      where: {
+        status: status ?? undefined,
+        name: { contains: search ?? '' }
+      },
+      take: limit ?? undefined,
+      skip: offset ?? undefined
     })
     return parameters
   }

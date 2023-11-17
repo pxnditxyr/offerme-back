@@ -7,6 +7,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard'
 import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { User } from 'src/users/users/entities/user.entity'
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator'
+import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
 @Resolver( () => Parameter )
 export class ParametersResolver {
@@ -24,8 +25,11 @@ export class ParametersResolver {
   }
 
   @Query( () => [ Parameter ], { name: 'parameters' } )
-  async findAll () {
-    return await this.parametersService.findAll()
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs: SearchArgs
+  ) {
+    return await this.parametersService.findAll({ paginationArgs, searchArgs })
   }
 
   @Query( () => Parameter, { name: 'parameter' } )

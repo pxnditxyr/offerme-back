@@ -26,8 +26,11 @@ export class SubparametersResolver {
   }
 
   @Query( () => [ Subparameter ], { name: 'subparameters' } )
-  async findAll () {
-    return await this.subparametersService.findAll()
+  async findAll (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs: SearchArgs
+  ) {
+    return await this.subparametersService.findAll({ paginationArgs, searchArgs })
   }
 
   @Query( () => Subparameter, { name: 'subparameter' } )

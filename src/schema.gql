@@ -727,9 +727,9 @@ type ManagementUser {
 }
 
 type Query {
-  parameters: [Parameter!]!
+  parameters(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Parameter!]!
   parameter(term: String!): Parameter!
-  subparameters: [Subparameter!]!
+  subparameters(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Subparameter!]!
   subparameter(id: ID!): Subparameter!
   subparametersByParameterName(parameterName: String!, search: String = "", status: Boolean = null, offset: Int = 0, limit: Int = 10000): [Subparameter!]!
   peopleInfo: [PeopleInfo!]!
