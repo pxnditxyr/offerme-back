@@ -97,13 +97,13 @@ export class SubparametersService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<Subparameter> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<Subparameter> {
+    const currentSubparameters = await this.findOne( id )
     try {
       const subparameter = await this.prismaService.subparameters.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentSubparameters.status,
           updatedBy: updater.id
         }
       })

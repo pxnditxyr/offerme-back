@@ -19,7 +19,7 @@ export class PromotionRequestsResolver {
   @Mutation( () => PromotionRequest )
   async createPromotionRequest (
     @Args( 'createPromotionRequestInput' ) createPromotionRequestInput : CreatePromotionRequestInput,
-    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
+    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) creator : User
   ) : Promise<PromotionRequest> {
     return await this.promotionRequestsService.create( createPromotionRequestInput, creator )
   }
@@ -42,7 +42,7 @@ export class PromotionRequestsResolver {
   @Mutation( () => PromotionRequest )
   async updatePromotionRequest (
     @Args( 'updatePromotionRequestInput' ) updatePromotionRequestInput : UpdatePromotionRequestInput,
-    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) updater : User
   ) : Promise<PromotionRequest> {
     return await this.promotionRequestsService.update( updatePromotionRequestInput.id, updatePromotionRequestInput, updater )
   }
@@ -50,7 +50,7 @@ export class PromotionRequestsResolver {
   @Mutation( () => PromotionRequest )
   async toggleStatusPromotionRequest (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) updater : User
   ) : Promise<PromotionRequest> {
     return await this.promotionRequestsService.toggleStatus( id, updater )
   }

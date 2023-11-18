@@ -24,10 +24,6 @@ export const parametersData = [
     description: 'Type of credit card',
   },
   {
-    name: 'promotion request type',
-    description: 'Type of promotion request',
-  },
-  {
     name: 'payment method',
     description: 'Type of payment method',
   },

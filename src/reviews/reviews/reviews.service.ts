@@ -65,13 +65,13 @@ export class ReviewsService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<Review> {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) : Promise<Review> {
+    const currentReview = await this.findOne( id )
     try {
       const review = await this.prismaService.reviews.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentReview.status,
           updatedBy: updater.id,
         }
       })

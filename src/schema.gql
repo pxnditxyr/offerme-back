@@ -815,10 +815,10 @@ enum ValidRoles {
 type Mutation {
   createParameter(createParameterInput: CreateParameterInput!): Parameter!
   updateParameter(updateParameterInput: UpdateParameterInput!): Parameter!
-  deactivateParameter(id: ID!): Parameter!
+  toggleStatusParameter(id: ID!): Parameter!
   createSubparameter(createSubparameterInput: CreateSubparameterInput!): Subparameter!
   updateSubparameter(updateSubparameterInput: UpdateSubparameterInput!): Subparameter!
-  deactivateSubparameter(id: ID!): Subparameter!
+  toggleStatusSubparameter(id: ID!): Subparameter!
   createPeopleInfo(createPeopleInfoInput: CreatePeopleInfoInput!): PeopleInfo!
   updatePeopleInfo(updatePeopleInfoInput: UpdatePeopleInfoInput!): PeopleInfo!
   deactivatePeopleInfo(id: ID!): PeopleInfo!
@@ -911,6 +911,7 @@ type Mutation {
   redeemDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   forgetDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   toggleStatusCodePromotionDiscountProduct(id: ID!): CodePromotionDiscountProduct!
+  toggleStatusReview(id: ID!): Review!
   createComment(createCommentInput: CreateCommentInput!): Comment!
   updateComment(updateCommentInput: UpdateCommentInput!): Comment!
   deactivateComment(id: ID!): Comment!

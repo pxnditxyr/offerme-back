@@ -50,10 +50,10 @@ export class ParametersResolver {
 
   @Mutation( () => Parameter )
   @UseGuards( JwtAuthGuard )
-  async deactivateParameter (
+  async toggleStatusParameter (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
   ) : Promise<Parameter> {
-    return await this.parametersService.deactivate( id, user )
+    return await this.parametersService.toggleStatus( id, user )
   }
 }

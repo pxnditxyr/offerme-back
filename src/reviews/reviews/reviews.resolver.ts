@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, ID } from '@nestjs/graphql'
+import { Resolver, Query, Args, ID, Mutation } from '@nestjs/graphql'
 import { ReviewsService } from './reviews.service'
 import { Review } from './entities/review.entity'
 import { ParseUUIDPipe, UseGuards } from '@nestjs/common'
@@ -14,14 +14,6 @@ export class ReviewsResolver {
     private readonly reviewsService: ReviewsService,
   ) {}
 
-  // @Mutation( () => Review )
-  // async createReview (
-  //   @Args( 'createReviewInput' ) createReviewInput : CreateReviewInput,
-  //   @CurrentUser([ ValidRoles.USER ]) user : User
-  // ) : Promise<Review> {
-  //   return await this.reviewsService.create( createReviewInput, user )
-  // }
-
   @Query( () => [ Review ], { name: 'reviews' } )
   async findAll (
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) _user : User
@@ -36,19 +28,11 @@ export class ReviewsResolver {
     return await this.reviewsService.findOne( id )
   }
 
-  // @Mutation( () => Review )
-  // async updateReview (
-  //   @Args( 'updateReviewInput' ) updateReviewInput : UpdateReviewInput,
-  //   @CurrentUser([ ValidRoles.USER ]) user : User
-  // ) : Promise<Review> {
-  //   return await this.reviewsService.update( updateReviewInput.id, updateReviewInput, user )
-  // }
-  //
-  // @Mutation( () => Review )
-  // async deactivateReview (
-  //   @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-  //   @CurrentUser([ ValidRoles.USER, ValidRoles.ADMIN ]) user : User
-  // ) : Promise<Review> {
-  //   return this.reviewsService.deactivate( id, user )
-  // }
+  @Mutation( () => Review )
+  async toggleStatusReview (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+  ) : Promise<Review> {
+    return this.reviewsService.toggleStatus( id, user )
+  }
 }

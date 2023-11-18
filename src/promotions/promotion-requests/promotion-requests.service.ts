@@ -52,16 +52,17 @@ export class PromotionRequestsService {
 
   async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
-    const { search  } = searchArgs
+    const { search, status } = searchArgs
     try {
       const promotionRequests = await this.prismaService.promotionRequests.findMany({
-        take: limit,
-        skip: offset,
+        take: limit ?? undefined,
+        skip: offset ?? undefined,
         where: {
           OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { description: { contains: search, mode: 'insensitive' } }
-          ]
+            { title: { contains: search || '', mode: 'insensitive' } },
+            { description: { contains: search || '', mode: 'insensitive' } }
+          ],
+          status: status ?? undefined
         },
         include: { ...promotionRequestIncludes }
       })

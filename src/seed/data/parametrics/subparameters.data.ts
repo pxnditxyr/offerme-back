@@ -159,7 +159,7 @@ export const subparametersData = () => {
     }
   ]
 
-  const promotionRequestTypeParameterId = 'promotion request type'
+  const promotionRequestTypeParameterId = 'promotion type'
   const promotionRequestTypeSubparameters = [
     {
       name: 'Descuento',

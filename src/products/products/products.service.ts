@@ -63,7 +63,8 @@ export class ProductsService {
       },
       include: { ...productIncludes },
       take: limit ?? undefined,
-      skip: offset ?? undefined
+      skip: offset ?? undefined,
+      orderBy: { updatedAt: 'desc' }
     })
     return products
   }

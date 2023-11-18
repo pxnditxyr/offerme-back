@@ -51,11 +51,11 @@ export class SubparametersResolver {
 
   @Mutation( () => Subparameter )
   @UseGuards( JwtAuthGuard )
-  async deactivateSubparameter (
+  async toggleStatusSubparameter (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) user : User
   ) : Promise<Subparameter> {
-    return await this.subparametersService.deactivate( id, user )
+    return await this.subparametersService.toggleStatus( id, user )
   }
 
   @Query( () => [ Subparameter ], { name: 'subparametersByParameterName' } )

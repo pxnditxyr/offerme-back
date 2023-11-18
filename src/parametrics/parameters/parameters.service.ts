@@ -84,13 +84,13 @@ export class ParametersService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) {
-    await this.findOne( id )
+  async toggleStatus ( id : string, updater : User ) {
+    const currentParameter = await this.findOne( id )
     try {
       const parameter = await this.prismaService.parameters.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentParameter.status,
           updatedBy: updater.id
         }
       })
