@@ -19,7 +19,7 @@ export class PromotionPaymentsResolver {
   @Mutation( () => PromotionPayment )
   async createPromotionPayment (
     @Args( 'createPromotionPaymentInput' ) createPromotionPaymentInput : CreatePromotionPaymentInput,
-    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
+    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) creator : User
   ) : Promise<PromotionPayment> {
     return await this.promotionPaymentsService.create( createPromotionPaymentInput, creator )
   }
@@ -42,16 +42,16 @@ export class PromotionPaymentsResolver {
   @Mutation( () => PromotionPayment )
   async updatePromotionPayment (
     @Args( 'updatePromotionPaymentInput' ) updatePromotionPaymentInput : UpdatePromotionPaymentInput,
-    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) updater : User
   ) : Promise<PromotionPayment> {
     return await this.promotionPaymentsService.update( updatePromotionPaymentInput.id, updatePromotionPaymentInput, updater )
   }
 
   @Mutation( () => PromotionPayment )
-  async deactivatePromotionPayment (
+  async toggleStatusPromotionPayment (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+    @CurrentUser([ ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.ADMIN ]) updater : User
   ) : Promise<PromotionPayment> {
-    return await this.promotionPaymentsService.deactivate( id, updater )
+    return await this.promotionPaymentsService.toggleStatus( id, updater )
   }
 }

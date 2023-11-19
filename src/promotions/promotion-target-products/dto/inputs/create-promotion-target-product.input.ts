@@ -1,5 +1,5 @@
 import { InputType, Field, ID } from '@nestjs/graphql'
-import { IsNotEmpty, IsUUID } from 'class-validator'
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator'
 
 @InputType()
 export class CreatePromotionTargetProductInput {
@@ -13,6 +13,6 @@ export class CreatePromotionTargetProductInput {
 
   @Field( () => String )
   @IsNotEmpty()
-  @IsUUID()
+  @IsString()
   description: string
 }

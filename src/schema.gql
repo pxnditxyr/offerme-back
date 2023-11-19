@@ -901,7 +901,7 @@ type Mutation {
   toggleStatusPromotionStatus(id: ID!): PromotionStatus!
   createPromotionPayment(createPromotionPaymentInput: CreatePromotionPaymentInput!): PromotionPayment!
   updatePromotionPayment(updatePromotionPaymentInput: UpdatePromotionPaymentInput!): PromotionPayment!
-  deactivatePromotionPayment(id: ID!): PromotionPayment!
+  toggleStatusPromotionPayment(id: ID!): PromotionPayment!
   createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
   updatePromotion(updatePromotionInput: UpdatePromotionInput!): Promotion!
   toggleStatusPromotion(id: ID!): Promotion!
@@ -1378,7 +1378,6 @@ input UpdateDiscountProductInput {
   discountAmount: Float
   discountPrice: Float
   id: ID!
-  status: Boolean!
 }
 
 input CreatePromotionStatusInput {

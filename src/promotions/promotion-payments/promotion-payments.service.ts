@@ -76,6 +76,7 @@ export class PromotionPaymentsService {
   }
 
   async update ( id : string, updatePromotionPaymentInput : UpdatePromotionPaymentInput, updater : User ) : Promise<PromotionPayment> {
+    await this.findOne( id )
     const { creditCardId, paymentMethodId, promotionRequestId } = updatePromotionPaymentInput
     if ( creditCardId ) await this.creditCardsService.findOne( creditCardId )
     if ( paymentMethodId ) await this.subparamatersService.findOne( paymentMethodId )
@@ -94,12 +95,13 @@ export class PromotionPaymentsService {
     }
   }
 
-  async deactivate ( id : string, updater : User ) : Promise<PromotionPayment> {
+  async toggleStatus ( id : string, updater : User ) : Promise<PromotionPayment> {
+    const currentPromotionPayment = await this.findOne( id )
     try {
       const promotionPayment = await this.prismaService.promotionPayments.update({
         where: { id },
         data: {
-          status: false,
+          status: !currentPromotionPayment.status,
           updatedBy: updater.id
         }
       })
