@@ -18,6 +18,8 @@ const promotionRequestIncludes = {
   promotionStatus: true,
   requestingUser: true,
   targetProducts: true,
+  promotionPayments: true,
+  discountProducts: true,
 }
 
 @Injectable()

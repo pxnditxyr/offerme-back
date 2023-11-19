@@ -48,12 +48,16 @@ export class PromotionPaymentsService {
     }
   }
 
-  async findAll ( { paginationArgs } : IFindAllOptions ) {
+  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
+    const { status } = searchArgs
     try {
       const promotionPayments = await this.prismaService.promotionPayments.findMany({
-        take: limit,
-        skip: offset,
+        take: limit ?? undefined,
+        skip: offset ?? undefined,
+        where: {
+          status: status ?? undefined,
+        },
         include: { ...promotionPaymentIncludes }
       })
       return promotionPayments

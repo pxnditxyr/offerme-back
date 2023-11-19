@@ -9,7 +9,7 @@ import { IFindAllOptions } from 'src/common/interfaces'
 
 const codePromotionDiscountProductIncludes = {
   discountProduct: true,
-  user: true,
+  used: true,
   creator: true,
   updater: true
 }
@@ -42,14 +42,15 @@ export class CodePromotionDiscountProductsService {
 
   async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
-    const { search } = searchArgs
+    const { search, status } = searchArgs
     try {
       const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.findMany({
-        skip: offset,
-        take: limit,
+        skip: offset ?? undefined,
+        take: limit ?? undefined,
         where: {
+          status: status ?? undefined,
           discountProduct: {
-            title: { contains: search, mode: 'insensitive' }
+            title: { contains: search ?? undefined, mode: 'insensitive' }
           }
         },
         include: { ...codePromotionDiscountProductIncludes }
