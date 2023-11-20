@@ -57,7 +57,8 @@ export class UserPhonesService {
             number: { contains: search }
           }
         },
-        include: { ...userPhoneIncludes }
+        include: { ...userPhoneIncludes },
+        orderBy: { updatedBy: 'desc' },
       })
       return userPhones
     } catch ( error ) {

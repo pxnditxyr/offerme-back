@@ -24,15 +24,39 @@ export class PromotionStatusResolver {
     return await this.promotionStatusService.create( createPromotionStatusInput, creator )
   }
 
-  @Query( () => [ PromotionStatus ], { name: 'promotionStatus' } )
+  @Query( () => [ PromotionStatus ], { name: 'promotionStatuses' } )
   async findAll (
     @Args() paginationArgs : PaginationArgs,
-    @Args() searchArgs : SearchArgs
+    @Args() searchArgs : SearchArgs,
   ) {
-    return await this.promotionStatusService.findAll({ paginationArgs, searchArgs })
+    return await this.promotionStatusService.findAll( { paginationArgs, searchArgs } )
   }
 
-  @Query( () => PromotionStatus, { name: 'promotionStatus' } )
+  @Query( () => [ PromotionStatus ], { name: 'promotionStatusesApproved' } )
+  async findAllApproved (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs,
+  ) {
+    return await this.promotionStatusService.findAllApproved( { paginationArgs, searchArgs } )
+  }
+
+  @Query( () => [ PromotionStatus ], { name: 'promotionStatusesRejected' } )
+  async findAllRejected (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs,
+  ) {
+    return await this.promotionStatusService.findAllRejected( { paginationArgs, searchArgs } )
+  }
+
+  @Query( () => [ PromotionStatus ], { name: 'promotionStatusesPending' } )
+  async findAllPending (
+    @Args() paginationArgs : PaginationArgs,
+    @Args() searchArgs : SearchArgs,
+  ) {
+    return await this.promotionStatusService.findAllPending( { paginationArgs, searchArgs } )
+  }
+
+  @Query( () => PromotionStatus, { name: 'promotionStates' } )
   async findOne (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string
   ) {

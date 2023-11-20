@@ -66,7 +66,8 @@ export class PromotionRequestsService {
           ],
           status: status ?? undefined
         },
-        include: { ...promotionRequestIncludes }
+        include: { ...promotionRequestIncludes, promotionStatus: true },
+        orderBy: { updatedAt: 'desc' }
       })
       return promotionRequests
     } catch ( error ) {
@@ -78,7 +79,7 @@ export class PromotionRequestsService {
   async findOne ( id : string ) {
     const promotionRequest = await this.prismaService.promotionRequests.findUnique({
       where: { id },
-      include: { ...promotionRequestIncludes }
+      include: { ...promotionRequestIncludes, promotionStatus: true }
     })
     if ( !promotionRequest ) throw new NotFoundException( `Promotion request with ID ${ id } does not exists` )
     return promotionRequest

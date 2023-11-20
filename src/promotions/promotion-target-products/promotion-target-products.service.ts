@@ -52,7 +52,8 @@ export class PromotionTargetProductsService {
         where: {
           description: { contains: search }
         },
-        include: { ...promotionTargetProductIncludes }
+        include: { ...promotionTargetProductIncludes },
+        orderBy: { updatedBy: 'desc' },
       })
       return promotionTargetProducts
     } catch ( error ) {

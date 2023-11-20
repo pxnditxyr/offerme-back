@@ -786,7 +786,11 @@ type Query {
   promotionTargetProduct(id: ID!): PromotionTargetProduct!
   discountProducts(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [DiscountProduct!]!
   discountProduct(id: ID!): DiscountProduct!
-  promotionStatus(id: ID!): PromotionStatus!
+  promotionStatuses(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionStatus!]!
+  promotionStatusesApproved(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionStatus!]!
+  promotionStatusesRejected(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionStatus!]!
+  promotionStatusesPending(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionStatus!]!
+  promotionStates(id: ID!): PromotionStatus!
   promotionPayments(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [PromotionPayment!]!
   promotionPayment(id: ID!): PromotionPayment!
   promotions(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Promotion!]!
@@ -1395,7 +1399,7 @@ input UpdatePromotionStatusInput {
 }
 
 input StatusUpdatePromotionStatusInput {
-  id: Int!
+  id: ID!
   adminComment: String!
   adminReason: String!
 }

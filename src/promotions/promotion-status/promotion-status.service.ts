@@ -41,18 +41,109 @@ export class PromotionStatusService {
     }
   }
 
-  async findAll ( { paginationArgs } : IFindAllOptions ) {
+  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
-    try {
-      const promotionStatuses = await this.prismaService.promotionStatus.findMany({
-        take: limit,
-        skip: offset,
-        include: { ...promotionStatusIncludes }
-      })
-      return promotionStatuses
-    } catch ( error ) {
-      this.hendlerDBExceptions( error )
-    }
+    const { search, status } = searchArgs
+    const promotionStatuses = await this.prismaService.promotionStatus.findMany({
+      take: limit ? limit : undefined,
+      skip: offset ? offset : undefined,
+      where: {
+        OR: [
+          { promotionRequest: {
+            title: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            code: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            description: { contains: search ? search : undefined }
+          }},
+        ],
+        status: status ? status : undefined,
+      },
+      include: { ...promotionStatusIncludes }
+    })
+    return promotionStatuses
+  }
+
+  async findAllApproved ( { paginationArgs, searchArgs } : IFindAllOptions ) {
+    const { limit, offset } = paginationArgs
+    const { search, status } = searchArgs
+    const promotionStatuses = await this.prismaService.promotionStatus.findMany({
+      take: limit ? limit : undefined,
+      skip: offset ? offset : undefined,
+      where: {
+        OR: [
+          { promotionRequest: {
+            title: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            code: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            description: { contains: search ? search : undefined }
+          }},
+        ],
+        status: status ? status : undefined,
+        adminApprovedStatus: true,
+      },
+      include: { ...promotionStatusIncludes }
+    })
+    return promotionStatuses
+  }
+
+  async findAllRejected ( { paginationArgs, searchArgs } : IFindAllOptions ) {
+    const { limit, offset } = paginationArgs
+    const { search, status } = searchArgs
+    const promotionStatuses = await this.prismaService.promotionStatus.findMany({
+      take: limit ? limit : undefined,
+      skip: offset ? offset : undefined,
+      where: {
+        OR: [
+          { promotionRequest: {
+            title: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            code: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            description: { contains: search ? search : undefined }
+          }},
+        ],
+        status: status ? status : undefined,
+        adminRejectedStatus: true,
+      },
+      include: { ...promotionStatusIncludes }
+    })
+    return promotionStatuses
+  }
+
+  async findAllPending ( { paginationArgs, searchArgs } : IFindAllOptions ) {
+    const { limit, offset } = paginationArgs
+    const { search, status } = searchArgs
+    const promotionStatuses = await this.prismaService.promotionStatus.findMany({
+      take: limit ? limit : undefined,
+      skip: offset ? offset : undefined,
+      where: {
+        OR: [
+          { promotionRequest: {
+            title: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            code: { contains: search ? search : undefined }
+          }},
+          { promotionRequest: {
+            description: { contains: search ? search : undefined }
+          }},
+        ],
+        status: status ? status : undefined,
+        adminApprovedStatus: false,
+        adminRejectedStatus: false,
+      },
+      include: { ...promotionStatusIncludes },
+      orderBy: { updatedAt: 'desc' }
+    })
+    return promotionStatuses
   }
 
   async findOne ( id : string ) {

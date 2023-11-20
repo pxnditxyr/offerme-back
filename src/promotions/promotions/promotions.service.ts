@@ -70,7 +70,8 @@ export class PromotionsService {
           ],
           status: status ?? undefined
         },
-        include: { ...promotionIncludes }
+        include: { ...promotionIncludes },
+        orderBy: { updatedBy: 'desc' }
       })
       return promotions
     } catch ( error ) {

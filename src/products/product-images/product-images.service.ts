@@ -47,6 +47,7 @@ export class ProductImagesService {
         include: { ...productImageIncludes },
         take: limit,
         skip: offset,
+        orderBy: { updatedBy: 'desc' },
       })
       return productImages
     } catch ( error ) {

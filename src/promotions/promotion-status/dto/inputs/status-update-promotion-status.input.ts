@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator'
-import { InputType, Field, Int } from '@nestjs/graphql'
+import { InputType, Field, ID } from '@nestjs/graphql'
 
 @InputType()
 export class StatusUpdatePromotionStatusInput {
-  @Field( () => Int )
+  @Field( () => ID )
   @IsUUID()
   id: string
 
