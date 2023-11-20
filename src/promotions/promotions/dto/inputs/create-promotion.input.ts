@@ -5,10 +5,6 @@ import { IsDate, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 export class CreatePromotionInput {
   @Field( () => ID )
   @IsUUID()
-  userId: string
-
-  @Field( () => ID )
-  @IsUUID()
   companyId: string
 
   @Field( () => ID )

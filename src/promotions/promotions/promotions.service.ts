@@ -35,8 +35,7 @@ export class PromotionsService {
   ) {}
 
   async create ( createPromotionInput : CreatePromotionInput, creator : User ) : Promise<Promotion> {
-    const { userId, companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = createPromotionInput
-    await this.usersService.findOne( userId )
+    const { companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = createPromotionInput
     await this.companiesService.findOne( companyId )
     await this.subparametersService.findOne( promotionTypeId )
     await this.promotionPaymentsService.findOne( promotionPaymentId )
@@ -45,7 +44,8 @@ export class PromotionsService {
       const promotion = await this.prismaService.promotions.create({
         data: {
           ...createPromotionInput,
-          createdBy: creator.id
+          createdBy: creator.id,
+          userId: creator.id
         }
       })
       return promotion
@@ -89,8 +89,7 @@ export class PromotionsService {
 
   async update ( id : string, updatePromotionInput : UpdatePromotionInput, updater : User ) : Promise<Promotion> {
     await this.findOne( id )
-    const { userId, companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = updatePromotionInput
-    if ( userId ) await this.usersService.findOne( userId )
+    const { companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = updatePromotionInput
     if ( companyId ) await this.companiesService.findOne( companyId )
     if ( promotionTypeId ) await this.subparametersService.findOne( promotionTypeId )
     if ( promotionPaymentId ) await this.promotionPaymentsService.findOne( promotionPaymentId )

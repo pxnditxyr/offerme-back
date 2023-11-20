@@ -1425,7 +1425,6 @@ input UpdatePromotionPaymentInput {
 }
 
 input CreatePromotionInput {
-  userId: ID!
   companyId: ID!
   promotionPaymentId: ID!
   promotionRequestId: ID!
@@ -1440,7 +1439,6 @@ input CreatePromotionInput {
 }
 
 input UpdatePromotionInput {
-  userId: ID
   companyId: ID
   promotionPaymentId: ID
   promotionRequestId: ID
@@ -1453,7 +1451,6 @@ input UpdatePromotionInput {
   promotionStartAt: DateTime
   promotionEndAt: DateTime
   id: ID!
-  status: Boolean
 }
 
 input CreateCodePromotionDiscountProductInput {
