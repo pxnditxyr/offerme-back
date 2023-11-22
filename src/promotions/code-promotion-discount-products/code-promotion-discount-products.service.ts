@@ -6,12 +6,14 @@ import { CodePromotionDiscountProduct } from './entities/code-promotion-discount
 import { DiscountProductsService } from '../discount-products/discount-products.service'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
 import { IFindAllOptions } from 'src/common/interfaces'
+import { generateDiscountCodes } from 'src/utils'
 
 const codePromotionDiscountProductIncludes = {
   discountProduct: true,
   used: true,
   creator: true,
-  updater: true
+  updater: true,
+  redeemed: true,
 }
 
 @Injectable()
@@ -24,17 +26,26 @@ export class CodePromotionDiscountProductsService {
     private readonly discountProductsService : DiscountProductsService
   ) {}
 
-  async create( createCodePromotionDiscountProductInput : CreateCodePromotionDiscountProductInput, creator : User ) : Promise<CodePromotionDiscountProduct> {
+  async create( createCodePromotionDiscountProductInput : CreateCodePromotionDiscountProductInput, creator : User ) : Promise<boolean> {
     const { discountProductId } = createCodePromotionDiscountProductInput
     await this.discountProductsService.findOne( discountProductId )
+    const codes = await this.prismaService.codePromotionDiscountProducts.findMany({
+      select: { code: true }
+    })
+    const newCodes = generateDiscountCodes({
+      quantity: createCodePromotionDiscountProductInput.quantity,
+      existingCodes: codes.map( code => code.code )
+    })
+
     try {
-      const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.create({
-        data: {
-          ...createCodePromotionDiscountProductInput,
+      const codePromotionDiscountProducts = await this.prismaService.codePromotionDiscountProducts.createMany({
+        data: newCodes.map( code => ({
+          code,
+          discountProductId,
           createdBy: creator.id,
-        }
+        }) )
       })
-      return codePromotionDiscountProducts
+      return !!codePromotionDiscountProducts
     } catch ( error ) {
       this.handlerDBExceptions( error )
     }
@@ -49,9 +60,10 @@ export class CodePromotionDiscountProductsService {
         take: limit ?? undefined,
         where: {
           status: status ?? undefined,
-          discountProduct: {
-            title: { contains: search ?? undefined, mode: 'insensitive' }
-          }
+          OR: [
+            { code: { contains: search ?? undefined, mode: 'insensitive' } },
+            { discountProduct: { title: { contains: search ?? undefined, mode: 'insensitive' } } },
+          ]
         },
         include: { ...codePromotionDiscountProductIncludes }
       }) 

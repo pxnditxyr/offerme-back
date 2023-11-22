@@ -16,7 +16,6 @@ import { CompaniesModule } from '../companies/companies.module'
     CompaniesModule,
     UsersModule,
   ],
-
   exports: [
     CompanyUsersService,
   ]

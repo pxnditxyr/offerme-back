@@ -48,16 +48,17 @@ export class DiscountProductsService {
 
   async findAll ( { paginationArgs, searchArgs } : IFindAllOptions ) {
     const { limit, offset } = paginationArgs
-    const { search } = searchArgs
+    const { search, status } = searchArgs
     try {
       const discountProducts = await this.prismaService.discountProducts.findMany({
-        skip: offset,
-        take: limit,
+        skip: offset ?? undefined,
+        take: limit ?? undefined,
         include: { ...discountProductIncludes },
         where: {
           promotionRequest: {
-            title: { contains: search, mode: 'insensitive' }
-          }
+            title: { contains: search ?? undefined, mode: 'insensitive' }
+          },
+          status: status ?? undefined
         }
       })
       return discountProducts

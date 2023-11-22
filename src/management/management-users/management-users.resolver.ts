@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int, ID } from '@nestjs/graphql'
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql'
 import { ManagementUsersService } from './management-users.service'
 import { ManagementUser } from './entities/management-user.entity'
 import { CreateManagementUserInput, UpdateManagementUserInput } from './dto/inputs'
@@ -20,14 +20,14 @@ export class ManagementUsersResolver {
   @Mutation( () => ManagementUser )
   async createManagementUser (
     @Args( 'createManagementUserInput' ) createManagementUserInput : CreateManagementUserInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) creator : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
   ) : Promise<ManagementUser> {
     return this.managementUsersService.create( createManagementUserInput, creator )
   }
 
   @Query( () => [ ManagementUser ], { name: 'managementUsers' } )
   async findAll (
-    @CurrentUser([ ValidRoles.ADMIN ]) _user : User,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) _user : User,
     @Args() paginationArgs : PaginationArgs,
     @Args() searchArgs : SearchArgs
   ) : Promise<ManagementUser[]> {
@@ -37,7 +37,7 @@ export class ManagementUsersResolver {
   @Query( () => ManagementUser, { name: 'managementUser' } )
   async findOne (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.ADMIN ]) _user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) _user : User
   ) : Promise<ManagementUser> {
     return this.managementUsersService.findOne( id )
   }
@@ -45,7 +45,7 @@ export class ManagementUsersResolver {
   @Mutation( () => ManagementUser )
   async updateManagementUser (
     @Args( 'updateManagementUserInput' ) updateManagementUserInput : UpdateManagementUserInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) updater : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
   ) : Promise<ManagementUser> {
     return this.managementUsersService.update( updateManagementUserInput.id, updateManagementUserInput, updater )
   }
@@ -53,8 +53,16 @@ export class ManagementUsersResolver {
   @Mutation( () => ManagementUser )
   async deactivateManagementUser (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.ADMIN ]) updater : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
   ) {
     return this.managementUsersService.deactivate( id, updater )
+  }
+
+  @Mutation( () => ManagementUser )
+  async toggleStatusManagementUser (
+    @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+  ) {
+    return this.managementUsersService.toggleStatus( id, updater )
   }
 }

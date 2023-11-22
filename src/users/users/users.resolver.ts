@@ -26,7 +26,7 @@ export class UsersResolver {
   @Query( () => [ User ], { name: 'users' } )
   async findAll (
     @Args() validRoles : ValidRolesArgs,
-    @CurrentUser([ ValidRoles.ADMIN ]) _user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) _user : User
   ) {
     return await this.usersService.findAll( validRoles.roles )
   }

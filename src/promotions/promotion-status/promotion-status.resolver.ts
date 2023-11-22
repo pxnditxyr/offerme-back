@@ -19,7 +19,7 @@ export class PromotionStatusResolver {
   @Mutation( () => PromotionStatus )
   async createPromotionStatus (
     @Args( 'createPromotionStatusInput' ) createPromotionStatusInput : CreatePromotionStatusInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) creator : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
   ) : Promise<PromotionStatus> {
     return await this.promotionStatusService.create( createPromotionStatusInput, creator )
   }

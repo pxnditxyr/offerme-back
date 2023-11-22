@@ -42,7 +42,7 @@ export class ProductsResolver {
   @Mutation( () => Product )
   async updateProduct (
     @Args( 'updateProductInput' ) updateProductInput : UpdateProductInput,
-    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE, ValidRoles.SELLER ]) updater : User
   ) {
     return await this.productsService.update( updateProductInput.id, updateProductInput, updater )
   }

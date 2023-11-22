@@ -211,6 +211,7 @@ type CodePromotionDiscountProduct {
   updatedBy: ID
   discountProduct: DiscountProduct
   used: User
+  redeemed: User
   creator: User
   updater: User
 }
@@ -766,6 +767,7 @@ type Query {
   category(id: ID!): Category!
   companyUsers: [CompanyUser!]!
   companyUser(id: ID!): CompanyUser!
+  companyByUserId(userId: ID!): Company!
   categoryImages(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [CategoryImage!]!
   categoryImage(id: ID!): CategoryImage!
   products(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Product!]!
@@ -909,7 +911,7 @@ type Mutation {
   createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
   updatePromotion(updatePromotionInput: UpdatePromotionInput!): Promotion!
   toggleStatusPromotion(id: ID!): Promotion!
-  createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
+  createCodePromotionDiscountProduct(createCodePromotionDiscountProductInput: CreateCodePromotionDiscountProductInput!): Boolean!
   updateCodePromotionDiscountProduct(updateCodePromotionDiscountProductInput: UpdateCodePromotionDiscountProductInput!): CodePromotionDiscountProduct!
   getDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
   redeemDiscountCoupon(id: ID!): CodePromotionDiscountProduct!
@@ -931,6 +933,7 @@ type Mutation {
   createManagementUser(createManagementUserInput: CreateManagementUserInput!): ManagementUser!
   updateManagementUser(updateManagementUserInput: UpdateManagementUserInput!): ManagementUser!
   deactivateManagementUser(id: ID!): ManagementUser!
+  toggleStatusManagementUser(id: ID!): ManagementUser!
 }
 
 input CreateParameterInput {
@@ -1454,12 +1457,12 @@ input UpdatePromotionInput {
 }
 
 input CreateCodePromotionDiscountProductInput {
-  code: String!
+  quantity: Int!
   discountProductId: ID!
 }
 
 input UpdateCodePromotionDiscountProductInput {
-  code: String
+  quantity: Int
   discountProductId: ID
   id: ID!
   isUsed: Boolean!

@@ -19,7 +19,7 @@ export class CompanyLogosResolver {
   @Mutation( () => CompanyLogo )
   async createCompanyLogo (
     @Args( 'createCompanyLogoInput' ) createCompanyLogoInput : CreateCompanyLogoInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) user : User
   ) : Promise<CompanyLogo> {
     return await this.companyLogosService.create( createCompanyLogoInput, user )
   }
@@ -41,7 +41,7 @@ export class CompanyLogosResolver {
   @Mutation( () => CompanyLogo )
   async updateCompanyLogo (
     @Args( 'updateCompanyLogoInput' ) updateCompanyLogoInput : UpdateCompanyLogoInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) user : User
   ) : Promise<CompanyLogo> {
     return await this.companyLogosService.update( updateCompanyLogoInput.id, updateCompanyLogoInput, user )
   }
@@ -49,7 +49,7 @@ export class CompanyLogosResolver {
   @Mutation( () => CompanyLogo )
   async toggleStatusCompanyLogo (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) user : User
   ) : Promise<CompanyLogo> {
     return await this.companyLogosService.toggleStatus( id, user )
   }

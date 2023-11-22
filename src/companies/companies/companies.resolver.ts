@@ -19,7 +19,7 @@ export class CompaniesResolver {
   @Mutation( () => Company )
   async createCompany(
     @Args( 'createCompanyInput' ) createCompanyInput : CreateCompanyInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) user : User
   ) : Promise<Company> {
     return await this.companiesService.create( createCompanyInput, user )
   }
@@ -43,7 +43,7 @@ export class CompaniesResolver {
   @Mutation( () => Company )
   async updateCompany (
     @Args( 'updateCompanyInput' ) updateCompanyInput : UpdateCompanyInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) user : User
   ) : Promise<Company> {
     return await this.companiesService.update( updateCompanyInput.id, updateCompanyInput, user )
   }
@@ -51,7 +51,7 @@ export class CompaniesResolver {
   @Mutation( () => Company )
   async toggleStatusCompany (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.ADMIN ]) user : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) user : User
   ) {
     return this.companiesService.toggleStatus( id, user )
   }

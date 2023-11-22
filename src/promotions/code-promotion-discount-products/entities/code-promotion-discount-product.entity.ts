@@ -53,6 +53,9 @@ export class CodePromotionDiscountProduct {
   used?: User | null
 
   @Field( () => User, { nullable: true } )
+  redeemed?: User | null
+
+  @Field( () => User, { nullable: true } )
   creator?: User | null
 
   @Field( () => User, { nullable: true } )

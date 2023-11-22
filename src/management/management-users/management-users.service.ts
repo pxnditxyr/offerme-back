@@ -187,4 +187,18 @@ export class ManagementUsersService {
     const userWithRelations = await this.findOne( id )
     return userWithRelations
   }
+
+  async toggleStatus ( id : string, updater : User ) : Promise<ManagementUser> {
+    const currentUser = await this.findOne( id )
+    try {
+      await this.usersService.update( id, {
+        id,
+        status: !currentUser.status,
+      }, updater )
+      const userWithRelations = await this.findOne( id )
+      return userWithRelations
+    } catch ( error ) {
+      throw new Error( error )
+    }
+  }
 }

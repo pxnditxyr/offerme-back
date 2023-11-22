@@ -16,11 +16,11 @@ export class CodePromotionDiscountProductsResolver {
     private readonly codePromotionDiscountProductsService: CodePromotionDiscountProductsService
   ) {}
 
-  @Mutation( () => CodePromotionDiscountProduct )
+  @Mutation( () => Boolean )
   async createCodePromotionDiscountProduct (
     @Args( 'createCodePromotionDiscountProductInput' ) createCodePromotionDiscountProductInput : CreateCodePromotionDiscountProductInput,
-    @CurrentUser([ ValidRoles.ADMIN ]) creator : User
-  ) : Promise<CodePromotionDiscountProduct> {
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
+  ) : Promise<boolean> {
     return await this.codePromotionDiscountProductsService.create( createCodePromotionDiscountProductInput, creator )
   }
 
@@ -74,7 +74,7 @@ export class CodePromotionDiscountProductsResolver {
   @Mutation( () => CodePromotionDiscountProduct )
   async toggleStatusCodePromotionDiscountProduct(
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
-    @CurrentUser([ ValidRoles.ADMIN ]) updater : User
+    @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
   ) : Promise<CodePromotionDiscountProduct> {
     return await this.codePromotionDiscountProductsService.toggleStatus( id, updater )
   }

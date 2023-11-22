@@ -6,6 +6,7 @@ import { UsersService } from 'src/users/users/users.service'
 import { User } from 'src/users/users/entities/user.entity'
 import { CompanyUser } from './entities/company-user.entity'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
+import { Company } from '../companies/entities/company.entity'
 
 const companyUserIncludes = {
   user: true,
@@ -91,6 +92,20 @@ export class CompanyUsersService {
     } catch ( error ) {
       this.handlerDBExceptions( error )
     }
+  }
+
+  async getCompanyByUserId ( userId : string ) : Promise<Company> {
+    await this.usersService.findOne( userId )
+
+    const companyUser = await this.prismaService.companyUsers.findFirst({
+      where: { userId },
+    })
+
+    if ( !companyUser ) throw new NotFoundException( `Company User with User ID ${ userId } not found` )
+
+    const company = await this.companiesService.findOne( companyUser.companyId )
+    if ( !company ) throw new NotFoundException( `Company with ID ${ companyUser.companyId } not found` )
+    return company
   }
 
   private handlerDBExceptions ( error : any ) : never {

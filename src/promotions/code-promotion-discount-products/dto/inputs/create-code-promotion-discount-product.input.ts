@@ -1,12 +1,12 @@
-import { InputType, Field, ID } from '@nestjs/graphql';
-import { IsBoolean, IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { InputType, Field, ID, Int } from '@nestjs/graphql';
+import { IsNotEmpty, IsNumber, IsUUID } from 'class-validator';
 
 @InputType()
 export class CreateCodePromotionDiscountProductInput {
-  @Field( () => String )
+  @Field( () => Int )
   @IsNotEmpty()
-  @IsString()
-  code: string
+  @IsNumber()
+  quantity: number
 
   @Field( () => ID )
   @IsUUID()
