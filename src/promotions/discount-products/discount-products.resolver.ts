@@ -9,7 +9,6 @@ import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { User } from 'src/users/users/entities/user.entity'
 import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@UseGuards( JwtAuthGuard )
 @Resolver( () => DiscountProduct )
 export class DiscountProductsResolver {
   constructor (
@@ -17,6 +16,7 @@ export class DiscountProductsResolver {
   ) {}
 
   @Mutation( () => DiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async createDiscountProduct (
     @Args( 'createDiscountProductInput' ) createDiscountProductInput : CreateDiscountProductInput,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
@@ -40,6 +40,7 @@ export class DiscountProductsResolver {
   }
 
   @Mutation( () => DiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async updateDiscountProduct (
     @Args( 'updateDiscountProductInput' ) updateDiscountProductInput : UpdateDiscountProductInput,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
@@ -48,6 +49,7 @@ export class DiscountProductsResolver {
   }
 
   @Mutation( () => DiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async toggleStatusDiscountProduct (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User

@@ -9,7 +9,6 @@ import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { User } from 'src/users/users/entities/user.entity'
 import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@UseGuards( JwtAuthGuard )
 @Resolver( () => Promotion )
 export class PromotionsResolver {
   constructor (
@@ -17,6 +16,7 @@ export class PromotionsResolver {
   ) {}
 
   @Mutation( () => Promotion )
+  @UseGuards( JwtAuthGuard )
   async createPromotion (
     @Args( 'createPromotionInput' ) createPromotionInput : CreatePromotionInput,
     @CurrentUser([ ValidRoles.ADMIN ]) creator : User
@@ -40,6 +40,7 @@ export class PromotionsResolver {
   }
 
   @Mutation( () => Promotion )
+  @UseGuards( JwtAuthGuard )
   async updatePromotion (
     @Args( 'updatePromotionInput' ) updatePromotionInput : UpdatePromotionInput,
     @CurrentUser([ ValidRoles.ADMIN ]) updater : User
@@ -48,6 +49,7 @@ export class PromotionsResolver {
   }
 
   @Mutation( () => Promotion )
+  @UseGuards( JwtAuthGuard )
   async toggleStatusPromotion (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN ]) updater : User

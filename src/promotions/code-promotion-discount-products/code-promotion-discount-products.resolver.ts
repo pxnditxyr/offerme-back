@@ -9,7 +9,6 @@ import { ValidRoles } from 'src/auth/enums/valid-roles.enum'
 import { User } from 'src/users/users/entities/user.entity'
 import { PaginationArgs, SearchArgs } from 'src/common/dto/args'
 
-@UseGuards( JwtAuthGuard )
 @Resolver( () => CodePromotionDiscountProduct )
 export class CodePromotionDiscountProductsResolver {
   constructor (
@@ -17,6 +16,7 @@ export class CodePromotionDiscountProductsResolver {
   ) {}
 
   @Mutation( () => Boolean )
+@UseGuards( JwtAuthGuard )
   async createCodePromotionDiscountProduct (
     @Args( 'createCodePromotionDiscountProductInput' ) createCodePromotionDiscountProductInput : CreateCodePromotionDiscountProductInput,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) creator : User
@@ -40,6 +40,7 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async updateCodePromotionDiscountProduct (
     @Args( 'updateCodePromotionDiscountProductInput' ) updateCodePromotionDiscountProductInput : UpdateCodePromotionDiscountProductInput,
     @CurrentUser([ ValidRoles.ADMIN ]) updater : User
@@ -48,6 +49,7 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async getDiscountCoupon (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.USER ]) user : User
@@ -56,6 +58,7 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async redeemDiscountCoupon (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.SELLER ]) user : User
@@ -64,6 +67,7 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async forgetDiscountCoupon (
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.USER ]) user : User
@@ -72,6 +76,7 @@ export class CodePromotionDiscountProductsResolver {
   }
 
   @Mutation( () => CodePromotionDiscountProduct )
+  @UseGuards( JwtAuthGuard )
   async toggleStatusCodePromotionDiscountProduct(
     @Args( 'id', { type: () => ID }, ParseUUIDPipe ) id : string,
     @CurrentUser([ ValidRoles.ADMIN, ValidRoles.COMPANY_REPRESENTATIVE ]) updater : User
