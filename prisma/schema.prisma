@@ -185,6 +185,8 @@ model Users {
   updatedPromotionReviews        PromotionReviews[]              @relation("promotion_reviews_updated_by")
   createdCompanyReviews          CompanyReviews[]                @relation("company_reviews_created_by")
   updatedCompanyReviews          CompanyReviews[]                @relation("company_reviews_updated_by")
+  createdClickCounterPerPeriods  ClickCounterPerPeriod[]         @relation("click_counter_per_period_created_by")
+  updatedClickCounterPerPeriods  ClickCounterPerPeriod[]         @relation("click_counter_per_period_updated_by")
 
   avatars                   UserAvatars[]                   @relation("user_avatars_user")
   sessions                  Sessions[]                      @relation("sessions_user")
@@ -336,6 +338,7 @@ model Companies {
   website        String?   @db.VarChar(255)
   email          String?   @db.VarChar(255)
   foundedAt      DateTime? @db.Date
+  rank           Float     @default(0)
   status         Boolean   @default(true)
   createdAt      DateTime  @default(now())
   createdBy      String?
@@ -356,6 +359,7 @@ model Companies {
   promotionRequests PromotionRequests[] @relation("promotion_request_company")
   promotions        Promotions[]        @relation("promotions_company")
   reviews           CompanyReviews[]    @relation("company_reviews_company")
+  clickCounterPerPeriods ClickCounterPerPeriod[] @relation("click_counter_per_period_company")
 
   @@map("companies")
 }
@@ -615,8 +619,8 @@ model PromotionRequests {
   promotionTypeId  String
   reason           String   @db.VarChar(255)
   comment          String   @db.VarChar(255)
-  promotionStartAt DateTime @db.Date
-  promotionEndAt   DateTime @db.Date
+  promotionStartAt DateTime
+  promotionEndAt   DateTime
   inversionAmount  Float    @default(0)
   currencyId       String
   status           Boolean  @default(true)
@@ -709,10 +713,10 @@ model PromotionStatus {
   id                  String    @id @default(uuid())
   promotionRequestId  String
   adminApprovedStatus Boolean   @default(false)
-  adminApprovedAt     DateTime? @db.Date
+  adminApprovedAt     DateTime?
   adminApprovedBy     String?
   adminRejectedStatus Boolean   @default(false)
-  adminRejectedAt     DateTime? @db.Date
+  adminRejectedAt     DateTime?
   adminRejectedBy     String?
   adminComment        String?   @db.VarChar(255)
   adminReason         String?   @db.VarChar(255)
@@ -738,7 +742,7 @@ model PromotionPayments {
   amount             Float    @default(0)
   creditCardId       String?
   voucher            String?
-  paymentDate        DateTime @default(now()) @db.Date
+  paymentDate        DateTime @default(now())
   status             Boolean  @default(true)
   createdAt          DateTime @default(now())
   createdBy          String?
@@ -768,8 +772,8 @@ model Promotions {
   promotionTypeId    String
   reason             String   @db.VarChar(255)
   comment            String   @db.VarChar(255)
-  promotionStartAt   DateTime @db.Date
-  promotionEndAt     DateTime @db.Date
+  promotionStartAt   DateTime
+  promotionEndAt     DateTime
   status             Boolean  @default(true)
   createdAt          DateTime @default(now())
   createdBy          String?
@@ -794,10 +798,10 @@ model CodePromotionDiscountProducts {
   code               String    @unique @db.VarChar(255)
   discountProductId  String
   isUsed             Boolean   @default(false)
-  usedAt             DateTime? @db.Date
+  usedAt             DateTime?
   usedBy             String?
   isRedeemed         Boolean   @default(false)
-  redeemedAt         DateTime? @db.Date
+  redeemedAt         DateTime?
   redeemedBy         String?
   status             Boolean   @default(true)
   createdAt          DateTime  @default(now())
@@ -819,7 +823,7 @@ model Reviews {
   userId     String
   review     String   @db.VarChar(255)
   rating     Int      @default(0)
-  reviewDate DateTime @default(now()) @db.Date
+  reviewDate DateTime @default(now())
   status     Boolean  @default(true)
   createdAt  DateTime @default(now())
   createdBy  String?
@@ -842,7 +846,7 @@ model Comments {
   userId      String
   reviewId    String
   comment     String   @db.VarChar(255)
-  commentDate DateTime @default(now()) @db.Date
+  commentDate DateTime @default(now())
   status      Boolean  @default(true)
   createdAt   DateTime @default(now())
   createdBy   String?
@@ -891,4 +895,24 @@ model CompanyReviews {
   updater Users?    @relation("company_reviews_updated_by", fields: [updatedBy], references: [id])
 
   @@map("company_reviews")
+}
+
+model ClickCounterPerPeriod {
+  id        String   @id @default(uuid())
+  companyId String
+  startDate DateTime @default(now())
+  endDate   DateTime
+  
+  count     Int      @default(0)
+  status    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  createdBy String?
+  updatedAt DateTime @updatedAt
+  updatedBy String?
+
+  company Companies @relation("click_counter_per_period_company", fields: [companyId], references: [id])
+  creator Users?    @relation("click_counter_per_period_created_by", fields: [createdBy], references: [id])
+  updater Users?    @relation("click_counter_per_period_updated_by", fields: [updatedBy], references: [id])
+
+  @@map("click_counter_per_period")
 }

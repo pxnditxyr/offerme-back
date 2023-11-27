@@ -1,4 +1,5 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql'
+import { ObjectType, Field, ID, Float } from '@nestjs/graphql'
+import { ClickCounterPerPeriod } from 'src/click-counter-per-period/entities/click-counter-per-period.entity'
 import { CompanyAddress } from 'src/companies/company-addresses/entities/company-address.entity'
 import { CompanyCategory } from 'src/companies/company-categories/entities/company-category.entity'
 import { CompanyLogo } from 'src/companies/company-logos/entities/company-logo.entity'
@@ -39,6 +40,9 @@ export class Company {
 
   @Field( () => Date, { nullable: true } )
   foundedAt?: Date | null
+
+  @Field( () => Float )
+  rank: number
 
   @Field( () => Boolean )
   status: boolean
@@ -92,5 +96,8 @@ export class Company {
   promotions?: Promotion[]
 
   @Field( () => [ CompanyReview ], { nullable: true } )
-  companies?: CompanyReview[]
+  reviews?: CompanyReview[]
+
+  @Field( () => [ ClickCounterPerPeriod ], { nullable: true } )
+  clickCounterPerPeriods?: ClickCounterPerPeriod[]
 }

@@ -40,22 +40,26 @@ export class CategoriesService {
     }
   }
 
-  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions  ) {
+  async findAll ( { paginationArgs, searchArgs } : IFindAllOptions, order? : string  ) {
     try {
       const { limit, offset } = paginationArgs
       const { search, status } = searchArgs
+
+      const newOrder = !isNaN( Number( order ) ) ? Number( order ) : undefined
+      
+
       const categories = await this.prismaService.categories.findMany({
         include: { ...categoryIncludes },
         where: {
           OR: [
             { name: { contains: search || '', mode: 'insensitive' } },
-            { description: { contains: search || '', mode: 'insensitive' } }
+            { description: { contains: search || '', mode: 'insensitive' } },
           ],
-          status: status ?? undefined
+          status: status ?? undefined,
+          order: newOrder ?? undefined
         },
         take: limit ?? undefined,
         skip: offset ?? undefined,
-        orderBy: { updatedAt: 'desc' }
       })
       return categories
     } catch ( error ) {

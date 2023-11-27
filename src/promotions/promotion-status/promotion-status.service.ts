@@ -141,7 +141,6 @@ export class PromotionStatusService {
         adminRejectedStatus: false,
       },
       include: { ...promotionStatusIncludes },
-      orderBy: { updatedAt: 'desc' }
     })
     return promotionStatuses
   }

@@ -125,6 +125,22 @@ type Parameter {
   subparameters: [Subparameter!]!
 }
 
+type ClickCounterPerPeriod {
+  id: ID!
+  companyId: ID!
+  startDate: DateTime!
+  endDate: DateTime!
+  count: Int!
+  status: Boolean!
+  createdAt: DateTime!
+  createdBy: ID
+  updatedAt: DateTime!
+  updatedBy: ID
+  company: Company
+  creator: User
+  updater: User
+}
+
 type Address {
   id: ID!
   street: String
@@ -591,6 +607,7 @@ type Company {
   website: String
   email: String
   foundedAt: DateTime
+  rank: Float!
   status: Boolean!
   createdAt: DateTime!
   createdBy: ID
@@ -608,7 +625,8 @@ type Company {
   users: [CompanyUser!]
   promotionRequests: [PromotionRequest!]
   promotions: [Promotion!]
-  companies: [CompanyReview!]
+  reviews: [CompanyReview!]
+  clickCounterPerPeriods: [ClickCounterPerPeriod!]
 }
 
 type CompanyPhone {
@@ -763,7 +781,7 @@ type Query {
   companyAddress(id: ID!): CompanyAddress!
   companyCategories: [CompanyCategory!]!
   companyCategory(id: ID!): CompanyCategory!
-  categories(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [Category!]!
+  categories(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null, order: String): [Category!]!
   category(id: ID!): Category!
   companyUsers: [CompanyUser!]!
   companyUser(id: ID!): CompanyUser!
@@ -809,6 +827,8 @@ type Query {
   companyReview(id: ID!): CompanyReview!
   managementUsers(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [ManagementUser!]!
   managementUser(id: ID!): ManagementUser!
+  clickCounterPerPeriods(offset: Int = 0, limit: Int = 10000, search: String = "", status: Boolean = null): [ClickCounterPerPeriod!]!
+  clickCounterPerPeriod(id: String!): ClickCounterPerPeriod!
 }
 
 enum ValidRoles {
@@ -934,6 +954,10 @@ type Mutation {
   updateManagementUser(updateManagementUserInput: UpdateManagementUserInput!): ManagementUser!
   deactivateManagementUser(id: ID!): ManagementUser!
   toggleStatusManagementUser(id: ID!): ManagementUser!
+  createClickCounterPerPeriod(createClickCounterPerPeriodInput: CreateClickCounterPerPeriodInput!): ClickCounterPerPeriod!
+  updateClickCounterPerPeriod(updateClickCounterPerPeriodInput: UpdateClickCounterPerPeriodInput!): ClickCounterPerPeriod!
+  toggleStatusClickCounterPerPeriod(id: ID!): ClickCounterPerPeriod!
+  addClickClickCounterPerPeriod(id: ID!): ClickCounterPerPeriod!
 }
 
 input CreateParameterInput {
@@ -1123,6 +1147,7 @@ input UpdateCompanyInput {
   email: String
   foundedAt: DateTime
   id: ID!
+  rank: Float
   status: Boolean
 }
 
@@ -1533,4 +1558,18 @@ input UpdateManagementUserInput {
   roleId: ID
   id: ID!
   status: Boolean
+}
+
+input CreateClickCounterPerPeriodInput {
+  companyId: ID!
+  startDate: DateTime!
+  endDate: DateTime!
+}
+
+input UpdateClickCounterPerPeriodInput {
+  companyId: ID
+  startDate: DateTime
+  endDate: DateTime
+  id: ID!
+  count: Int!
 }

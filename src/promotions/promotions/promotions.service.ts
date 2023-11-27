@@ -4,12 +4,12 @@ import { PrismaService } from 'src/prisma'
 import { SubparametersService } from 'src/parametrics/subparameters/subparameters.service'
 import { User } from 'src/users/users/entities/user.entity'
 import { Promotion } from './entities/promotion.entity'
-import { UsersService } from 'src/users/users/users.service'
 import { CompaniesService } from 'src/companies/companies/companies.service'
 import { PromotionPaymentsService } from '../promotion-payments/promotion-payments.service'
 import { extractPrismaExceptions } from 'src/common/exception-catchers'
 import { IFindAllOptions } from 'src/common/interfaces'
 import { PromotionRequestsService } from '../promotion-requests/promotion-requests.service'
+import { companyRankCalculator } from 'src/utils'
 
 const promotionIncludes = {
   promotionType: true,
@@ -28,26 +28,29 @@ export class PromotionsService {
     private readonly prismaService : PrismaService,
 
     private readonly subparametersService : SubparametersService,
-    private readonly usersService : UsersService,
     private readonly companiesService : CompaniesService,
     private readonly promotionPaymentsService : PromotionPaymentsService,
-    private readonly promotionRequestsService : PromotionRequestsService
+    private readonly promotionRequestsService : PromotionRequestsService,
   ) {}
 
   async create ( createPromotionInput : CreatePromotionInput, creator : User ) : Promise<Promotion> {
-    const { companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = createPromotionInput
-    await this.companiesService.findOne( companyId )
+    const { companyId, promotionTypeId, promotionRequestId } = createPromotionInput
     await this.subparametersService.findOne( promotionTypeId )
-    await this.promotionPaymentsService.findOne( promotionPaymentId )
-    await this.promotionRequestsService.findOne( promotionRequestId )
+    const promotionRequest = await this.promotionRequestsService.findOne( promotionRequestId )
+    const company = await this.companiesService.findOne( companyId )
     try {
       const promotion = await this.prismaService.promotions.create({
         data: {
           ...createPromotionInput,
           createdBy: creator.id,
-          userId: creator.id
+          userId: creator.id,
         }
       })
+      
+      await this.companiesService.update( companyId, {
+        id: companyId,
+        rank: company.rank + companyRankCalculator( promotionRequest.inversionAmount, promotionRequest.currency.name )
+      }, creator )
       return promotion
     } catch ( error ) {
       this.handlerDBExceptions( error )
@@ -71,7 +74,6 @@ export class PromotionsService {
           status: status ?? undefined
         },
         include: { ...promotionIncludes },
-        orderBy: { updatedBy: 'desc' }
       })
       return promotions
     } catch ( error ) {
@@ -88,20 +90,26 @@ export class PromotionsService {
   }
 
   async update ( id : string, updatePromotionInput : UpdatePromotionInput, updater : User ) : Promise<Promotion> {
-    await this.findOne( id )
+    const currentPromotion = await this.findOne( id )
     const { companyId, promotionTypeId, promotionPaymentId, promotionRequestId } = updatePromotionInput
     if ( companyId ) await this.companiesService.findOne( companyId )
     if ( promotionTypeId ) await this.subparametersService.findOne( promotionTypeId )
     if ( promotionPaymentId ) await this.promotionPaymentsService.findOne( promotionPaymentId )
     if ( promotionRequestId ) await this.promotionRequestsService.findOne( promotionRequestId )
+    const company = ( companyId ) ? await this.companiesService.findOne( companyId ) : await this.companiesService.findOne( currentPromotion.companyId )
+    const promotionRequest = ( promotionRequestId ) ? await this.promotionRequestsService.findOne( promotionRequestId ) : await this.promotionRequestsService.findOne( currentPromotion.promotionRequestId )
     try {
       const promotion = await this.prismaService.promotions.update({
         where: { id },
         data: {
           ...updatePromotionInput,
-          updatedBy: updater.id
+          updatedBy: updater.id,
         }
       })
+      await this.companiesService.update( company.id, {
+        id: company.id,
+        rank: company.rank + companyRankCalculator( promotionRequest.inversionAmount, promotionRequest.currency.name )
+      }, updater )
       return promotion
     } catch ( error ) {
       this.handlerDBExceptions( error )

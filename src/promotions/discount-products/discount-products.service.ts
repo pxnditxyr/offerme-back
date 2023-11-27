@@ -58,7 +58,12 @@ export class DiscountProductsService {
           promotionRequest: {
             title: { contains: search ?? undefined, mode: 'insensitive' }
           },
-          status: status ?? undefined
+          status: status ?? undefined,
+        },
+        orderBy: {
+          promotionRequest: {
+            company: { rank: 'desc' }
+          }
         }
       })
       return discountProducts

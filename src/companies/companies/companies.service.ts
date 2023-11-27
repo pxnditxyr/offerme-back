@@ -19,7 +19,7 @@ const companyIncludes = {
   updater: true,
   addresses: true,
   categories: true,
-  users: true
+  users: true,
 }
 
 @Injectable()
@@ -87,7 +87,7 @@ export class CompaniesService {
         data: {
           ...updateCompanyInput,
           updatedBy: updater.id,
-          }
+        }
       })
       return company
     } catch ( error ) {

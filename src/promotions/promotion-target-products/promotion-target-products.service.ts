@@ -53,7 +53,6 @@ export class PromotionTargetProductsService {
           description: { contains: search }
         },
         include: { ...promotionTargetProductIncludes },
-        orderBy: { updatedBy: 'desc' },
       })
       return promotionTargetProducts
     } catch ( error ) {

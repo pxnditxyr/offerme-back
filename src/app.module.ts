@@ -33,6 +33,7 @@ import { SeedModule } from './seed'
 import { CommonModule } from './common'
 
 import { ManagementUsersModule } from './management'
+import { ClickCounterPerPeriodModule } from './click-counter-per-period/click-counter-per-period.module';
 
 @Module({
   imports: [
@@ -57,7 +58,8 @@ import { ManagementUsersModule } from './management'
     DiscountProductsModule, PromotionStatusModule, PromotionPaymentsModule,
     PromotionsModule, CodePromotionDiscountProductsModule, ReviewsModule, CommentsModule,
     PromotionReviewsModule, CompanyReviewsModule, SeedModule, CommonModule,
-    ManagementUsersModule
+    ManagementUsersModule,
+    ClickCounterPerPeriodModule
   ]
 })
 export class AppModule {}

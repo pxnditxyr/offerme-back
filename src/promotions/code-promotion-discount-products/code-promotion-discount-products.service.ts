@@ -34,7 +34,7 @@ export class CodePromotionDiscountProductsService {
     })
     const newCodes = generateDiscountCodes({
       quantity: createCodePromotionDiscountProductInput.quantity,
-      existingCodes: codes.map( code => code.code )
+      existingCodes: codes.map( code => code.code ),
     })
 
     try {
@@ -43,7 +43,7 @@ export class CodePromotionDiscountProductsService {
           code,
           discountProductId,
           createdBy: creator.id,
-        }) )
+        }) ),
       })
       return !!codePromotionDiscountProducts
     } catch ( error ) {

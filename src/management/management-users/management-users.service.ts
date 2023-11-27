@@ -78,9 +78,8 @@ export class ManagementUsersService {
           { peopleInfo: { documentNumber: { contains: search, mode: 'insensitive' } } },
         ],
       },
-      take: limit || 10,
-      skip: offset || 0,
-      orderBy: { createdAt: 'desc' },
+      take: limit ?? undefined,
+      skip: offset ?? undefined,
       include: {
         creator: true,
         updater: true,

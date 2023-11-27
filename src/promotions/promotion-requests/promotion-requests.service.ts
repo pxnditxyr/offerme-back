@@ -67,7 +67,6 @@ export class PromotionRequestsService {
           status: status ?? undefined
         },
         include: { ...promotionRequestIncludes, promotionStatus: true },
-        orderBy: { updatedAt: 'desc' }
       })
       return promotionRequests
     } catch ( error ) {
